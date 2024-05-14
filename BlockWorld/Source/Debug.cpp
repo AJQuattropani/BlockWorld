@@ -25,7 +25,6 @@ void GLAPIENTRY glDebugOutput(GLenum source, GLenum type, GLuint id, GLenum seve
 {
 
     // ignore non-significant error/warning codes
-    // TODO look this up
     //if (id == 131169 || id == 131185 || id == 131218 || id == 131204) return;
 
     const static std::map<GLenum, const char*> sources =

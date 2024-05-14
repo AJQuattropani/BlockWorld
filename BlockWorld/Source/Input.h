@@ -7,7 +7,6 @@
 
 #include <map>
 
-
 struct InputContext
 {
 	struct {

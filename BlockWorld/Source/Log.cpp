@@ -1,8 +1,5 @@
 #include "Log.h"
 
-
-
-
 std::shared_ptr<Log> Log::AppLog = std::make_shared<Log>(BW_DEFAULT_LOG_LEVEL, "Application");;
 std::shared_ptr<Log> Log::GraphicsLog = std::make_shared<Log>(GL_DEFAULT_LOG_LEVEL, "OpenGL");
 std::map<Log_Level, const char*> Log::names =

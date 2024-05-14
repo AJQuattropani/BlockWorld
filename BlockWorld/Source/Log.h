@@ -8,57 +8,12 @@
 #define BW_DEFAULT_LOG_LEVEL Log_Level::INFO
 #define GL_DEFAULT_LOG_LEVEL Log_Level::INFO
 
-
-enum class Log_Level
-{
-	INFO = 0, WARN, ERROR, FATAL, DEBUG
-};
-
-class Log
-{
-public:
-	static void init(Log_Level app_level, Log_Level graphics_level)
-	{
-		AppLog = std::make_shared<Log>(app_level, "App");
-		GraphicsLog = std::make_shared<Log>(graphics_level, "OpenGL");
-
-		names =
-		{
-			{Log_Level::INFO, "INFO"},
-			{Log_Level::WARN, "WARNING"},
-			{Log_Level::ERROR, "ERROR"},
-			{Log_Level::FATAL, "FATAL"},
-			{Log_Level::DEBUG, "DEBUG"}
-		};
-	}
-
-	void print(Log_Level msg_level, const char* message) const
-	{
-		if (msg_level >= log_level) std::cout << type << " [ " << names[msg_level] << " ] : " << message << std::endl;
-	}
-
-	void setLevel(Log_Level level) { log_level = level;	}
-	
-	static Log* getAppLog() {	return AppLog.get();	}
-	static Log* getGraphicsLog() {	return GraphicsLog.get();	}
-
-	Log(Log_Level level, const std::string& type) : log_level(level), type(type) {	}
-private:
-	Log_Level log_level;
-	const std::string type;
-
-private:
-	static std::shared_ptr<Log> AppLog;
-	static std::shared_ptr<Log> GraphicsLog;
-	static std::map<Log_Level, const char*> names;
-
-};
-
 #ifdef BW_LOG_OUTPUT
 #define BW_INFO(x) Log::getAppLog()->print(Log_Level::INFO, x)
 #define BW_WARN(x) Log::getAppLog()->print(Log_Level::WARN, x)
 #define BW_ERROR(x) Log::getAppLog()->print(Log_Level::ERROR, x)
 #define BW_FATAL(x) Log::getAppLog()->print(Log_Level::FATAL, x)
+#define BW_LEVEL(x) Log::getAppLog()->setLevel(x);
 #ifdef BW_DEBUGGING
 #define BW_DEBUG(x) Log::getAppLog()->print(Log_Level::DEBUG, x)
 #else
@@ -70,6 +25,7 @@ private:
 #define BW_ERROR(x)
 #define BW_FATAL(x)
 #define BW_DEBUG(x)
+#define BW_LEVEL(x)
 #endif
 
 #ifdef GL_DEBUGGING
@@ -78,10 +34,40 @@ private:
 #define GL_ERROR(x) Log::getGraphicsLog()->print(Log_Level::ERROR, x)
 #define GL_FATAL(x) Log::getGraphicsLog()->print(Log_Level::FATAL, x)
 #define GL_DEBUG(x) Log::getGraphicsLog()->print(Log_Level::DEBUG, x)
+#define GL_LEVEL(x) Log::getGraphicsLog()->setLevel(x)
 #else
 #define GL_INFO(x) 
 #define GL_WARN(x) 
 #define GL_ERROR(x)
 #define GL_FATAL(x)
 #define GL_DEBUG(x)
+#define GL_LEVEL(x)
 #endif
+
+enum class Log_Level
+{
+	INFO = 0, WARN, ERROR, FATAL, DEBUG
+};
+
+class Log
+{
+public:
+	inline static Log const* getAppLog() { return AppLog.get(); }
+	inline static Log const* getGraphicsLog() { return GraphicsLog.get(); }
+public:
+	inline void print(Log_Level msg_level, const char* message) const {
+		if (msg_level >= log_level) std::cout << type << " [ " << names[msg_level] << " ] : " << message << std::endl;
+	}
+	inline void setLevel(Log_Level level) { log_level = level;	}
+	
+	Log(Log_Level level, const std::string& type) : log_level(level), type(type) {	}
+
+private:
+	Log_Level log_level;
+	const std::string type;
+private:
+	static std::shared_ptr<Log> AppLog;
+	static std::shared_ptr<Log> GraphicsLog;
+	static std::map<Log_Level, const char*> names;
+
+};
