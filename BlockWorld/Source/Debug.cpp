@@ -50,17 +50,41 @@ void GLAPIENTRY glDebugOutput(GLenum source, GLenum type, GLuint id, GLenum seve
         { GL_DEBUG_TYPE_OTHER,                  "Other"}
     };
 
-    static std::string log_message = " [ " + std::to_string(id) + " ]: " + message + "\n"
-        + "Source: " + sources.find(source)->second + " | Type: " + types.find(type)->second;
+    //static std::string log_message = " [ " + std::to_string(id) + " ]: " + message + "\n"
+    //    + "Source: " + sources.find(source)->second + " | Type: " + types.find(type)->second;
 
     switch (severity)
     {
-    case GL_DEBUG_SEVERITY_HIGH:         GL_FATAL(log_message.c_str()); break;
-    case GL_DEBUG_SEVERITY_MEDIUM:       GL_ERROR(log_message.c_str()); break;
-    case GL_DEBUG_SEVERITY_LOW:          GL_WARN(log_message.c_str()); break;
-    case GL_DEBUG_SEVERITY_NOTIFICATION: GL_INFO(log_message.c_str()); break;
-    }
+    case GL_DEBUG_SEVERITY_HIGH:         GL_FATAL("[%d]: %s\n Source: %s | Type: %s", id, message, 
+        sources.find(source)->second, types.find(type)->second); break;
 
+    case GL_DEBUG_SEVERITY_MEDIUM:       GL_ERROR("[%d]: %s\n Source: %s | Type: %s", id, message,
+        sources.find(source)->second, types.find(type)->second); break;
+
+    case GL_DEBUG_SEVERITY_LOW:          GL_WARN("[%d]: %s\n Source: %s | Type: %s", id, message,
+        sources.find(source)->second, types.find(type)->second); break;
+
+    case GL_DEBUG_SEVERITY_NOTIFICATION: GL_INFO("[%d]: %s\n Source: %s | Type: %s", id, message,
+        sources.find(source)->second, types.find(type)->second); break;
+    }
+}
+
+void shaderCompileStatus(GLuint id, const char* shader)
+{
+    int length;
+    glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length);
+    char* message = (char*)_malloca(length * sizeof(char));
+    glGetShaderInfoLog(id, length, &length, message);
+    GL_ERROR("COMPILER: %s | %s", shader, message);
+}
+
+void shaderLinkStatus(GLuint program)
+{
+    int length;
+    glGetProgramiv(program, GL_INFO_LOG_LENGTH, &length);
+    char* message = (char*)_malloca(length * sizeof(char));
+    glGetShaderInfoLog(program, length, &length, message);
+    GL_ERROR("LINKER: %s ", message);
 }
 
 void GLClearError()

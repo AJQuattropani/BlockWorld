@@ -4,10 +4,14 @@ void mouse_cursor_input_callback(GLFWwindow* window, double xpos, double ypos)
 {
 	static InputContext* const context = static_cast<InputContext*>(glfwGetWindowUserPointer(window));
 	auto& handler = context->mouse_handler;
+
+	//GL_INFO("Offsets: %f %f | Last: %f %f | Current Read: %f %f", handler.cached_x_offset, handler.cached_y_offset, handler.last_x, handler.last_y, xpos, ypos);
+
 	handler.cached_x_offset += xpos - handler.last_x;
 	handler.cached_y_offset += ypos - handler.last_y;
 	handler.last_x = xpos;
 	handler.last_y = ypos;
+
 }
 
 void mouse_button_input_callback(GLFWwindow* window, int button, int action, int mods)

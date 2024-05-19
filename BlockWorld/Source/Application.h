@@ -6,25 +6,29 @@
 
 #include "Debug.h"
 #include "Input.h"
+#include "Shader.h"
+#include "Renderer.h"
 
 #include <string>
 
 class Application
 {
 public:
-	Application(unsigned int screen_width = 1080, unsigned int screen_height = 720, float fps = 1.0f, float ups = 1.0f);
+	Application(unsigned int screen_width = 1080, unsigned int screen_height = 720, float fps = 60.0f, float ups = 60.0f);
 	int run();
 	~Application();
 private:
 	GLFWwindow* window;
-	InputContext context;
+	double frameRateSeconds, gameUpdateRateSeconds;
+	InputContext inputContext;
+	std::shared_ptr<RenderContext> renderContext;
+	Camera camera;
 	struct {
 		double lastTimeSeconds, deltaTimeSeconds;
 		double lastFrameTimeSeconds, lastUpdateTimeSeconds;
 	} timer;
-	double frameRateSeconds, gameUpdateRateSeconds;
 
-	unsigned int screen_width_px, screen_height_px;
+
 
 private:
 	GLFWwindow* glfwWindowInit(const std::string& name);
@@ -35,6 +39,7 @@ private:
 
 	void handleInput();
 
+	void handleRenderContext();
 private:
 	static void loadCallbacks(GLFWwindow* window);
 	static void updateTime(double& lastTimeSeconds, double& deltaTimeSeconds);

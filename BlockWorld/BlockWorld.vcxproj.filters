@@ -25,6 +25,21 @@
     <Filter Include="Source Files\Debug">
       <UniqueIdentifier>{be884055-20d4-450c-8f45-281788c5ab58}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\Shaders">
+      <UniqueIdentifier>{fef59df1-facd-436a-a97b-78d4def17778}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Shaders\Blocks">
+      <UniqueIdentifier>{d5e07377-95fb-472b-8777-ae753ad1e96a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Textures">
+      <UniqueIdentifier>{423fbe99-1a6f-4bf4-a2a0-a5611df94080}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Textures\Blocks">
+      <UniqueIdentifier>{6b2b6693-09e9-4617-9942-e3016ee39935}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Render">
+      <UniqueIdentifier>{8766c7f2-ef99-459c-a7ac-1b6a17118762}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Main.cpp">
@@ -42,6 +57,12 @@
     <ClCompile Include="Source\Debug.cpp">
       <Filter>Source Files\Debug</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Shader.cpp">
+      <Filter>Source Files\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Renderer.cpp">
+      <Filter>Source Files\Render</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application.h">
@@ -56,5 +77,24 @@
     <ClInclude Include="Source\Debug.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Shader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Renderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Resources\Textures\Blocks\blockmap.jpeg">
+      <Filter>Resource Files\Textures\Blocks</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Shaders\Blocks\block_shader.frag">
+      <Filter>Resource Files\Shaders\Blocks</Filter>
+    </None>
+    <None Include="Resources\Shaders\Blocks\block_shader.vert">
+      <Filter>Resource Files\Shaders\Blocks</Filter>
+    </None>
   </ItemGroup>
 </Project>
