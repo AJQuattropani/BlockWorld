@@ -40,6 +40,9 @@
     <Filter Include="Source Files\Render">
       <UniqueIdentifier>{8766c7f2-ef99-459c-a7ac-1b6a17118762}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Vendor">
+      <UniqueIdentifier>{804a4405-23b1-4fc5-a19b-5a2d5e6c1843}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Main.cpp">
@@ -66,6 +69,12 @@
     <ClCompile Include="Source\Camera.cpp">
       <Filter>Source Files\Render</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Vendor\stb_image.cpp">
+      <Filter>Header Files\Vendor</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Texture.cpp">
+      <Filter>Source Files\Render</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application.h">
@@ -90,6 +99,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\RenderContext.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Vendor\stb_image.h">
+      <Filter>Header Files\Vendor</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Texture.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
