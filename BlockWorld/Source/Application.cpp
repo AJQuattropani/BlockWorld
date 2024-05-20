@@ -1,5 +1,5 @@
 #include "Application.h"
-
+#include "Vendor/stb_image.h"
 
 Application::Application(unsigned int screen_width, unsigned int screen_height, float fps, float ups) :
 	inputContext{
