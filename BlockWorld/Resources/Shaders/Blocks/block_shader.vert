@@ -2,6 +2,7 @@
 
 layout(location=0) in vec3 position;
 
+
 uniform vec3 inColor;
 
 uniform mat4 model;

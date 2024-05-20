@@ -191,6 +191,7 @@ void Application::handleInput() {
 
 	// Scroll Input
 	camera.zoom(inputContext.scroll_handler.cache_amount);
+	inputContext.scroll_handler.cache_amount = 0;
 
 
 }

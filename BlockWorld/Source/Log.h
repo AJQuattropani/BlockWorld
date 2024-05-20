@@ -108,7 +108,6 @@ public:
 
 		delete[] formatBuffer;
 		delete[] textBuffer;
-		//if (msg_level >= log_level) std::cout << type << " [ " << names[msg_level] << " ] : " << message << std::endl;
 	}
 	inline void setLevel(Log_Level level) { log_level = level;	}
 	

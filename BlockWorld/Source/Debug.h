@@ -25,6 +25,8 @@
 	GL_ASSERT(GLErrorLogCall(#x, __FILE__, __LINE__));
 #define GLFW_DEBUG_HINT glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
 #define GL_DEBUG_CALLBACK doGLDebugCallback();
+#define GL_SHADER_COMPILE_STATUS(id, shader) shaderCompileStatus(id, shader);
+#define GL_SHADER_LINK_STATUS(program) shaderLinkStatus(program);
 
 void doGLDebugCallback();
 void GLClearError();
@@ -41,5 +43,7 @@ void shaderLinkStatus(GLuint program);
 #define GL_TRY(x) x
 #define GLFW_DEBUG_HINT
 #define GL_DEBUG_CALLBACK
+#define GL_SHADER_COMPILE_STATUS(id, shader)
+#define GL_SHADER_LINK_STATUS(program)
 
 #endif

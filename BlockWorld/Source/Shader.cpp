@@ -119,7 +119,7 @@ GLuint Shader::CreateShaders(const std::unordered_map<Shader_Type, std::string>&
 	glGetProgramiv(program, GL_LINK_STATUS, &result);
 	if (result == GL_FALSE)
 	{
-		shaderLinkStatus(program);
+		GL_SHADER_LINK_STATUS(program);
 		return -1;
 	}
 	return program;
@@ -139,7 +139,7 @@ GLuint Shader::CompileShader(Shader_Type type, const std::string& source)
 	glGetShaderiv(id, GL_COMPILE_STATUS, &result);
 	if (result == GL_FALSE)
 	{
-		shaderCompileStatus(id, SHADERS.at(type).name.data());
+		GL_SHADER_COMPILE_STATUS(id, SHADERS.at(type).name.c_str());
 		return -1;
 	}
 
