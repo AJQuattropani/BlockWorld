@@ -9,7 +9,9 @@
 
 #ifdef BW_DEBUGGING
 
-#define BW_ASSERT(x) if (!(x)) {__debugbreak();\
+#define BW_ASSERT(x, msg, ...) if (!(x)) {	\
+	BW_ERROR(msg, ##__VA_ARGS__);			\
+	__debugbreak();							\
 	glfwTerminate();}
 #else
 #define BW_ASSERT(x)
@@ -19,10 +21,12 @@
 
 #ifdef GL_DEBUGGING
 
-#define GL_ASSERT(x) if (!(x)) __debugbreak();
-#define GL_TRY(x) GLClearError();\
-	x;\
-	GL_ASSERT(GLErrorLogCall(#x, __FILE__, __LINE__));
+#define GL_ASSERT(x, msg, ...) if (!(x)) {	\
+	GL_ERROR(msg, ##__VA_ARGS__);			\
+	__debugbreak(); }
+#define GL_TRY(x) GLClearError();			\
+	x;										\
+	GL_ASSERT(GLErrorLogCall(#x, __FILE__, __LINE__), NULL, NULL);
 #define GLFW_DEBUG_HINT glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
 #define GL_DEBUG_CALLBACK doGLDebugCallback();
 #define GL_SHADER_COMPILE_STATUS(id, shader) shaderCompileStatus(id, shader);
@@ -39,7 +43,7 @@ void shaderLinkStatus(GLuint program);
 
 
 #else
-#define GL_ASSERT(x)
+#define GL_ASSERT(x, msg, ...)
 #define GL_TRY(x) x
 #define GLFW_DEBUG_HINT
 #define GL_DEBUG_CALLBACK

@@ -10,19 +10,18 @@ Application::Application(unsigned int screen_width, unsigned int screen_height, 
 },
 timer{ 0, 0, 0, 0 },
 frameRateSeconds(1 / fps),
-gameUpdateRateSeconds(1 / ups)
+gameUpdateRateSeconds(1 / ups),
+renderContext(nullptr)
 {
 	window = glfwWindowInit("Block World");
-	BW_ASSERT(window != nullptr);
+	BW_ASSERT(window != nullptr, "Window failed to initialize.");
 
 	glfwMakeContextCurrent(window);
 	glfwSetWindowUserPointer(window, &inputContext);
-	if (glewInit() != GLEW_OK) {
-		GL_FATAL("Glew failed to initialize.");
-		GL_ASSERT(false);
-	}
-	loadCallbacks(window);
 
+	GL_ASSERT(glewInit() == GLEW_OK, "Glew failed to initialize.");
+
+	loadCallbacks(window);
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 	renderContext = new RenderContext{screen_width, screen_height, Shader("Blocks/block_shader"), glm::mat4(1.0), glm::mat4(1.0f)};
