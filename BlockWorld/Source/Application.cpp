@@ -5,12 +5,12 @@ Application::Application(unsigned int screen_width, unsigned int screen_height, 
 	inputContext{
 		.screen_handler{screen_width, screen_height},
 		.scroll_handler = {0},
-		.key_handler{ .keyCache = std::map<unsigned int, bool>()},
+		.key_handler{.keyCache = std::map<unsigned int, bool>()},
 		.mouse_handler{screen_width / 2.0, screen_height / 2.0,0,0}
-	},
-	timer{ 0, 0, 0, 0 },
-	frameRateSeconds(1 / fps),
-	gameUpdateRateSeconds(1 / ups)
+},
+timer{ 0, 0, 0, 0 },
+frameRateSeconds(1 / fps),
+gameUpdateRateSeconds(1 / ups)
 {
 	window = glfwWindowInit("Block World");
 	BW_ASSERT(window != nullptr);
@@ -25,9 +25,11 @@ Application::Application(unsigned int screen_width, unsigned int screen_height, 
 
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-	renderContext = std::make_shared<RenderContext>( screen_width, screen_height, Shader("Blocks/block_shader"), glm::mat4(1.0), glm::mat4(1.0f));
+	renderContext = new RenderContext{screen_width, screen_height, Shader("Blocks/block_shader"), glm::mat4(1.0), glm::mat4(1.0f)};
 
-	camera = Camera(renderContext);
+	camera.attachContext(renderContext);
+
+	glClearColor(0.3f, 0.4f, 1.0f, 1.0f);
 
 	const char* version(reinterpret_cast<const char*>(glGetString(GL_VERSION)));
 	GL_INFO(version);
@@ -172,13 +174,12 @@ void Application::handleInput() {
 		}
 	}
 
-	camera.turn(inputContext.mouse_handler.cached_x_offset, -inputContext.mouse_handler.cached_y_offset);
+	camera.turn(static_cast<float>(inputContext.mouse_handler.cached_x_offset), static_cast<float>(-inputContext.mouse_handler.cached_y_offset));
 	inputContext.mouse_handler.cached_x_offset = 0;
 	inputContext.mouse_handler.cached_y_offset = 0;
 
 	// Cursor Input
-	if (inputContext.mouse_handler.resetFlag)
-	{
+	if (inputContext.mouse_handler.resetFlag) {
 		GL_INFO("Reset mouse.");
 		glfwGetCursorPos(window, &inputContext.mouse_handler.last_x, &inputContext.mouse_handler.last_y);
 		
@@ -190,10 +191,8 @@ void Application::handleInput() {
 
 
 	// Scroll Input
-	camera.zoom(inputContext.scroll_handler.cache_amount);
+	camera.zoom(static_cast<float>(inputContext.scroll_handler.cache_amount));
 	inputContext.scroll_handler.cache_amount = 0;
-
-
 }
 
 void Application::handleRenderContext()

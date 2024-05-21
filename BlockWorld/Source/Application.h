@@ -21,7 +21,7 @@ private:
 	GLFWwindow* window;
 	double frameRateSeconds, gameUpdateRateSeconds;
 	InputContext inputContext;
-	std::shared_ptr<RenderContext> renderContext;
+	RenderContext* renderContext;
 	Camera camera;
 	struct {
 		double lastTimeSeconds, deltaTimeSeconds;

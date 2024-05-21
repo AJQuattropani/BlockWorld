@@ -17,10 +17,15 @@ enum class Camera_Controls
 class Camera
 {
 public:
-	Camera(const std::shared_ptr<RenderContext>& context, const glm::vec3& positon = glm::vec3(0.0f, 0.0f, -3.5f),
-		const glm::vec3& up = glm::vec3(0.0f, 1.0f, 0.0f), float yaw = YAW, float pitch = PITCH);
+	Camera(RenderContext* context, const glm::vec3 positon = glm::vec3(0.0f, 0.0f, -3.5f),
+		const glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), float yaw = YAW, float pitch = PITCH);
 
-	Camera() = default;
+	Camera();
+
+	void attachContext(RenderContext* context)
+	{
+		outputContext = context;
+	}
 
 	inline float getFov() const { return fov; }
 
@@ -32,7 +37,7 @@ public:
 	void updateContext();
 private:
 
-	std::shared_ptr<RenderContext> outputContext;
+	RenderContext* outputContext;
 
 	glm::vec3 position;
 	glm::vec3 front;
@@ -50,7 +55,7 @@ private:
 	constexpr static uint8_t UPDATE_PROJECTION_FLAG = 0b10;
 	constexpr static float YAW = -90.0f;
 	constexpr static float PITCH = 0.0f;
-	constexpr static float SPEED = 1.0 / 60.f;
+	constexpr static float SPEED = 1.0f / 60.f;
 	constexpr static float SENSITIVITY = 0.1f;
 	constexpr static float ZOOM = 45.0f;
 	constexpr static glm::vec3 WORLD_UP = { 0.0f, 1.0f, 0.0f };

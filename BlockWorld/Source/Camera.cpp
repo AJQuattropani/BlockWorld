@@ -1,11 +1,14 @@
 #include "Camera.h"
 
-Camera::Camera(const std::shared_ptr<RenderContext>& context, const glm::vec3& positon, const glm::vec3& up, float yaw, float pitch)
+Camera::Camera(RenderContext* context, const glm::vec3 positon, const glm::vec3 up, float yaw, float pitch)
     : outputContext(context), position(position), front(glm::vec3(0.0f, 0.0f, -1.0f)), up(up), yaw(yaw), pitch(pitch),
     movementSpeed(SPEED), mouseSensitivity(SENSITIVITY), fov(ZOOM), updateFlags(0b00)
 {
     updateCameraVectors();
 }
+
+Camera::Camera() : Camera(nullptr)
+{}
 
 void Camera::move(Camera_Controls direction, float magnitude)
 {
@@ -54,7 +57,7 @@ void Camera::turn(float xoffset, float yoffset, bool constrainPitch)
 
 void Camera::zoom(float yoffset)
 {
-    fov -= (float)yoffset;
+    fov -= yoffset;
     if (fov < 1.0f) {
         fov = 1.0f;
         return;
@@ -69,7 +72,7 @@ void Camera::zoom(float yoffset)
 void Camera::updateContext()
 {
     if (updateFlags & UPDATE_PROJECTION_FLAG) outputContext->projectionMatrix =
-        glm::perspective(glm::radians(fov), (float)outputContext->screen_width_px / outputContext->screen_height_px, 0.1f, 100.0f);
+        glm::perspective(glm::radians(fov), static_cast<float>(outputContext->screen_width_px) / outputContext->screen_height_px, 0.1f, 100.0f);
     if (updateFlags & UPDATE_VIEW_FLAG) outputContext->viewMatrix = glm::lookAt(position, position + front, up);
 
     updateFlags = DEFAULT;
