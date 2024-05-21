@@ -21,13 +21,13 @@ private:
 	GLFWwindow* window;
 	double frameRateSeconds, gameUpdateRateSeconds;
 	InputContext inputContext;
-	RenderContext* renderContext;
+	bwrenderer::RenderContext* renderContext;
 	Camera camera;
 	struct {
 		double lastTimeSeconds, deltaTimeSeconds;
 		double lastFrameTimeSeconds, lastUpdateTimeSeconds;
 	} timer;
-
+	bwrenderer::TextureCache texture_cache;
 
 
 private:

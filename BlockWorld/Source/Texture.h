@@ -22,4 +22,20 @@ namespace bwrenderer
 	GLuint createTexture(TextureBuffer* buffer, const std::string& type, const std::string& file);
 
 	void deleteTexture(TextureBuffer* buffer);
+
+	class TextureCache
+	{
+	public:
+		TextureCache();
+
+		~TextureCache();
+
+		TextureBuffer& findOrLoad(const std::string& type, const std::string& name);
+
+		TextureBuffer& findOrLoad_impl(const std::string& type, const std::string& filePath);
+
+	private:
+		std::unordered_map<std::string, TextureBuffer> loaded_textures;
+	};
+
 }

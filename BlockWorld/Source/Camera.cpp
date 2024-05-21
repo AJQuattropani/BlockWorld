@@ -1,6 +1,6 @@
 #include "Camera.h"
 
-Camera::Camera(RenderContext* context, const glm::vec3 positon, const glm::vec3 up, float yaw, float pitch)
+Camera::Camera(bwrenderer::RenderContext* context, const glm::vec3 positon, const glm::vec3 up, float yaw, float pitch)
     : outputContext(context), position(position), front(glm::vec3(0.0f, 0.0f, -1.0f)), up(up), yaw(yaw), pitch(pitch),
     movementSpeed(SPEED), mouseSensitivity(SENSITIVITY), fov(ZOOM), updateFlags(0b00)
 {

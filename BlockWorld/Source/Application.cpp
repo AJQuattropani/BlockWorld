@@ -24,11 +24,12 @@ renderContext(nullptr)
 	loadCallbacks(window);
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-	renderContext = new RenderContext{screen_width, screen_height, Shader("Blocks", "block_shader"), glm::mat4(1.0), glm::mat4(1.0f)};
+	renderContext = new bwrenderer::RenderContext{screen_width, screen_height, Shader("Blocks", "block_shader"), glm::mat4(1.0), glm::mat4(1.0f)};
 
 	camera.attachContext(renderContext);
 
 	glClearColor(0.3f, 0.4f, 1.0f, 1.0f);
+	glEnable(GL_DEPTH_TEST);
 
 	const char* version(reinterpret_cast<const char*>(glGetString(GL_VERSION)));
 	GL_INFO(version);
@@ -94,50 +95,17 @@ void Application::update() {
 }
 
 void Application::render() {
-	glClear(GL_COLOR_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	GLfloat vertices[] = {
-		-0.5, -0.5, 0.0, 0.0f, 0.0f,
-		-0.5, 0.5, 0.0, 0.0f, 1.0f,
-		0.5, -0.5, 0.0, 1.0f, 0.0f,
-		0.5, 0.5, 0.0, 1.0f, 1.0f
-	};
-
-	GLuint indices[] = {
-		0, 1, 2, 1, 2, 3
-	};
-
-	GLuint vertex_buffer;
-	GLuint index_buffer;
-	GLuint vertex_array;
-
-	glGenVertexArrays(1, &vertex_array);
-	glBindVertexArray(vertex_array);
-
-	glGenBuffers(1, &vertex_buffer);
-	glGenBuffers(1, &index_buffer);
-
-	glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buffer);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (const void*)0);
-	glEnableVertexAttribArray(0);
-
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (const void*)(3*sizeof(GLfloat)));
-	glEnableVertexAttribArray(1);
+	static bwrenderer::TexturedCubeMesh texturedCube(&texture_cache.findOrLoad("Blocks", "blockmap.jpeg"), glm::vec3(0.0f, 0.0f, 0.0f));
 
 	renderContext->shader.bind();
 	renderContext->shader.setUniform3f("inColor", 0.5, 1.0f, 0.7f);
-	renderContext->shader.setUniformMat4f("model", glm::translate(glm::mat4(1.0), glm::vec3(0.f, 0.f, -1.f)));
 	renderContext->shader.setUniformMat4f("view", renderContext->viewMatrix);
 	renderContext->shader.setUniformMat4f("projection", renderContext->projectionMatrix);
 	renderContext->shader.setUniform1i("block_texture", 0);
 
-	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-
+	texturedCube.render(renderContext->shader);
 }
 
 void Application::handleInput() {

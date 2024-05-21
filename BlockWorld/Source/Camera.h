@@ -17,12 +17,12 @@ enum class Camera_Controls
 class Camera
 {
 public:
-	Camera(RenderContext* context, const glm::vec3 positon = glm::vec3(0.0f, 0.0f, -3.5f),
+	Camera(bwrenderer::RenderContext* context, const glm::vec3 positon = glm::vec3(0.0f, 0.0f, -3.5f),
 		const glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), float yaw = YAW, float pitch = PITCH);
 
 	Camera();
 
-	void attachContext(RenderContext* context)
+	void attachContext(bwrenderer::RenderContext* context)
 	{
 		outputContext = context;
 	}
@@ -37,7 +37,7 @@ public:
 	void updateContext();
 private:
 
-	RenderContext* outputContext;
+	bwrenderer::RenderContext* outputContext;
 
 	glm::vec3 position;
 	glm::vec3 front;
