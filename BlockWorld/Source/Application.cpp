@@ -97,10 +97,10 @@ void Application::render() {
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	GLfloat vertices[] = {
-		-0.5, -0.5, 0.0,
-		-0.5, 0.5, 0.0,
-		0.5, -0.5, 0.0,
-		0.5, 0.5, 0.0,
+		-0.5, -0.5, 0.0, 0.0f, 0.0f,
+		-0.5, 0.5, 0.0, 0.0f, 1.0f,
+		0.5, -0.5, 0.0, 1.0f, 0.0f,
+		0.5, 0.5, 0.0, 1.0f, 1.0f
 	};
 
 	GLuint indices[] = {
@@ -123,14 +123,19 @@ void Application::render() {
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buffer);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (const void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (const void*)0);
 	glEnableVertexAttribArray(0);
+
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (const void*)(3*sizeof(GLfloat)));
+	glEnableVertexAttribArray(1);
 
 	renderContext->shader.bind();
 	renderContext->shader.setUniform3f("inColor", 0.5, 1.0f, 0.7f);
 	renderContext->shader.setUniformMat4f("model", glm::translate(glm::mat4(1.0), glm::vec3(0.f, 0.f, -1.f)));
 	renderContext->shader.setUniformMat4f("view", renderContext->viewMatrix);
 	renderContext->shader.setUniformMat4f("projection", renderContext->projectionMatrix);
+	renderContext->shader.setUniform1i("block_texture", 0);
+
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 }
