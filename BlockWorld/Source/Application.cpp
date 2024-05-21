@@ -68,6 +68,7 @@ int Application::run() {
 }
 
 Application::~Application() {
+	delete renderContext;
 	glfwTerminate();
 }
 
