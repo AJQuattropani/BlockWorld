@@ -14,7 +14,7 @@
 	__debugbreak();							\
 	glfwTerminate();}
 #else
-#define BW_ASSERT(x)
+#define BW_ASSERT(x, msg, ...) x
 
 
 #endif
@@ -43,7 +43,7 @@ void shaderLinkStatus(GLuint program);
 
 
 #else
-#define GL_ASSERT(x, msg, ...)
+#define GL_ASSERT(x, msg, ...) x
 #define GL_TRY(x) x
 #define GLFW_DEBUG_HINT
 #define GL_DEBUG_CALLBACK
