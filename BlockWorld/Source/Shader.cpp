@@ -1,20 +1,11 @@
 #include "Shader.h"
 
-#include <map>
 #include <fstream>
 #include <filesystem>
 #include <sstream>
 
-const std::string Shader::SHADER_PATH = "Resources/Shaders/";
-const std::unordered_map<Shader_Type, Shader_Info> Shader::SHADERS = {
-	{Shader_Type::VERTEX_SHADER, Shader_Info{"VERT", ".vert"} },
-	{Shader_Type::FRAGMENT_SHADER, Shader_Info{"FRAG", ".frag"} },
-	{Shader_Type::GEOMETRY_SHADER, Shader_Info{"GEOM", ".geom"} },
-	{Shader_Type::TESS_CONTROL_SHADER, Shader_Info{"TESC", ".tesc"} },
-	{Shader_Type::TESS_EVALUATION_SHADER, Shader_Info{"TESE", ".tese"} }
-};
-
-Shader::Shader(const std::string& file) : filePath(SHADER_PATH + file), shaderID(init(SHADER_PATH + file))
+Shader::Shader(const std::string& type, const std::string& file) 
+	: filePath(SHADER_PATH + type + "/" + file), type(type), shaderID(init(SHADER_PATH + type + "/" + file))
 {
 	BW_INFO("SHADER [%x] has been created.", shaderID);
 	controlHead = new unsigned int(1);
@@ -22,9 +13,8 @@ Shader::Shader(const std::string& file) : filePath(SHADER_PATH + file), shaderID
 
 GLuint Shader::init(const std::string& filePath) 
 {
-	std::unordered_map<Shader_Type, std::string>* shaders = ParseShaders(filePath);
-	GLuint new_program = CreateShaders(*shaders);
-	delete shaders;
+	std::unordered_map<Shader_Type, std::string> shaders = ParseShaders(filePath);
+	GLuint new_program = CreateShaders(shaders);
 	return new_program;
 }
 
@@ -69,9 +59,8 @@ Shader& Shader::operator=(Shader&& other) noexcept
 	return *this;
 }
 
-// TODO make it move rather than copy or heap alloca
-std::unordered_map<Shader_Type, std::string>* Shader::ParseShaders(const std::string& filePath) {
-	std::unordered_map<Shader_Type, std::string> *shaders = new std::unordered_map<Shader_Type, std::string>();
+std::unordered_map<Shader_Type, std::string> Shader::ParseShaders(const std::string& filePath) {
+	std::unordered_map<Shader_Type, std::string> shaders;
 	for (const auto& shader : SHADERS) {
 		std::ifstream stream(filePath + shader.second.ext);
 		if (stream.fail()) {
@@ -94,7 +83,7 @@ std::unordered_map<Shader_Type, std::string>* Shader::ParseShaders(const std::st
 		while (getline(stream, line)) {	//pushes line into the shader
 			ss << line << '\n';
 		}
-		(*shaders)[shader.first] = ss.str();
+		(shaders)[shader.first] = ss.str();
 	}
 	return shaders;
 }

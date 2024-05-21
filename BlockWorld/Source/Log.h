@@ -20,12 +20,12 @@
 #define BW_DEBUG(x)
 #endif
 #else
-#define BW_INFO(x)
-#define BW_WARN(x)
-#define BW_ERROR(x)
-#define BW_FATAL(x)
-#define BW_DEBUG(x)
-#define BW_LEVEL(x)
+#define BW_INFO(msg, ...)
+#define BW_WARN(msg, ...)
+#define BW_ERROR(msg, ...)
+#define BW_FATAL(msg, ...)
+#define BW_DEBUG(msg, ...)
+#define BW_LEVEL(msg, ...)
 #endif
 
 #ifdef GL_DEBUGGING
@@ -36,12 +36,12 @@
 #define GL_DEBUG(msg, ...) Log::getGraphicsLog()->print(Log_Level::DEBUG, TextColor::GREEN, msg, ##__VA_ARGS__)
 #define GL_LEVEL(x) Log::getGraphicsLog()->setLevel(x)
 #else
-#define GL_INFO(x) 
-#define GL_WARN(x) 
-#define GL_ERROR(x)
-#define GL_FATAL(x)
-#define GL_DEBUG(x)
-#define GL_LEVEL(x)
+#define GL_INFO(msg, ...) 
+#define GL_WARN(msg, ...) 
+#define GL_ERROR(msg, ...)
+#define GL_FATAL(msg, ...)
+#define GL_DEBUG(msg, ...)
+#define GL_LEVEL(msg, ...)
 #endif
 
 enum class Log_Level

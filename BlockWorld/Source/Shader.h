@@ -25,7 +25,7 @@ struct Shader_Info
 class Shader
 {
 public:
-	explicit Shader(const std::string& path);
+	explicit Shader(const std::string& type, const std::string& path);
 
 	~Shader();
 
@@ -45,46 +45,53 @@ public:
 	}
 
 	// TODO abstract shader uniform system
-	void setUniform1f(const std::string& name, GLfloat value)
+	inline void setUniform1f(const std::string& name, GLfloat value)
 	{
 		glUniform1f(getUniformLocation(name), value);
 	}
 
-	void setUniform2f(const std::string& name, GLfloat v0, GLfloat v1)
+	inline void setUniform2f(const std::string& name, GLfloat v0, GLfloat v1)
 	{
 		glUniform2f(getUniformLocation(name), v0, v1);
 	}
 
-	void setUniform3f(const std::string& name, GLfloat v0, GLfloat v1, GLfloat v2)
+	inline void setUniform3f(const std::string& name, GLfloat v0, GLfloat v1, GLfloat v2)
 	{
 		glUniform3f(getUniformLocation(name), v0, v1, v2);
 	}
 
-	void setUniform4f(const std::string& name, GLfloat v0, GLfloat v1, GLfloat v2, GLfloat v3)
+	inline void setUniform4f(const std::string& name, GLfloat v0, GLfloat v1, GLfloat v2, GLfloat v3)
 	{
 		glUniform4f(getUniformLocation(name), v0, v1, v2, v3);
 	}
 
-	void setUniform1i(const std::string& name, GLint value)
+	inline void setUniform1i(const std::string& name, GLint value)
 	{
 		glUniform1i(getUniformLocation(name), value);
 	}
 	
-	void setUniformMat3f(const std::string& name, const glm::mat3& matrix)
+	inline void setUniformMat3f(const std::string& name, const glm::mat3& matrix)
 	{
 		glUniformMatrix3fv(getUniformLocation(name), 1, GL_FALSE, &matrix[0][0]);
 	}
 
-	void setUniformMat4f(const std::string& name, const glm::mat4& matrix)
+	inline void setUniformMat4f(const std::string& name, const glm::mat4& matrix)
 	{
 		glUniformMatrix4fv(getUniformLocation(name), 1, GL_FALSE, &matrix[0][0]);
 	}
 
 public:
-	static const std::string SHADER_PATH;
-	static const std::unordered_map<Shader_Type, Shader_Info> SHADERS;
+	inline static const std::string SHADER_PATH = "Resources/Shaders/";
+	inline static const std::unordered_map<Shader_Type, Shader_Info> SHADERS = {
+	{Shader_Type::VERTEX_SHADER, Shader_Info{"VERT", ".vert"} },
+	{Shader_Type::FRAGMENT_SHADER, Shader_Info{"FRAG", ".frag"} },
+	{Shader_Type::GEOMETRY_SHADER, Shader_Info{"GEOM", ".geom"} },
+	{Shader_Type::TESS_CONTROL_SHADER, Shader_Info{"TESC", ".tesc"} },
+	{Shader_Type::TESS_EVALUATION_SHADER, Shader_Info{"TESE", ".tese"} }
+	};
 private:
 	const std::string filePath;
+	const std::string type;
 	const GLuint shaderID;
 	mutable std::unordered_map<std::string, GLint> uniformLocationCache;
 
@@ -101,7 +108,7 @@ private:
 private:
 	static GLuint init(const std::string& filePath);
 
-	static std::unordered_map<Shader_Type, std::string>* ParseShaders(const std::string& filePath);
+	static std::unordered_map<Shader_Type, std::string> ParseShaders(const std::string& filePath);
 	static GLuint CreateShaders(const std::unordered_map<Shader_Type, std::string>& shaderSources);
 	static GLuint CompileShader(Shader_Type type, const std::string& source);
 

@@ -24,7 +24,7 @@ renderContext(nullptr)
 	loadCallbacks(window);
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-	renderContext = new RenderContext{screen_width, screen_height, Shader("Blocks/block_shader"), glm::mat4(1.0), glm::mat4(1.0f)};
+	renderContext = new RenderContext{screen_width, screen_height, Shader("Blocks", "block_shader"), glm::mat4(1.0), glm::mat4(1.0f)};
 
 	camera.attachContext(renderContext);
 
