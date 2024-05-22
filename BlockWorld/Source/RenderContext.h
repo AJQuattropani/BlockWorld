@@ -15,9 +15,11 @@ namespace bwrenderer
 		glm::mat4 projectionMatrix;
 	};
 
+    using RENDER = void(Shader& shader);
+
 	class RendererObject
 	{
-		virtual void render(Shader& shader) = 0;
+		virtual RENDER render = 0;
 	};
 
 	class TexturedCubeMesh : RendererObject

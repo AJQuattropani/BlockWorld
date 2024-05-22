@@ -1,16 +1,16 @@
 #include "Camera.h"
 
-Camera::Camera(bwrenderer::RenderContext* context, const glm::vec3 positon, const glm::vec3 up, float yaw, float pitch)
+bwrenderer::Camera::Camera(bwrenderer::RenderContext* context, const glm::vec3 positon, const glm::vec3 up, float yaw, float pitch)
     : outputContext(context), position(position), front(glm::vec3(0.0f, 0.0f, -1.0f)), up(up), yaw(yaw), pitch(pitch),
     movementSpeed(SPEED), mouseSensitivity(SENSITIVITY), fov(ZOOM), updateFlags(0b00)
 {
     updateCameraVectors();
 }
 
-Camera::Camera() : Camera(nullptr)
+bwrenderer::Camera::Camera() : Camera(nullptr)
 {}
 
-void Camera::move(Camera_Controls direction, float magnitude)
+void bwrenderer::Camera::move(Camera_Controls direction, float magnitude)
 {
     switch (direction)
     {
@@ -37,7 +37,7 @@ void Camera::move(Camera_Controls direction, float magnitude)
 
 }
 
-void Camera::turn(float xoffset, float yoffset, bool constrainPitch)
+void bwrenderer::Camera::turn(float xoffset, float yoffset, bool constrainPitch)
 {
     xoffset *= mouseSensitivity;
     yoffset *= mouseSensitivity;
@@ -55,7 +55,7 @@ void Camera::turn(float xoffset, float yoffset, bool constrainPitch)
     updateCameraVectors();
 }
 
-void Camera::zoom(float yoffset)
+void bwrenderer::Camera::zoom(float yoffset)
 {
     fov -= yoffset;
     if (fov < 1.0f) {
@@ -69,7 +69,7 @@ void Camera::zoom(float yoffset)
     updateFlags |= UPDATE_PROJECTION_FLAG;
 }
 
-void Camera::updateContext()
+void bwrenderer::Camera::updateContext()
 {
     if (updateFlags & UPDATE_PROJECTION_FLAG) outputContext->projectionMatrix =
         glm::perspective(glm::radians(fov), static_cast<float>(outputContext->screen_width_px) / outputContext->screen_height_px, 0.1f, 100.0f);
@@ -78,7 +78,7 @@ void Camera::updateContext()
     updateFlags = DEFAULT;
 }
 
-void Camera::updateCameraVectors()
+void bwrenderer::Camera::updateCameraVectors()
 {
     // calculate the new Front vector
     glm::vec3 frnt;

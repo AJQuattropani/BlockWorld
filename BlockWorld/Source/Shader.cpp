@@ -4,21 +4,21 @@
 #include <filesystem>
 #include <sstream>
 
-Shader::Shader(const std::string& type, const std::string& file) 
+bwrenderer::Shader::Shader(const std::string& type, const std::string& file) 
 	: filePath(SHADER_PATH + type + "/" + file), type(type), shaderID(init(SHADER_PATH + type + "/" + file))
 {
 	BW_INFO("SHADER [%x] has been created.", shaderID);
 	controlHead = new unsigned int(1);
 }
 
-GLuint Shader::init(const std::string& filePath) 
+GLuint bwrenderer::Shader::init(const std::string& filePath)
 {
 	std::unordered_map<Shader_Type, std::string> shaders = ParseShaders(filePath);
 	GLuint new_program = CreateShaders(shaders);
 	return new_program;
 }
 
-Shader::~Shader() {
+bwrenderer::Shader::~Shader() {
 	if (controlHead) {
 		BW_INFO("1 instance of SHADER [%x] is destroyed of [%d] shared ptrs.", shaderID, *controlHead);
 		if (--(*controlHead))
@@ -29,8 +29,7 @@ Shader::~Shader() {
 	}
 }
 
-
-Shader::Shader(const Shader& other)
+bwrenderer::Shader::Shader(const Shader& other)
 	: shaderID(other.shaderID), filePath(other.filePath), uniformLocationCache(other.uniformLocationCache)
 {
 	controlHead = other.controlHead;
@@ -38,28 +37,28 @@ Shader::Shader(const Shader& other)
 	BW_INFO("New copy of SHADER [%x] totals [%d] shared ptrs.", shaderID, *controlHead);
 }
 
-Shader::Shader(Shader&& other) noexcept : shaderID(other.shaderID),
+bwrenderer::Shader::Shader(Shader&& other) noexcept : shaderID(other.shaderID),
 	filePath(other.filePath), uniformLocationCache(std::move(other.uniformLocationCache)), controlHead(other.controlHead)
 { 
 	other.controlHead = nullptr;
 	BW_INFO("SHADER [%x] instance moved. [%d] total shared ptrs.", shaderID, *controlHead);
 }
 
-Shader& Shader::operator=(const Shader& other)
+bwrenderer::Shader& bwrenderer::Shader::operator=(const Shader& other)
 {
 	this->~Shader();
 	new (this) Shader(other);
 	return *this;
 }
 
-Shader& Shader::operator=(Shader&& other) noexcept
+bwrenderer::Shader& bwrenderer::Shader::operator=(Shader&& other) noexcept
 {
 	this->~Shader();
 	new (this) Shader(std::move(other));
 	return *this;
 }
 
-std::unordered_map<Shader_Type, std::string> Shader::ParseShaders(const std::string& filePath) {
+std::unordered_map<bwrenderer::Shader_Type, std::string> bwrenderer::Shader::ParseShaders(const std::string& filePath) {
 	std::unordered_map<Shader_Type, std::string> shaders;
 	for (const auto& shader : SHADERS) {
 		std::ifstream stream(filePath + shader.second.ext);
@@ -88,7 +87,7 @@ std::unordered_map<Shader_Type, std::string> Shader::ParseShaders(const std::str
 	return shaders;
 }
 
-GLuint Shader::CreateShaders(const std::unordered_map<Shader_Type, std::string>& shaderSources) {
+GLuint bwrenderer::Shader::CreateShaders(const std::unordered_map<Shader_Type, std::string>& shaderSources) {
 	GLuint program = glCreateProgram();
 
 	std::vector<GLuint> shaders(5);
@@ -114,7 +113,7 @@ GLuint Shader::CreateShaders(const std::unordered_map<Shader_Type, std::string>&
 	return program;
 }
 
-GLuint Shader::CompileShader(Shader_Type type, const std::string& source)
+GLuint bwrenderer::Shader::CompileShader(Shader_Type type, const std::string& source)
 {
 	GLuint id = glCreateShader(static_cast<GLenum>(type));
 	const char* source_code = source.c_str();
