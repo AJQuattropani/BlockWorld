@@ -24,12 +24,15 @@ renderContext(nullptr)
 	loadCallbacks(window);
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-	renderContext = new bwrenderer::RenderContext{screen_width, screen_height, Shader("Blocks", "block_shader"), glm::mat4(1.0), glm::mat4(1.0f)};
+	renderContext = std::make_shared<bwrenderer::RenderContext>
+		(screen_width, screen_height, bwrenderer::Shader("Blocks/World", "block_shader"), glm::mat4(1.0), glm::mat4(1.0f));
 
 	camera.attachContext(renderContext);
 
 	glClearColor(0.3f, 0.4f, 1.0f, 1.0f);
+
 	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_CULL_FACE);
 
 	const char* version(reinterpret_cast<const char*>(glGetString(GL_VERSION)));
 	GL_INFO(version);
@@ -69,7 +72,6 @@ int Application::run() {
 }
 
 Application::~Application() {
-	delete renderContext;
 	glfwTerminate();
 }
 
@@ -97,15 +99,64 @@ void Application::update() {
 void Application::render() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	static bwrenderer::TexturedCubeMesh texturedCube(&texture_cache.findOrLoad("Blocks", "blockmap.jpeg"), glm::vec3(0.0f, 0.0f, 0.0f));
+	/*static bwrenderer::TexturedNormalCubeMesh texturedCube(&renderContext->texture_cache.findOrLoad("Blocks", "blockmap.jpeg"), glm::vec3(0.0f, 0.0f, 0.0f));
 
 	renderContext->shader.bind();
-	renderContext->shader.setUniform3f("inColor", 0.5, 1.0f, 0.7f);
+	renderContext->shader.setUniform2f("image_size", 256, 256);
 	renderContext->shader.setUniformMat4f("view", renderContext->viewMatrix);
 	renderContext->shader.setUniformMat4f("projection", renderContext->projectionMatrix);
 	renderContext->shader.setUniform1i("block_texture", 0);
 
-	texturedCube.render(renderContext->shader);
+	texturedCube.render(renderContext->shader);*/
+
+	static bwrenderer::ChunkModel model;
+	static bwrenderer::ChunkModel model2;
+	static bool flag = true;
+	if (flag) {
+		model.updateRenderData({
+ {glm::vec3(0.0f, 0.0f, 0.0f),  glm::vec3(0.0f, 1.0f, 0.0f),  glm::vec2(1.0f, 0.0f) },
+ {glm::vec3(1.0f, 0.0f, 0.0f),  glm::vec3(0.0f, 1.0f, 0.0f),  glm::vec2(1.0f, 0.0f) },
+ {glm::vec3(2.0f, 0.0f, 0.0f),  glm::vec3(0.0f, 1.0f, 0.0f),  glm::vec2(1.0f, 0.0f) },
+ {glm::vec3(3.0f, 0.0f, 0.0f),  glm::vec3(0.0f, 1.0f, 0.0f),  glm::vec2(1.0f, 0.0f) },
+ {glm::vec3(4.0f, 0.0f, 0.0f),  glm::vec3(0.0f, 1.0f, 0.0f),  glm::vec2(1.0f, 0.0f) },
+ {glm::vec3(5.0f, 0.0f, 0.0f),  glm::vec3(0.0f, 1.0f, 0.0f),  glm::vec2(1.0f, 0.0f) },
+ {glm::vec3(6.0f, 0.0f, 0.0f),  glm::vec3(0.0f, 1.0f, 0.0f),  glm::vec2(3.0f, 0.0f) },
+ {glm::vec3(7.0f, 0.0f, 0.0f),  glm::vec3(0.0f, 1.0f, 0.0f),  glm::vec2(2.0f, 0.0f) },
+ {glm::vec3(8.0f, 0.0f, 0.0f),  glm::vec3(0.0f, 1.0f, 0.0f),  glm::vec2(4.0f, 0.0f) },
+ {glm::vec3(9.0f, 0.0f, 0.0f),  glm::vec3(0.0f, 1.0f, 0.0f),  glm::vec2(3.0f, 0.0f) },
+ {glm::vec3(10.0f, 0.0f, 0.0f),  glm::vec3(0.0f, 1.0f, 0.0f),  glm::vec2(2.0f, 0.0f) },
+ {glm::vec3(11.0f, 0.0f, 0.0f),  glm::vec3(0.0f, 1.0f, 0.0f),  glm::vec2(4.0f, 0.0f) },
+ {glm::vec3(12.0f, 0.0f, 0.0f),  glm::vec3(0.0f, 1.0f, 0.0f),  glm::vec2(3.0f, 0.0f) },
+ {glm::vec3(13.0f, 0.0f, 0.0f),  glm::vec3(0.0f, 1.0f, 0.0f),  glm::vec2(2.0f, 0.0f) },
+ {glm::vec3(14.0f, 0.0f, 0.0f),  glm::vec3(0.0f, 1.0f, 0.0f),  glm::vec2(4.0f, 0.0f) },
+ {glm::vec3(15.0f, 0.0f, 0.0f),  glm::vec3(0.0f, 1.0f, 0.0f),  glm::vec2(4.0f, 0.0f) }
+			});
+		model2.updateRenderData({
+ {glm::vec3(0.0f, 0.0f, 0.0f),  glm::vec3(0.0f, 1.0f, 0.0f),  glm::vec2(1.0f, 0.0f) },
+ {glm::vec3(1.0f, 0.0f, 0.0f),  glm::vec3(0.0f, 1.0f, 0.0f),  glm::vec2(1.0f, 0.0f) },
+ {glm::vec3(2.0f, 0.0f, 0.0f),  glm::vec3(0.0f, 1.0f, 0.0f),  glm::vec2(1.0f, 0.0f) },
+ {glm::vec3(3.0f, 0.0f, 0.0f),  glm::vec3(0.0f, 1.0f, 0.0f),  glm::vec2(1.0f, 0.0f) },
+ {glm::vec3(4.0f, 0.0f, 0.0f),  glm::vec3(0.0f, 1.0f, 0.0f),  glm::vec2(1.0f, 0.0f) },
+ {glm::vec3(5.0f, 0.0f, 0.0f),  glm::vec3(0.0f, 1.0f, 0.0f),  glm::vec2(1.0f, 0.0f) },
+ {glm::vec3(6.0f, 0.0f, 0.0f),  glm::vec3(0.0f, 1.0f, 0.0f),  glm::vec2(3.0f, 0.0f) },
+ {glm::vec3(7.0f, 0.0f, 0.0f),  glm::vec3(0.0f, 1.0f, 0.0f),  glm::vec2(2.0f, 0.0f) },
+ {glm::vec3(8.0f, 0.0f, 0.0f),  glm::vec3(0.0f, 1.0f, 0.0f),  glm::vec2(4.0f, 0.0f) },
+ {glm::vec3(9.0f, 0.0f, 0.0f),  glm::vec3(0.0f, 1.0f, 0.0f),  glm::vec2(3.0f, 0.0f) },
+ {glm::vec3(10.0f, 0.0f, 0.0f),  glm::vec3(0.0f, 1.0f, 0.0f),  glm::vec2(2.0f, 0.0f) },
+ {glm::vec3(11.0f, 0.0f, 0.0f),  glm::vec3(0.0f, 1.0f, 0.0f),  glm::vec2(4.0f, 0.0f) },
+ {glm::vec3(12.0f, 0.0f, 0.0f),  glm::vec3(0.0f, 1.0f, 0.0f),  glm::vec2(3.0f, 0.0f) },
+ {glm::vec3(13.0f, 0.0f, 0.0f),  glm::vec3(0.0f, 1.0f, 0.0f),  glm::vec2(2.0f, 0.0f) },
+ {glm::vec3(14.0f, 0.0f, 0.0f),  glm::vec3(0.0f, 1.0f, 0.0f),  glm::vec2(4.0f, 0.0f) },
+ {glm::vec3(15.0f, 0.0f, 0.0f),  glm::vec3(0.0f, 1.0f, 0.0f),  glm::vec2(4.0f, 0.0f) }
+			});
+		model2.setModelMatrix(glm::vec3(16.0, 0.0, 0.0));
+		flag = false;
+	}
+
+	model.render(*renderContext);
+	model2.render(*renderContext);
+
+
 }
 
 void Application::handleInput() {
@@ -126,22 +177,22 @@ void Application::handleInput() {
 				glfwSetWindowShouldClose(window, 1);
 				break;
 			case GLFW_KEY_W:
-				camera.move(Camera_Controls::FORWARD, 1.0f);
+				camera.move(bwrenderer::Camera_Controls::FORWARD, 1.0f);
 				break;
 			case GLFW_KEY_S:
-				camera.move(Camera_Controls::BACKWARD, 1.0f);
+				camera.move(bwrenderer::Camera_Controls::BACKWARD, 1.0f);
 				break;
 			case GLFW_KEY_D:
-				camera.move(Camera_Controls::RIGHT, 1.0f);
+				camera.move(bwrenderer::Camera_Controls::RIGHT, 1.0f);
 				break;
 			case GLFW_KEY_A:
-				camera.move(Camera_Controls::LEFT, 1.0f);
+				camera.move(bwrenderer::Camera_Controls::LEFT, 1.0f);
 				break;
 			case GLFW_KEY_SPACE:
-				camera.move(Camera_Controls::UP, 1.0f);
+				camera.move(bwrenderer::Camera_Controls::UP, 1.0f);
 				break;
 			case GLFW_KEY_LEFT_SHIFT:
-				camera.move(Camera_Controls::DOWN, 1.0f);
+				camera.move(bwrenderer::Camera_Controls::DOWN, 1.0f);
 				break;
 			}
 		}

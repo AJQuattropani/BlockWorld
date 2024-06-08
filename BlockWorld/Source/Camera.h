@@ -24,7 +24,7 @@ namespace bwrenderer
 
 		Camera();
 
-		void attachContext(bwrenderer::RenderContext* context)
+		void attachContext(const std::shared_ptr<bwrenderer::RenderContext>& context)
 		{
 			outputContext = context;
 		}
@@ -39,7 +39,7 @@ namespace bwrenderer
 		void updateContext();
 	private:
 
-		bwrenderer::RenderContext* outputContext;
+		std::shared_ptr<bwrenderer::RenderContext> outputContext;
 
 		glm::vec3 position;
 		glm::vec3 front;
@@ -59,7 +59,7 @@ namespace bwrenderer
 		constexpr static float PITCH = 0.0f;
 		constexpr static float SPEED = 1.0f / 60.f;
 		constexpr static float SENSITIVITY = 0.1f;
-		constexpr static float ZOOM = 45.0f;
+		constexpr static float ZOOM = 30.0f;
 		constexpr static glm::vec3 WORLD_UP = { 0.0f, 1.0f, 0.0f };
 	};
 }

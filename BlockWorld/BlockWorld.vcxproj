@@ -89,35 +89,46 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Source\Application.cpp" />
+    <ClCompile Include="Source\BlockMesh.cpp" />
+    <ClCompile Include="Source\Buffers.cpp" />
     <ClCompile Include="Source\Camera.cpp" />
+    <ClCompile Include="Source\ChunkModel.cpp" />
     <ClCompile Include="Source\Debug.cpp" />
     <ClCompile Include="Source\Input.cpp" />
     <ClCompile Include="Source\Log.cpp" />
     <ClCompile Include="Source\Main.cpp" />
     <ClCompile Include="Source\RenderContext.cpp" />
-    <ClCompile Include="Source\Renderer.cpp" />
     <ClCompile Include="Source\Shader.cpp" />
     <ClCompile Include="Source\Texture.cpp" />
     <ClCompile Include="Source\Vendor\stb_image.cpp" />
+    <ClCompile Include="Source\Vertices.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="resource.h" />
     <ClInclude Include="Source\Application.h" />
+    <ClInclude Include="Source\BlockMesh.h" />
+    <ClInclude Include="Source\Buffers.h" />
     <ClInclude Include="Source\Camera.h" />
+    <ClInclude Include="Source\ChunkModel.h" />
     <ClInclude Include="Source\Debug.h" />
     <ClInclude Include="Source\Input.h" />
     <ClInclude Include="Source\Log.h" />
     <ClInclude Include="Source\RenderContext.h" />
-    <ClInclude Include="Source\Renderer.h" />
     <ClInclude Include="Source\Shader.h" />
     <ClInclude Include="Source\Texture.h" />
     <ClInclude Include="Source\Vendor\stb_image.h" />
+    <ClInclude Include="Source\Vertices.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\Textures\Blocks\blockmap.jpeg" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Shaders\Blocks\block_shader.frag" />
-    <None Include="Resources\Shaders\Blocks\block_shader.vert" />
+    <None Include="Resources\Shaders\Blocks\World\block_shader.frag" />
+    <None Include="Resources\Shaders\Blocks\World\block_shader.geom" />
+    <None Include="Resources\Shaders\Blocks\World\block_shader.vert" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="BlockWorld.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

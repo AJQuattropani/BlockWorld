@@ -16,14 +16,8 @@
     <Filter Include="Source Files\Application">
       <UniqueIdentifier>{2fc130b2-cce4-45e1-ad58-ccbdb3f18d63}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Input">
-      <UniqueIdentifier>{eb7b7115-fdf0-47ed-82e8-e4cf9cb24d8e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Resource Files\Shaders">
       <UniqueIdentifier>{fef59df1-facd-436a-a97b-78d4def17778}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Resource Files\Shaders\Blocks">
-      <UniqueIdentifier>{d5e07377-95fb-472b-8777-ae753ad1e96a}</UniqueIdentifier>
     </Filter>
     <Filter Include="Resource Files\Textures">
       <UniqueIdentifier>{423fbe99-1a6f-4bf4-a2a0-a5611df94080}</UniqueIdentifier>
@@ -43,8 +37,47 @@
     <Filter Include="Header Files\Render">
       <UniqueIdentifier>{88471a32-3f6a-4576-b645-2f09d87c88fb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Input">
+    <Filter Include="Source Files\Application\Input">
+      <UniqueIdentifier>{eb7b7115-fdf0-47ed-82e8-e4cf9cb24d8e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Application\Input">
       <UniqueIdentifier>{657a9ac4-372f-460b-930d-075944db0ed0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Game">
+      <UniqueIdentifier>{420f9eef-d145-4233-bd7f-b13557e01072}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\World">
+      <UniqueIdentifier>{0bfd59a6-52be-4f73-ad49-bf880f6bb3f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Game">
+      <UniqueIdentifier>{d2344373-2aba-4faa-a713-51487a1388ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Render\Block">
+      <UniqueIdentifier>{56a4ef85-5d56-4e54-8e41-238a7b71c938}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Render\Block">
+      <UniqueIdentifier>{1ef06599-7764-42e8-95cd-5df9607d41d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Render\Utils">
+      <UniqueIdentifier>{e5668611-6643-4646-88fa-d01c58d1d994}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Game\Utils">
+      <UniqueIdentifier>{3447f01c-cf34-4e18-81db-443b23b71a9d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Shaders\World">
+      <UniqueIdentifier>{d53b101b-0797-4ed3-b33f-5e76ffae6854}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Application\Info">
+      <UniqueIdentifier>{506aabf6-e650-4ad1-ac0b-21aa611db6a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Application\Info">
+      <UniqueIdentifier>{546c1c8f-5e22-4775-843a-b1030a7fcc5a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Render\Utils">
+      <UniqueIdentifier>{d8398bb7-1d4a-44b4-be17-d79390e56fd0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Game\Utils">
+      <UniqueIdentifier>{e2e62aa5-cdec-477b-b32a-c1de3ab50656}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -52,34 +85,43 @@
       <Filter>Source Files\Application</Filter>
     </ClCompile>
     <ClCompile Include="Source\Input.cpp">
-      <Filter>Source Files\Input</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Shader.cpp">
-      <Filter>Source Files\Render</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Renderer.cpp">
-      <Filter>Source Files\Render</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Camera.cpp">
-      <Filter>Source Files\Render</Filter>
+      <Filter>Source Files\Application\Input</Filter>
     </ClCompile>
     <ClCompile Include="Source\Vendor\stb_image.cpp">
       <Filter>Header Files\Vendor</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Texture.cpp">
-      <Filter>Source Files\Render</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Log.cpp">
-      <Filter>Source Files\Application</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\RenderContext.cpp">
-      <Filter>Source Files\Render</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Debug.cpp">
-      <Filter>Source Files\Application</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Main.cpp">
       <Filter>Source Files\Application</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\BlockMesh.cpp">
+      <Filter>Source Files\Render\Block</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Buffers.cpp">
+      <Filter>Source Files\Render\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Camera.cpp">
+      <Filter>Source Files\Render\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\RenderContext.cpp">
+      <Filter>Source Files\Render\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Shader.cpp">
+      <Filter>Source Files\Render\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Texture.cpp">
+      <Filter>Source Files\Render\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Vertices.cpp">
+      <Filter>Source Files\Render\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ChunkModel.cpp">
+      <Filter>Source Files\Render\Block</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Debug.cpp">
+      <Filter>Source Files\Application\Info</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Log.cpp">
+      <Filter>Source Files\Application\Info</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -89,29 +131,41 @@
     <ClInclude Include="Source\Application.h">
       <Filter>Header Files\Application</Filter>
     </ClInclude>
-    <ClInclude Include="Source\RenderContext.h">
-      <Filter>Header Files\Render</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Renderer.h">
-      <Filter>Header Files\Render</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Shader.h">
-      <Filter>Header Files\Render</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Camera.h">
-      <Filter>Header Files\Render</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Input.h">
-      <Filter>Header Files\Input</Filter>
+      <Filter>Header Files\Application\Input</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Log.h">
-      <Filter>Header Files\Application</Filter>
+    <ClInclude Include="Source\BlockMesh.h">
+      <Filter>Header Files\Render\Block</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ChunkModel.h">
+      <Filter>Header Files\Render\Block</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Debug.h">
-      <Filter>Header Files\Application</Filter>
+      <Filter>Header Files\Application\Info</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Log.h">
+      <Filter>Header Files\Application\Info</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Buffers.h">
+      <Filter>Header Files\Render\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Camera.h">
+      <Filter>Header Files\Render\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\RenderContext.h">
+      <Filter>Header Files\Render\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Shader.h">
+      <Filter>Header Files\Render\Utils</Filter>
     </ClInclude>
     <ClInclude Include="Source\Texture.h">
-      <Filter>Header Files\Render</Filter>
+      <Filter>Header Files\Render\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Vertices.h">
+      <Filter>Header Files\Render\Utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -120,11 +174,19 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Shaders\Blocks\block_shader.frag">
-      <Filter>Resource Files\Shaders\Blocks</Filter>
+    <None Include="Resources\Shaders\Blocks\World\block_shader.frag">
+      <Filter>Resource Files\Shaders\World</Filter>
     </None>
-    <None Include="Resources\Shaders\Blocks\block_shader.vert">
-      <Filter>Resource Files\Shaders\Blocks</Filter>
+    <None Include="Resources\Shaders\Blocks\World\block_shader.geom">
+      <Filter>Resource Files\Shaders\World</Filter>
     </None>
+    <None Include="Resources\Shaders\Blocks\World\block_shader.vert">
+      <Filter>Resource Files\Shaders\World</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="BlockWorld.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

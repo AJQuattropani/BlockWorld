@@ -7,7 +7,9 @@
 #include "Debug.h"
 #include "Input.h"
 #include "Shader.h"
-#include "Renderer.h"
+#include "RenderContext.h"
+#include "Camera.h"
+#include "ChunkModel.h"
 
 #include <string>
 
@@ -21,13 +23,12 @@ private:
 	GLFWwindow* window;
 	double frameRateSeconds, gameUpdateRateSeconds;
 	InputContext inputContext;
-	bwrenderer::RenderContext* renderContext;
-	Camera camera;
+	std::shared_ptr<bwrenderer::RenderContext> renderContext;
+	bwrenderer::Camera camera;
 	struct {
 		double lastTimeSeconds, deltaTimeSeconds;
 		double lastFrameTimeSeconds, lastUpdateTimeSeconds;
 	} timer;
-	bwrenderer::TextureCache texture_cache;
 
 
 private:

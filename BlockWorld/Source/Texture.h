@@ -5,6 +5,8 @@
 #include "GL/glew.h"
 #include <string>
 
+#include "Vendor/stb_image.h"
+
 namespace bwrenderer
 {
 	inline const std::string TEXTURE_PATH = "Resources/Textures/";
@@ -19,7 +21,7 @@ namespace bwrenderer
 		int nrChannels = 0, format = 0;
 	};
 
-	GLuint createTexture(TextureBuffer* buffer, const std::string& type, const std::string& file);
+	GLuint createTexture(TextureBuffer* buffer, const std::string& type, const std::string& filePath);
 
 	void deleteTexture(TextureBuffer* buffer);
 

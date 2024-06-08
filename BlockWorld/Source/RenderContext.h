@@ -13,6 +13,7 @@ namespace bwrenderer
 		Shader shader;
 		glm::mat4 viewMatrix;
 		glm::mat4 projectionMatrix;
+        bwrenderer::TextureCache texture_cache;
 	};
 
     using RENDER = void(Shader& shader);
@@ -44,48 +45,109 @@ namespace bwrenderer
 	public:
 		inline static const float vertex_data[] =
 		{
-        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-         0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
-         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+        -1.0f, -1.0f, -1.0f,  0.0f, 0.0f,
+         1.0f, -1.0f, -1.0f,  1.0f, 0.0f,
+         1.0f,  1.0f, -1.0f,  1.0f, 1.0f,
+         1.0f,  1.0f, -1.0f,  1.0f, 1.0f,
+        -1.0f,  1.0f, -1.0f,  0.0f, 1.0f,
+        -1.0f, -1.0f, -1.0f,  0.0f, 0.0f,
 
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-         0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-         0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+        -1.0f, -1.0f,  1.0f,  1.0f, 0.0f,
+         1.0f, -1.0f,  1.0f,  2.0f, 0.0f,
+         1.0f,  1.0f,  1.0f,  2.0f, 1.0f,
+         1.0f,  1.0f,  1.0f,  2.0f, 1.0f,
+        -1.0f,  1.0f,  1.0f,  1.0f, 1.0f,
+        -1.0f, -1.0f,  1.0f,  1.0f, 0.0f,
 
-        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-        -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        -1.0f,  1.0f,  1.0f,  3.0f, 0.0f,
+        -1.0f,  1.0f, -1.0f,  3.0f, 1.0f,
+        -1.0f, -1.0f, -1.0f,  2.0f, 1.0f,
+        -1.0f, -1.0f, -1.0f,  2.0f, 1.0f,
+        -1.0f, -1.0f,  1.0f,  2.0f, 0.0f,
+        -1.0f,  1.0f,  1.0f,  3.0f, 0.0f,
 
-         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-         0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-         0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-         0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+         1.0f,  1.0f,  1.0f,  4.0f, 0.0f,
+         1.0f,  1.0f, -1.0f,  4.0f, 1.0f,
+         1.0f, -1.0f, -1.0f,  3.0f, 1.0f,
+         1.0f, -1.0f, -1.0f,  3.0f, 1.0f,
+         1.0f, -1.0f,  1.0f,  3.0f, 0.0f,
+         1.0f,  1.0f,  1.0f,  4.0f, 0.0f,
 
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-         0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
-         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+        -1.0f, -1.0f, -1.0f,  4.0f, 1.0f,
+         1.0f, -1.0f, -1.0f,  5.0f, 1.0f,
+         1.0f, -1.0f,  1.0f,  5.0f, 0.0f,
+         1.0f, -1.0f,  1.0f,  5.0f, 0.0f,
+        -1.0f, -1.0f,  1.0f,  4.0f, 0.0f,
+        -1.0f, -1.0f, -1.0f,  4.0f, 1.0f,
 
-        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
+        -1.0f,  1.0f, -1.0f,  0.0f, 1.0f,
+         1.0f,  1.0f, -1.0f,  1.0f, 1.0f,
+         1.0f,  1.0f,  1.0f,  1.0f, 0.0f,
+         1.0f,  1.0f,  1.0f,  1.0f, 0.0f,
+        -1.0f,  1.0f,  1.0f,  0.0f, 0.0f,
+        -1.0f,  1.0f, -1.0f,  0.0f, 1.0f
 		};
 
 	};
+
+    class TexturedNormalCubeMesh : RendererObject
+    {
+    public:
+        TexturedNormalCubeMesh();
+
+        TexturedNormalCubeMesh(TextureBuffer* buffer, glm::vec3 worldPos = glm::vec3(0.0, 0.0, 0.0));
+
+        inline void attachTexture(TextureBuffer* textBuffer) {
+            texture = textBuffer;
+        }
+
+        void render(Shader& shader);
+
+    private:
+        GLuint vertex_buffer, index_buffer, vertex_array;
+        const TextureBuffer* texture;
+        glm::vec3 worldPosition;
+    private:
+        void buildNewBuffer();
+    public:
+        inline static const float vertex_data[] =
+        {
+        0.0f, 0.0f, 0.0f,  1.0f, 0.0f, 0.0f,  1.0f, 0.0f,
+        0.0f, 0.0f, 0.0f,  -1.0f, 0.0f, 0.0f,  1.0f, 0.0f,
+        0.0f, 0.0f, 0.0f,  0.0f, 1.0f, 0.0f,  1.0f, 0.0f,
+        0.0f, 0.0f, 0.0f,  0.0f, -1.0f, 0.0f,  1.0f, 0.0f,
+        0.0f, 0.0f, 0.0f,  0.0f, 0.0f, 1.0f,  1.0f, 0.0f,
+        0.0f, 0.0f, 0.0f,  0.0f, 0.0f, -1.0f,  1.0f, 0.0f,
+
+        0.0f, 1.0f, 0.0f,  -1.0f, 0.0f, 0.0f,  3.0f, 0.0f,
+        
+        1.0f, 1.0f, 0.0f,  0.0f, 1.0f, 0.0f,  2.0f, 0.0f,
+
+        0.0f, 1.0f, 1.0f,  0.0f, 1.0f, 0.0f,  4.0f, 0.0f,
+
+        1.0f, 1.0f, 1.0f,  0.0f, 1.0f, 0.0f,  2.0f, 0.0f,
+        
+        2.0f, 1.0f, 2.0f,  1.0f, 0.0f, 0.0f,  1.0f, 0.0f,
+
+        2.0f, 3.0f, 2.0f,  0.0f, -1.0f, 0.0f,  0.0f, 0.0f,
+
+        2.0f, 3.0f, 2.0f,  -1.0f, 0.0f, 0.0f,  2.0f, 0.0f,
+
+        3.0f, 3.0f, 2.0f,  -1.0f, 0.0f, 0.0f,  2.0f, 0.0f,
+
+        4.0f, 3.0f, 2.0f,  -1.0f, 0.0f, 0.0f,  2.0f, 0.0f,
+
+        2.0f, 3.0f, 3.0f,  0.0f, -1.0f, 0.0f,  1.0f, 0.0f,
+
+        2.0f, 3.0f, 4.0f,  -1.0f, 0.0f, 0.0f,  4.0f, 0.0f,
+
+        3.0f, 3.0f, 5.0f,  -1.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+
+        4.0f, 3.0f, 6.0f,  -1.0f, 0.0f, 0.0f,  2.0f, 0.0f,
+
+        };
+
+    };
+
+
 }

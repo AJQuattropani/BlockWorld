@@ -1,7 +1,5 @@
 #include "Texture.h"
 
-#include "Vendor/stb_image.h"
-
 using namespace bwrenderer;
 
 GLuint initializeTexture(TextureBuffer* buffer);
@@ -17,6 +15,11 @@ GLuint bwrenderer::createTexture(TextureBuffer* buffer, const std::string& type,
 	buffer->filePath = filePath;
 	return initializeTexture(buffer);
 }
+void bwrenderer::deleteTexture(TextureBuffer* buffer)
+{
+	GL_INFO("Texture deleted: %s | Type: %s | ID: %x", buffer->filePath.c_str(), buffer->type.c_str(), buffer->textureID);
+	glDeleteTextures(1, &buffer->textureID);
+}
 
 GLuint initializeTexture(TextureBuffer* buffer)
 {
@@ -30,14 +33,14 @@ GLuint initializeTexture(TextureBuffer* buffer)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
 	//// STB IMAGE
-	stbi_set_flip_vertically_on_load(true);
+	stbi_set_flip_vertically_on_load(false);
 	unsigned char* data = stbi_load(buffer->filePath.c_str(), &buffer->width, &buffer->height, &buffer->nrChannels, 0);
 	buffer->format = updateFormat(buffer->nrChannels);
 
 	BW_ASSERT(data, "Failed to load image at %s", buffer->filePath.c_str());
 
 	glTexImage2D(GL_TEXTURE_2D, 0, buffer->format, buffer->width, buffer->height, 0, buffer->format, GL_UNSIGNED_BYTE, data);
-	glGenerateMipmap(GL_TEXTURE_2D);
+	//glGenerateMipmap(GL_TEXTURE_2D);
 
 	BW_INFO("Texture successfully generated as: %s | Type: %s | ID: %x | %d x %d : %d", 
 		buffer->filePath.c_str(), buffer->type.c_str(), buffer->textureID, buffer->width, buffer->height, buffer->nrChannels);
@@ -65,15 +68,10 @@ int updateFormat(int nrChannels)
 	}
 }
 
-void bwrenderer::deleteTexture(TextureBuffer* buffer)
-{
-	GL_INFO("Texture deleted: %s | Type: %s | ID: %x", buffer->filePath, buffer->type, buffer->textureID);
-	glDeleteTextures(1, &buffer->textureID);
-}
 
-bwrenderer::TextureCache::TextureCache() = default;
+TextureCache::TextureCache() = default;
 
-bwrenderer::TextureCache::~TextureCache()
+TextureCache::~TextureCache()
 {
 	for (auto texBuff : loaded_textures)
 	{
@@ -82,12 +80,12 @@ bwrenderer::TextureCache::~TextureCache()
 
 }
 
-TextureBuffer& bwrenderer::TextureCache::findOrLoad(const std::string& type, const std::string& name)
+TextureBuffer& TextureCache::findOrLoad(const std::string& type, const std::string& name)
 {
 	return findOrLoad_impl(type, makePath(type, name));
 }
 
-TextureBuffer& bwrenderer::TextureCache::findOrLoad_impl(const std::string& type, const std::string& filePath)
+TextureBuffer& TextureCache::findOrLoad_impl(const std::string& type, const std::string& filePath)
 {
 	if (const auto& texBuff = loaded_textures.find(filePath); texBuff != loaded_textures.end()) return texBuff->second;
 
