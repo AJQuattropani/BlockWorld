@@ -1,5 +1,4 @@
 #pragma once
-#pragma once
 
 #define GLEW_STATIC
 #include <GL/glew.h>
@@ -9,7 +8,7 @@
 #include "Shader.h"
 #include "RenderContext.h"
 #include "Camera.h"
-#include "ChunkModel.h"
+#include "Chunk.h"
 
 #include <string>
 

@@ -109,7 +109,7 @@ void Application::render() {
 
 	texturedCube.render(renderContext->shader);*/
 
-	static bwrenderer::ChunkModel model;
+	/*static bwrenderer::ChunkModel model;
 	static bwrenderer::ChunkModel model2;
 	static bool flag = true;
 	if (flag) {
@@ -129,7 +129,6 @@ void Application::render() {
  {glm::vec3(12.0f, 0.0f, 0.0f),  glm::vec3(0.0f, 1.0f, 0.0f),  glm::vec2(3.0f, 0.0f) },
  {glm::vec3(13.0f, 0.0f, 0.0f),  glm::vec3(0.0f, 1.0f, 0.0f),  glm::vec2(2.0f, 0.0f) },
  {glm::vec3(14.0f, 0.0f, 0.0f),  glm::vec3(0.0f, 1.0f, 0.0f),  glm::vec2(4.0f, 0.0f) },
- {glm::vec3(15.0f, 0.0f, 0.0f),  glm::vec3(0.0f, 1.0f, 0.0f),  glm::vec2(4.0f, 0.0f) }
 			});
 		model2.updateRenderData({
  {glm::vec3(0.0f, 0.0f, 0.0f),  glm::vec3(0.0f, 1.0f, 0.0f),  glm::vec2(1.0f, 0.0f) },
@@ -147,16 +146,15 @@ void Application::render() {
  {glm::vec3(12.0f, 0.0f, 0.0f),  glm::vec3(0.0f, 1.0f, 0.0f),  glm::vec2(3.0f, 0.0f) },
  {glm::vec3(13.0f, 0.0f, 0.0f),  glm::vec3(0.0f, 1.0f, 0.0f),  glm::vec2(2.0f, 0.0f) },
  {glm::vec3(14.0f, 0.0f, 0.0f),  glm::vec3(0.0f, 1.0f, 0.0f),  glm::vec2(4.0f, 0.0f) },
- {glm::vec3(15.0f, 0.0f, 0.0f),  glm::vec3(0.0f, 1.0f, 0.0f),  glm::vec2(4.0f, 0.0f) }
 			});
-		model2.setModelMatrix(glm::vec3(16.0, 0.0, 0.0));
+		model2.setModelMatrix(glm::vec3(15.0, 0.0, 0.0));
 		flag = false;
 	}
 
 	model.render(*renderContext);
-	model2.render(*renderContext);
-
-
+	model2.render(*renderContext);*/
+	static bwgame::Chunk chunk({0, 0});
+	chunk.render(*renderContext);
 }
 
 void Application::handleInput() {

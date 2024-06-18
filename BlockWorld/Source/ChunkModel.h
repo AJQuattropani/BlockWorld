@@ -1,6 +1,7 @@
 #pragma once
 
 #include "BlockMesh.h"
+#include "ChunkData.h"
 
 namespace bwrenderer {
 
@@ -9,11 +10,11 @@ namespace bwrenderer {
 	public:
 		
 		ChunkModel() {
-			BW_INFO("ChunkModel generated.");
+			GL_INFO("ChunkModel generated.");
 		}
 
 		~ChunkModel() {
-			BW_INFO("ChunkModel destroyed.");
+			GL_INFO("ChunkModel destroyed.");
 		}
 
 		ChunkModel(const ChunkModel& other) = default;
@@ -29,7 +30,12 @@ namespace bwrenderer {
 			mesh.setVertexBuffer(blockVertices);
 		}
 
-		inline void setModelMatrix(const glm::vec3& position)
+		inline void setModelMatrix(ChunkCoords coords)
+		{
+			setModelMatrix(glm::vec3(coords.x,0,coords.z));
+		}
+
+		inline void setModelMatrix(glm::vec3 position)
 		{
 			model = modelMatrixInit(glm::translate(glm::mat4(1.0), position));
 		}
@@ -38,6 +44,7 @@ namespace bwrenderer {
 		BlockMesh mesh;
 		glm::mat4 model = modelMatrixInit(glm::mat4(1.0));
 	private:
+
 		inline static const glm::mat4 modelMatrixInit(const glm::mat4& premodel)
 		{
 			return glm::scale(premodel, glm::vec3(1.0));

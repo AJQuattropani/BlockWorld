@@ -16,7 +16,7 @@ uniform mat4 view;
 uniform mat4 projection;
 
 uniform vec2 image_size;
-
+uniform float chunk_width;
 
 void main() {
 	
@@ -44,29 +44,29 @@ void main() {
 
 	f_normal = normal;
 
-	gl_Position = projection * view * model * (vec4(pos + offshoots[0]/2, 1.0)/16);
+	gl_Position = projection * view * model * (vec4(pos + offshoots[0]/2, 1.0)/chunk_width);
 	f_texCoords = texCoords[0];
 	EmitVertex();
 
-	gl_Position = projection * view * model * (vec4(pos + offshoots[1]/2, 1.0)/16);
+	gl_Position = projection * view * model * (vec4(pos + offshoots[1]/2, 1.0)/chunk_width);
 	f_texCoords = texCoords[1];
 	EmitVertex();
 
-	gl_Position = projection * view * model * (vec4(pos + offshoots[2]/2, 1.0)/16);
+	gl_Position = projection * view * model * (vec4(pos + offshoots[2]/2, 1.0)/chunk_width);
 	f_texCoords = texCoords[2];
 	EmitVertex();
 
 	EndPrimitive();
 
-	gl_Position = projection * view * model * (vec4(pos + offshoots[0]/2, 1.0)/16);
+	gl_Position = projection * view * model * (vec4(pos + offshoots[0]/2, 1.0)/chunk_width);
 	f_texCoords = texCoords[0];
 	EmitVertex();
 
-	gl_Position = projection * view * model * (vec4(pos + offshoots[2]/2, 1.0)/16);
+	gl_Position = projection * view * model * (vec4(pos + offshoots[2]/2, 1.0)/chunk_width);
 	f_texCoords = texCoords[2];
 	EmitVertex();
 
-	gl_Position = projection * view * model * (vec4(pos + offshoots[3]/2, 1.0)/16);
+	gl_Position = projection * view * model * (vec4(pos + offshoots[3]/2, 1.0)/chunk_width);
 	f_texCoords = texCoords[3];
 	EmitVertex();
 

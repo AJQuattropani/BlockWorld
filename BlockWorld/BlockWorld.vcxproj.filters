@@ -123,6 +123,15 @@
     <ClCompile Include="Source\Log.cpp">
       <Filter>Source Files\Application\Info</Filter>
     </ClCompile>
+    <ClCompile Include="Source\BinaryChunk.cpp">
+      <Filter>Source Files\Game\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ExtendLong.cpp">
+      <Filter>Source Files\Game\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Chunk.cpp">
+      <Filter>Source Files\Game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Vendor\stb_image.h">
@@ -166,6 +175,18 @@
     </ClInclude>
     <ClInclude Include="Source\Vertices.h">
       <Filter>Header Files\Render\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Chunk.h">
+      <Filter>Header Files\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ChunkData.h">
+      <Filter>Header Files\Game\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ExtendLong.h">
+      <Filter>Header Files\Game\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\BinaryChunk.h">
+      <Filter>Header Files\Game\Utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

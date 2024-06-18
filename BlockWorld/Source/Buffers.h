@@ -29,7 +29,7 @@ namespace bwrenderer {
             GL_INFO("[Vertex Buffer] unbound.");
         }
 
-        inline void attachBuffer(const GLfloat* data, GLsizeiptr size, GLenum usage = GL_STATIC_DRAW)
+        inline void attachBuffer(const GLfloat* data, GLuint size, GLenum usage = GL_STATIC_DRAW)
         {
             GL_INFO("[Vertex Buffer] Buffer attached.");
             glBufferData(GL_ARRAY_BUFFER, size, data, usage);
@@ -68,7 +68,7 @@ namespace bwrenderer {
             GL_INFO("[Index Buffer] unbound.");
         }
 
-        inline void attachBuffer(const GLuint* data, GLsizeiptr size, GLenum usage = GL_STATIC_DRAW)
+        inline void attachBuffer(const GLuint* data, GLuint size, GLenum usage = GL_STATIC_DRAW)
         {
             glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, data, usage);
             byte_size = size;
