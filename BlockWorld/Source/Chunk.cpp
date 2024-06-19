@@ -59,11 +59,11 @@ bwgame::Chunk::Chunk(ChunkCoords chunkCoords)
 			{
 				for (uint8_t x = 0; x < 15; x++)
 				{
-					if (rand() % 4 == 0)
+					if (rand() % 10 == 0 || y < 60)
 					{
-						if (y < 12) setBlock({ x, (uint8_t)y, z }, BlockType::STONE);
-						if (y < 15 && y >= 12) setBlock({ x, (uint8_t)y, z }, BlockType::DIRT);
-						if (y >= 15) setBlock({ x, (uint8_t)y, z }, BlockType::GRASS);
+						if (y < 55) setBlock({ x, (uint8_t)y, z }, BlockType::STONE);
+						if (y < 60 && y >= 55) setBlock({ x, (uint8_t)y, z }, BlockType::DIRT);
+						if (y >= 60) setBlock({ x, (uint8_t)y, z }, BlockType::GRASS);
 					}
 				}
 			}
