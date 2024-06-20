@@ -37,7 +37,7 @@ namespace bwrenderer {
 
 		inline void setModelMatrix(glm::vec3 position)
 		{
-			model = modelMatrixInit(glm::translate(glm::mat4(1.0), position));
+			model = modelMatrixInit(glm::translate(glm::mat4(1.0), position * 15.0f));
 		}
 
 	private:

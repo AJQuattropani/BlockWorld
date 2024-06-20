@@ -3,22 +3,14 @@
 #include "Buffers.h"
 #include "Vertices.h"
 #include "RenderContext.h"
+#include "BlockUtils.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
 namespace bwrenderer
 {
-	union BlockVertex
-	{
-		struct
-		{
-			glm::vec3 position;
-			glm::vec3 normal;
-			glm::vec2 tex_coords;
-		};
-		GLfloat data[3 + 3 + 2];
-	};
+	
 	
 	class BlockMesh
 	{

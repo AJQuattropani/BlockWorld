@@ -72,6 +72,7 @@ int Application::run() {
 }
 
 Application::~Application() {
+	GL_INFO("Application terminated.");
 	glfwTerminate();
 }
 
@@ -82,10 +83,9 @@ GLFWwindow* Application::glfwWindowInit(const std::string& name) {
 		return nullptr;
 	}
 
-	// TODO: look up what this does
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // macOS
+	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 	glfwWindowHint(GLFW_DOUBLEBUFFER, GL_TRUE);
 	glfwWindowHint(GLFW_SAMPLES, 4);
 	GLFW_DEBUG_HINT;
@@ -153,8 +153,13 @@ void Application::render() {
 
 	model.render(*renderContext);
 	model2.render(*renderContext);*/
-	static bwgame::Chunk chunk({0, 0});
+
+	static bwgame::BlockRegister blocks;
+	static bwgame::Chunk chunk({0, 0}, blocks), chunk2({ 1, 0 }, blocks), chunk3({ 0, 1 }, blocks), chunk4({ 1, 1 }, blocks);
 	chunk.render(*renderContext);
+	chunk2.render(*renderContext);
+	chunk3.render(*renderContext);
+	chunk4.render(*renderContext);
 }
 
 void Application::handleInput() {

@@ -57,7 +57,7 @@ namespace bwrenderer
 		constexpr static uint8_t UPDATE_PROJECTION_FLAG = 0b10;
 		constexpr static float YAW = -90.0f;
 		constexpr static float PITCH = 0.0f;
-		constexpr static float SPEED = 12.0f / 60.f;
+		constexpr static float SPEED = 20.0f / 60.f;
 		constexpr static float SENSITIVITY = 0.1f;
 		constexpr static float ZOOM = 30.0f;
 		constexpr static glm::vec3 WORLD_UP = { 0.0f, 1.0f, 0.0f };

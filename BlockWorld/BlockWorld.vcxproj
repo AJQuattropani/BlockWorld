@@ -93,6 +93,7 @@
     <ClCompile Include="Source\Application.cpp" />
     <ClCompile Include="Source\BinaryChunk.cpp" />
     <ClCompile Include="Source\BlockMesh.cpp" />
+    <ClCompile Include="Source\Blocks.cpp" />
     <ClCompile Include="Source\Buffers.cpp" />
     <ClCompile Include="Source\Camera.cpp" />
     <ClCompile Include="Source\Chunk.cpp" />
@@ -113,6 +114,8 @@
     <ClInclude Include="Source\Application.h" />
     <ClInclude Include="Source\BinaryChunk.h" />
     <ClInclude Include="Source\BlockMesh.h" />
+    <ClInclude Include="Source\Blocks.h" />
+    <ClInclude Include="Source\BlockUtils.h" />
     <ClInclude Include="Source\Buffers.h" />
     <ClInclude Include="Source\Camera.h" />
     <ClInclude Include="Source\Chunk.h" />

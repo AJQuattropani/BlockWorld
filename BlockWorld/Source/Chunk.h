@@ -5,43 +5,16 @@
 #include "ChunkModel.h"
 #include "ExtendLong.h"
 #include "BinaryChunk.h"
+#include "Blocks.h"
 
 #include <unordered_set>
 
 namespace bwgame
 {
-	enum class BlockType {
-		AIR = 0,
-		DIRT,
-		GRASS,
-		STONE,
-		COBBLESTONE
-	};
-
-	enum class BlockDirection {
-		UP, DOWN, LEFT, RIGHT, FORWARD, BACKWARD
-	};
-
-	glm::vec3 blockDirectionToNormal(BlockDirection dir);
-
-	class Block {
-	public:
-		Block(BlockType type) : type(type)
-		{
-
-		}
-
-		Block() : type(BlockType::AIR) {}
-
-		BlockType type;
-		glm::vec2 getPackagedRenderData(BlockDirection dir = BlockDirection::UP) const;
-		//static Block Air;
-	};
-
 	class Chunk
 	{
 	public:
-		Chunk(ChunkCoords chunkCoords);
+		Chunk(ChunkCoords chunkCoords, const BlockRegister& blocks);
 
 		~Chunk();
 
@@ -64,10 +37,9 @@ namespace bwgame
 			blockMap.erase(coords);
 		}
 
-		void setBlock(const BlockCoords& coords, BlockType type)
+		void setBlock(const BlockCoords& coords, const Block& block)
 		{
-			BW_ASSERT(type != BlockType::AIR, "Cannot convert a block to air.");
-			blockMap[coords] = Block(type);
+			blockMap[coords] = block;
 		}
 
 	private:
@@ -78,11 +50,14 @@ namespace bwgame
 		std::unique_ptr<bwrenderer::ChunkModel> model;
 	private:
 		std::vector<bwrenderer::BlockVertex> packageRenderData() const;
-		void bc_vertex_helper_ikj(uint16_t u, utils::data_IKJ& n_xzy, utils::data_IKJ& p_xzy, utils::data_IKJ& n_zxy, utils::data_IKJ& p_zxy,
+		void bc_vertex_helper_ikj(uint8_t u, utils::data_IKJ& n_xzy, utils::data_IKJ& p_xzy, utils::data_IKJ& n_zxy, utils::data_IKJ& p_zxy,
 			std::vector<bwrenderer::BlockVertex>& vertices) const;
-		void bc_vertex_helper_jik(uint16_t i, uint16_t k, utils::data_JIK& n_yxz, utils::data_JIK& p_yxz,
+		void bc_vertex_helper_jik(uint8_t i, uint8_t k, utils::data_JIK& n_yxz, utils::data_JIK& p_yxz,
 			std::vector<bwrenderer::BlockVertex>& vertices) const;
-
+		inline bwrenderer::BlockVertex packageBlockRenderData(bwgame::BlockCoords pos, BlockDirection dir) const
+		{
+			return { glm::vec3(pos.x, pos.y, pos.z), utils::blockDirectionToNormal(dir), getBlock(pos).getTexture(dir) };
+		}
 
 
 
