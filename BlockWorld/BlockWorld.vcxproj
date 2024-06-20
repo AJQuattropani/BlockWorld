@@ -130,6 +130,7 @@
     <ClInclude Include="Source\Texture.h" />
     <ClInclude Include="Source\Vendor\stb_image.h" />
     <ClInclude Include="Source\Vertices.h" />
+    <ClInclude Include="Source\World.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\Textures\Blocks\blockmap.jpeg" />

@@ -197,6 +197,9 @@
     <ClInclude Include="Source\BlockUtils.h">
       <Filter>Header Files\Game\Utils</Filter>
     </ClInclude>
+    <ClInclude Include="Source\World.h">
+      <Filter>Header Files\Game</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\Textures\Blocks\blockmap.jpeg">

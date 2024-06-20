@@ -11,7 +11,7 @@ void bwrenderer::ChunkModel::render(RenderContext& context) const
 	context.shader.setUniformMat4f("projection", context.projectionMatrix);
 	context.shader.setUniformMat4f("model", model);
 
-	context.shader.setUniform1f("chunk_width", CHUNK_WIDTH_BLOCKS);
+	context.shader.setUniform1f("chunk_width", bwgame::CHUNK_WIDTH_BLOCKS);
 
 	context.shader.setUniform1i("block_texture", 0);
 	

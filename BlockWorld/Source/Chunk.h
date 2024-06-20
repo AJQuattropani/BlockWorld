@@ -29,7 +29,6 @@ namespace bwgame
 		inline const Block& getBlock(const BlockCoords& coords) const
 		{
 			if (const auto& block = blockMap.find(coords); block != blockMap.end()) return block->second;
-			BW_ASSERT(false, "Block not found.");
 		}
 
 		inline void deleteBlock(const BlockCoords& coords)
@@ -39,6 +38,9 @@ namespace bwgame
 
 		void setBlock(const BlockCoords& coords, const Block& block)
 		{
+			BW_ASSERT(coords.x <= CHUNK_WIDTH_BLOCKS 
+				&& coords.z <= CHUNK_WIDTH_BLOCKS, // Note: block_coord_t already puts cap on y coord range
+				"Block outside chunk range.");
 			blockMap[coords] = block;
 		}
 

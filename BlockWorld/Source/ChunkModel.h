@@ -30,7 +30,7 @@ namespace bwrenderer {
 			mesh.setVertexBuffer(blockVertices);
 		}
 
-		inline void setModelMatrix(ChunkCoords coords)
+		inline void setModelMatrix(bwgame::ChunkCoords coords)
 		{
 			setModelMatrix(glm::vec3(coords.x,0,coords.z));
 		}

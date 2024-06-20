@@ -4,25 +4,28 @@
 #include <bitset>
 #include <bit>
 
-using chunk_coord_t = int32_t;
+namespace bwgame {
+	using chunk_coord_t = int32_t;
 
-constexpr uint16_t CHUNK_WIDTH_BLOCKS = 15;
-constexpr uint16_t CHUNK_HEIGHT_BLOCKS = 256;
+	constexpr uint16_t CHUNK_WIDTH_BLOCKS = 15;
+	constexpr uint16_t CHUNK_HEIGHT_BLOCKS = 256;
 
-union ChunkCoords
-{
-	struct { chunk_coord_t x, z; };
-	chunk_coord_t data[2];
-	uint64_t seed;
-};
+	union ChunkCoords
+	{
+		struct { chunk_coord_t x, z; };
+		chunk_coord_t data[2];
+		uint64_t seed;
+	};
 
-enum CHUNK_FLAGS
-{
-	MODEL_UPDATE_FLAG = 0,
-	SIZE
-};
+	enum CHUNK_FLAGS
+	{
+		MODEL_UPDATE_FLAG = 0,
+		SIZE
+	};
 
-using ChunkFlags = std::bitset<CHUNK_FLAGS::SIZE>;
+	using ChunkFlags = std::bitset<CHUNK_FLAGS::SIZE>;
+
+}
 
 namespace std {
 	template<>
@@ -43,5 +46,21 @@ namespace std {
 		}
 	};
 
+	template<>
+	struct hash<bwgame::ChunkCoords>
+	{
+		size_t operator()(const bwgame::ChunkCoords& key) const
+		{
+			return key.seed;
+		}
+	};
 
+	template<>
+	struct equal_to<bwgame::ChunkCoords>
+	{
+		bool operator()(const bwgame::ChunkCoords& key1, const bwgame::ChunkCoords& key2) const
+		{
+			return key1.seed == key2.seed;
+		}
+	};
 }
