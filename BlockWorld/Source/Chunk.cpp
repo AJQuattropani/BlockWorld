@@ -97,16 +97,16 @@ namespace bwgame {
 		utils::BinaryChunk* binary_chunk = new utils::BinaryChunk{};
 
 		//// package all data into blockmap
-		for (const auto& block : blockMap)
+		for (const auto& [coords, block] : blockMap)
 		{
-			utils::set(binary_chunk->n_xzy, block.first.x, block.first.y, block.first.z);
-			utils::set(binary_chunk->p_xzy, block.first.x, block.first.y, block.first.z);
+			utils::set(binary_chunk->n_xzy, coords.x, coords.y, coords.z);
+			utils::set(binary_chunk->p_xzy, coords.x + 1, coords.y, coords.z);
 
-			utils::set(binary_chunk->n_yxz, block.first.x, block.first.y, block.first.z);
-			utils::set(binary_chunk->p_yxz, block.first.x, block.first.y, block.first.z);
+			utils::set(binary_chunk->n_yxz, coords.x, coords.y, coords.z);
+			utils::set(binary_chunk->p_yxz, coords.x, coords.y, coords.z);
 
-			utils::set(binary_chunk->n_zxy, block.first.z, block.first.y, block.first.x);
-			utils::set(binary_chunk->p_zxy, block.first.z, block.first.y, block.first.x);
+			utils::set(binary_chunk->n_zxy, coords.z, coords.y, coords.x);
+			utils::set(binary_chunk->p_zxy, coords.z + 1, coords.y, coords.x);
 		}
 
 		//// convert block placement data to block exposure data
@@ -143,8 +143,9 @@ namespace bwgame {
 				trailing_zeros < 16;
 				trailing_zeros = std::countr_zero<uint16_t>(p_xzy[u].v16i_u16[b]))
 			{
+				uint8_t i = trailing_zeros - 1;
 				vertices.emplace_back(
-					packageBlockRenderData({ trailing_zeros, u, b }, BlockDirection::BACKWARD));
+					packageBlockRenderData({ i, u, b }, BlockDirection::BACKWARD));
 				p_xzy[u].v16i_u16[b] &= ~(1U << trailing_zeros);
 			}
 			for (uint8_t trailing_zeros = std::countr_zero<uint16_t>(n_zxy[u].v16i_u16[b]);
@@ -159,8 +160,9 @@ namespace bwgame {
 				trailing_zeros < 16;
 				trailing_zeros = std::countr_zero<uint16_t>(p_zxy[u].v16i_u16[b]))
 			{
+				uint8_t i = trailing_zeros - 1;
 				vertices.emplace_back(
-					packageBlockRenderData({b, u, trailing_zeros}, BlockDirection::LEFT));
+					packageBlockRenderData({b, u, i}, BlockDirection::LEFT));
 				p_zxy[u].v16i_u16[b] &= ~(1U << trailing_zeros);
 			}
 		}
