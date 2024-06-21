@@ -58,7 +58,7 @@ namespace bwgame {
 				{
 					for (uint8_t x = 0; x < 15; x++)
 					{
-						if (rand() % 10 == 0 || y < 60)
+						if (rand() % 1000 == 0 || y < 60 + 5 * cos((15 * coords.x + x) / 7.5) * sin((15 * coords.z + z) / 7.5))
 						{
 							if (y < 55) chunk.setBlock({ x, (uint8_t)y, z }, blocks.stone);
 							if (y < 59 && y >= 55) chunk.setBlock({ x, (uint8_t)y, z }, blocks.dirt);

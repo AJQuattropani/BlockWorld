@@ -39,7 +39,11 @@ renderContext(nullptr)
 }
 
 int Application::run() {
-
+	world.loadChunk({ -1,-1 }, blocks);
+	world.loadChunk({ 0,-1 }, blocks);
+	world.loadChunk({ -1,0 }, blocks);
+	world.loadChunk({ -1,1 }, blocks);
+	world.loadChunk({ 1,-1 }, blocks);
 	world.loadChunk({ 0,0 }, blocks);
 	world.loadChunk({ 1,0 }, blocks);
 	world.loadChunk({ 0,1 }, blocks);
