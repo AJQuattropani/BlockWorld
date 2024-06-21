@@ -9,6 +9,7 @@
 #include "RenderContext.h"
 #include "Camera.h"
 #include "Chunk.h"
+#include "World.h"
 
 #include <string>
 
@@ -28,7 +29,8 @@ private:
 		double lastTimeSeconds, deltaTimeSeconds;
 		double lastFrameTimeSeconds, lastUpdateTimeSeconds;
 	} timer;
-
+	bwgame::World world;
+	bwgame::BlockRegister blocks;
 
 private:
 	GLFWwindow* glfwWindowInit(const std::string& name);

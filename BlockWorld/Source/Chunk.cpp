@@ -3,35 +3,13 @@
 namespace bwgame {
 
 
-	Chunk::Chunk(ChunkCoords chunkCoords, const BlockRegister& blocks)
+	Chunk::Chunk(ChunkCoords chunkCoords)
 		: chunkCoords(chunkCoords), blockMap(), model(std::make_unique<bwrenderer::ChunkModel>())
 	{
 		flags = ~flags;
 		BW_INFO("Chunk generated.");
 
-		srand(chunkCoords.seed);
-
-		for (uint16_t y = 0; y < 256; y++)
-		{
-			for (uint8_t z = 0; z < 15; z++)
-			{
-				for (uint8_t x = 0; x < 15; x++)
-				{
-					if (rand() % 10 == 0 || y < 60)
-					{
-						if (y < 55) setBlock({ x, (uint8_t)y, z }, blocks.stone);
-						if (y < 60 && y >= 55) setBlock({ x, (uint8_t)y, z }, blocks.dirt);
-						if (y >= 60) setBlock({ x, (uint8_t)y, z }, blocks.grass);
-					}
-				}
-			}
-
-		}
-
-
 		model->setModelMatrix(chunkCoords);
-
-		update();
 	}
 
 	Chunk::~Chunk()

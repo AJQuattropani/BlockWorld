@@ -14,7 +14,7 @@ namespace bwgame
 	class Chunk
 	{
 	public:
-		Chunk(ChunkCoords chunkCoords, const BlockRegister& blocks);
+		Chunk(ChunkCoords chunkCoords);
 
 		~Chunk();
 
@@ -41,7 +41,12 @@ namespace bwgame
 			BW_ASSERT(coords.x <= CHUNK_WIDTH_BLOCKS 
 				&& coords.z <= CHUNK_WIDTH_BLOCKS, // Note: block_coord_t already puts cap on y coord range
 				"Block outside chunk range.");
-			blockMap[coords] = block;
+			if (const auto& it = blockMap.find(coords); it != blockMap.end())
+			{
+				it->second = block;
+				return;
+			}
+			blockMap.emplace(coords, block);
 		}
 
 	private:

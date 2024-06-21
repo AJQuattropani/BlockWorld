@@ -13,6 +13,32 @@ namespace bwgame {
 		BW_INFO("Block initialized.");
 	}
 
+	/*Block::Block(const Block& other) : type(other.type), textureData(other.textureData)
+	{
+		BW_INFO("Block copied.");
+	}
+
+	Block::Block(Block&& other) noexcept : type(std::move(other.type)), textureData(std::move(other.textureData))
+	{
+		BW_INFO("Block moved.");
+	}
+
+	Block& Block::operator=(const Block& other)
+	{
+		this->~Block();
+		new (this) Block(other);
+		return *this;
+	}
+
+	Block& Block::operator=(Block&& other) noexcept
+	{
+		this->~Block();
+		new (this) Block(std::move(other));
+		return *this;
+	}
+	*/
+
+
 	glm::vec2 Block::getTexture(BlockDirection dir) const
 	{
 		switch (dir)

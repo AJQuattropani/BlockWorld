@@ -11,12 +11,12 @@ namespace bwgame
 	public:
 		Block(BlockType type, std::shared_ptr<CubeTexData>&& textureData);
 		Block();
+		
+		Block(const Block& other) = default;
+		Block(Block&& other) = default;
 
-		Block(const Block&) = default;
-		Block(Block&&) = default;
-
-		Block& operator=(const Block&) = default;
-		Block& operator=(Block&&) = default;
+		Block& operator=(const Block& other) = default;
+		Block& operator=(Block&& other) = default;
 
 		inline bool isAir() { return type == BlockType::AIR; }
 

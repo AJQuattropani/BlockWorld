@@ -40,6 +40,10 @@ renderContext(nullptr)
 
 int Application::run() {
 
+	world.loadChunk({ 0,0 }, blocks);
+	world.loadChunk({ 1,0 }, blocks);
+	world.loadChunk({ 0,1 }, blocks);
+	world.loadChunk({ 1,1 }, blocks);
 
 	render();
 	glfwSwapBuffers(window);
@@ -94,6 +98,7 @@ GLFWwindow* Application::glfwWindowInit(const std::string& name) {
 }
 
 void Application::update() {
+	world.update();
 }
 
 void Application::render() {
@@ -154,12 +159,15 @@ void Application::render() {
 	model.render(*renderContext);
 	model2.render(*renderContext);*/
 
-	static bwgame::BlockRegister blocks;
-	static bwgame::Chunk chunk({0, 0}, blocks), chunk2({ 1, 0 }, blocks), chunk3({ 0, 1 }, blocks), chunk4({ 1, 1 }, blocks);
-	chunk.render(*renderContext);
-	chunk2.render(*renderContext);
-	chunk3.render(*renderContext);
-	chunk4.render(*renderContext);
+	//static bwgame::BlockRegister blocks;
+	//static bwgame::Chunk chunk({0, 0}, blocks), chunk2({ 1, 0 }, blocks), chunk3({ 0, 1 }, blocks), chunk4({ 1, 1 }, blocks);
+	//chunk.render(*renderContext);
+	//chunk2.render(*renderContext);
+	//chunk3.render(*renderContext);
+	//chunk4.render(*renderContext);
+
+	world.render(*renderContext);
+
 }
 
 void Application::handleInput() {
