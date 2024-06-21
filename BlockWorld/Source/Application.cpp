@@ -102,7 +102,7 @@ GLFWwindow* Application::glfwWindowInit(const std::string& name) {
 }
 
 void Application::update() {
-	world.update();
+	world.update(camera, blocks);
 }
 
 void Application::render() {

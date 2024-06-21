@@ -2,6 +2,7 @@
 
 #include "Debug.h"
 #include "Chunk.h"
+#include "Camera.h"
 
 #include <unordered_map>
 
@@ -24,8 +25,20 @@ namespace bwgame {
 			BW_INFO("World destroyed.");
 		}
 
-		void update()
+		void update(const bwrenderer::Camera& camera, const BlockRegister& blocks) // todo created shared instance of camera/player
 		{
+			for (auto it = chunkMap.begin(); it != chunkMap.end(); )
+			{
+				if (abs(it->first.x - camera.position.x / 15) >  16 || abs(it->first.z - camera.position.z / 15) > 16)
+					it = unloadChunk(it);
+				else it++;
+			}
+			
+			ChunkCoords coords{};
+			for (coords.x = camera.position.x/15 - 8; coords.x <= camera.position.x/15 + 8; coords.x++)
+				for (coords.z = camera.position.z/15 - 8; coords.z <= camera.position.z/15 + 8; coords.z++)
+					loadChunk(coords, blocks);
+
 			for (auto& [coords, chunk] : chunkMap)
 			{
 				chunk.update();
@@ -40,10 +53,10 @@ namespace bwgame {
 			}
 		}
 
-		void loadChunk(ChunkCoords coords, const BlockRegister& blocks)
+		const std::unordered_map<ChunkCoords,Chunk>::iterator loadChunk(ChunkCoords coords, const BlockRegister& blocks)
 		{
-			// when you left off, you were emplacing the Chunks. however, the current Chunk generation requires the Chunk construct
-			// to have a reference to BlockRegistry. You need to unroute the generation function from the Chunk constructor.
+			if (const auto& It = chunkMap.find(coords); It != chunkMap.end()) return It;
+
 			const auto& [Iterator, success] = chunkMap.emplace(coords, coords);
 			auto& chunk = Iterator->second;
 
@@ -58,7 +71,7 @@ namespace bwgame {
 				{
 					for (uint8_t x = 0; x < 15; x++)
 					{
-						if (rand() % 1000 == 0 || y < 60 + 5 * cos((15 * coords.x + x) / 7.5) * sin((15 * coords.z + z) / 7.5))
+						if (y < 60 + 5 * cos((15 * coords.x + x) / 7.5) * sin((15 * coords.z + z) / 7.5))
 						{
 							if (y < 55) chunk.setBlock({ x, (uint8_t)y, z }, blocks.stone);
 							if (y < 59 && y >= 55) chunk.setBlock({ x, (uint8_t)y, z }, blocks.dirt);
@@ -69,14 +82,26 @@ namespace bwgame {
 			}
 
 			BW_INFO("Chunk { %i, %i } loaded.", coords.x, coords.z);
+			return Iterator;
 		}
 
-		void unloadChunk(ChunkCoords coords)
+		void unloadChunk(const ChunkCoords& coords)
 		{
+			//storeChunk();
 			chunkMap.erase(coords);
 			BW_INFO("Chunk { %i, %i } unloaded.", coords.x, coords.z);
 		}
 
+		const std::unordered_map<ChunkCoords, Chunk>::iterator unloadChunk(const std::unordered_map<ChunkCoords, Chunk>::iterator& it)
+		{
+			//storeChunk(it);
+			return chunkMap.erase(it);
+		}
+
+		void storeChunk()
+		{
+			// todo add storage
+		}
 
 	private:
 		std::unordered_map<ChunkCoords, Chunk> chunkMap;

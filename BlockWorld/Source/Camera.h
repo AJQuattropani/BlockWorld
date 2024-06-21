@@ -37,11 +37,13 @@ namespace bwrenderer
 		void zoom(float yoffset);
 
 		void updateContext();
+
+
+		glm::vec3 position; // replace back after new data structure created.
 	private:
 
 		std::shared_ptr<bwrenderer::RenderContext> outputContext;
 
-		glm::vec3 position;
 		glm::vec3 front;
 		glm::vec3 up;
 		glm::vec3 right;
