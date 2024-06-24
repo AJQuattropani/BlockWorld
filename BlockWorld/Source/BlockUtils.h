@@ -5,6 +5,8 @@
 
 namespace bwgame
 {
+	using w_block_coord_t = uint64_t;
+
 	enum class BlockType {
 		AIR = 0,
 		DIRT,

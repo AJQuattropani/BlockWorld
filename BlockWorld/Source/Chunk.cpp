@@ -31,6 +31,19 @@ namespace bwgame {
 		model->render(context);
 	}
 
+	void Chunk::setBlock(const BlockCoords& coords, const Block& block)
+	{
+		BW_ASSERT(coords.x <= CHUNK_WIDTH_BLOCKS
+			&& coords.z <= CHUNK_WIDTH_BLOCKS, // Note: block_coord_t already puts cap on y coord range
+			"Block outside chunk range.");
+		if (const auto& it = blockMap.find(coords); it != blockMap.end())
+		{
+			it->second = block;
+			return;
+		}
+		blockMap.emplace(coords, block);
+	}
+
 	std::vector<bwrenderer::BlockVertex> Chunk::packageRenderData() const
 	{
 
@@ -87,6 +100,8 @@ namespace bwgame {
 			utils::set(binary_chunk->p_zxy, coords.z + 1, coords.y, coords.x);
 		}
 
+
+
 		//// convert block placement data to block exposure data
 		bc_face_bits_inplace(*binary_chunk);
 
@@ -113,8 +128,9 @@ namespace bwgame {
 				trailing_zeros < 16;
 				trailing_zeros = std::countr_zero<uint16_t>(n_xzy[u].v16i_u16[b]))
 			{
+				uint8_t i = trailing_zeros;
 				vertices.emplace_back(
-					packageBlockRenderData({ trailing_zeros, u, b }, BlockDirection::FORWARD));
+					packageBlockRenderData({ i, u, b }, BlockDirection::FORWARD));
 				n_xzy[u].v16i_u16[b] &= ~(1U << trailing_zeros);
 			}
 			for (uint8_t trailing_zeros = std::countr_zero<uint16_t>(p_xzy[u].v16i_u16[b]);
@@ -130,8 +146,9 @@ namespace bwgame {
 				trailing_zeros < 16;
 				trailing_zeros = std::countr_zero<uint16_t>(n_zxy[u].v16i_u16[b]))
 			{
+				uint8_t i = trailing_zeros;
 				vertices.emplace_back(
-					packageBlockRenderData({ b, u, trailing_zeros }, BlockDirection::RIGHT));
+					packageBlockRenderData({ b, u, i }, BlockDirection::RIGHT));
 				n_zxy[u].v16i_u16[b] &= ~(1U << trailing_zeros);
 			}
 			for (uint8_t trailing_zeros = std::countr_zero<uint16_t>(p_zxy[u].v16i_u16[b]);

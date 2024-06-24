@@ -27,7 +27,7 @@ namespace bwrenderer
 
 		inline void setVertexBuffer(const std::vector<BlockVertex>& vertices) 
 		{ 
-			GL_INFO("Vertex Buffer set for BlockMesh.");
+			//GL_INFO("Vertex Buffer set for BlockMesh.");
 			vbo.bind();
 			vbo.attachBuffer(vertices[0].data, vertices.size() * sizeof(BlockVertex)); 
 			this->vertices = vertices;

@@ -5,10 +5,16 @@
 #include <memory>
 #include <string>
 
-#define BW_DEFAULT_LOG_LEVEL Log_Level::INFO
-#define GL_DEFAULT_LOG_LEVEL Log_Level::INFO
+#ifndef DIST
+#ifdef RELEASE
+#define BW_DEFAULT_LOG_LEVEL Log_Level::ERROR
+#define GL_DEFAULT_LOG_LEVEL Log_Level::ERROR
+#endif
+#ifdef DEBUGGER
+#define BW_DEFAULT_LOG_LEVEL Log_Level::WARN
+#define GL_DEFAULT_LOG_LEVEL Log_Level::ERROR
+#endif
 
-#ifdef BW_LOG_OUTPUT
 #define BW_INFO(msg, ...) Log::getAppLog()->print(Log_Level::INFO, TextColor::WHITE, msg, ##__VA_ARGS__)
 #define BW_WARN(msg, ...) Log::getAppLog()->print(Log_Level::WARN, TextColor::BRIGHT_YELLOW, msg, ##__VA_ARGS__)
 #define BW_ERROR(msg, ...) Log::getAppLog()->print(Log_Level::ERROR, TextColor::BRIGHT_RED, msg, ##__VA_ARGS__)

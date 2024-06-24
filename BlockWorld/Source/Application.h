@@ -11,6 +11,7 @@
 #include "Chunk.h"
 #include "World.h"
 
+#include <memory>
 #include <string>
 
 class Application
@@ -29,8 +30,8 @@ private:
 		double lastTimeSeconds, deltaTimeSeconds;
 		double lastFrameTimeSeconds, lastUpdateTimeSeconds;
 	} timer;
+	std::shared_ptr<bwgame::BlockRegister> blocks;
 	bwgame::World world;
-	bwgame::BlockRegister blocks;
 
 private:
 	GLFWwindow* glfwWindowInit(const std::string& name);

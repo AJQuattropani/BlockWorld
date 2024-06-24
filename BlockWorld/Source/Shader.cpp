@@ -7,7 +7,7 @@
 bwrenderer::Shader::Shader(const std::string& type, const std::string& file) 
 	: filePath(SHADER_PATH + type + "/" + file), type(type), shaderID(init(SHADER_PATH + type + "/" + file))
 {
-	BW_INFO("SHADER [%x] has been created.", shaderID);
+	GL_INFO("SHADER [%x] has been created.", shaderID);
 	controlHead = new unsigned int(1);
 }
 
@@ -20,10 +20,10 @@ GLuint bwrenderer::Shader::init(const std::string& filePath)
 
 bwrenderer::Shader::~Shader() {
 	if (controlHead) {
-		BW_INFO("1 instance of SHADER [%x] is destroyed of [%d] shared ptrs.", shaderID, *controlHead);
+		GL_INFO("1 instance of SHADER [%x] is destroyed of [%d] shared ptrs.", shaderID, *controlHead);
 		if (--(*controlHead))
 		{
-			BW_INFO("SHADER [%x] is deleted.", shaderID);
+			GL_INFO("SHADER [%x] is deleted.", shaderID);
 			glDeleteProgram(shaderID);
 		}
 	}
@@ -34,14 +34,14 @@ bwrenderer::Shader::Shader(const Shader& other)
 {
 	controlHead = other.controlHead;
 	(*controlHead)++;
-	BW_INFO("New copy of SHADER [%x] totals [%d] shared ptrs.", shaderID, *controlHead);
+	GL_INFO("New copy of SHADER [%x] totals [%d] shared ptrs.", shaderID, *controlHead);
 }
 
 bwrenderer::Shader::Shader(Shader&& other) noexcept : shaderID(other.shaderID),
 	filePath(other.filePath), uniformLocationCache(std::move(other.uniformLocationCache)), controlHead(other.controlHead)
 { 
 	other.controlHead = nullptr;
-	BW_INFO("SHADER [%x] instance moved. [%d] total shared ptrs.", shaderID, *controlHead);
+	GL_INFO("SHADER [%x] instance moved. [%d] total shared ptrs.", shaderID, *controlHead);
 }
 
 bwrenderer::Shader& bwrenderer::Shader::operator=(const Shader& other)

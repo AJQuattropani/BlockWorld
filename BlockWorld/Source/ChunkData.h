@@ -6,6 +6,7 @@
 
 namespace bwgame {
 	using chunk_coord_t = int32_t;
+	using chunk_diff_t = int32_t;
 
 	constexpr uint16_t CHUNK_WIDTH_BLOCKS = 15;
 	constexpr uint16_t CHUNK_HEIGHT_BLOCKS = 256;

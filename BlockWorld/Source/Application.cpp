@@ -11,7 +11,9 @@ Application::Application(unsigned int screen_width, unsigned int screen_height, 
 timer{ 0, 0, 0, 0 },
 frameRateSeconds(1 / fps),
 gameUpdateRateSeconds(1 / ups),
-renderContext(nullptr)
+renderContext(nullptr),
+blocks(std::make_shared<bwgame::BlockRegister>()),
+world(blocks)
 {
 	window = glfwWindowInit("Block World");
 	BW_ASSERT(window != nullptr, "Window failed to initialize.");
@@ -39,15 +41,6 @@ renderContext(nullptr)
 }
 
 int Application::run() {
-	world.loadChunk({ -1,-1 }, blocks);
-	world.loadChunk({ 0,-1 }, blocks);
-	world.loadChunk({ -1,0 }, blocks);
-	world.loadChunk({ -1,1 }, blocks);
-	world.loadChunk({ 1,-1 }, blocks);
-	world.loadChunk({ 0,0 }, blocks);
-	world.loadChunk({ 1,0 }, blocks);
-	world.loadChunk({ 0,1 }, blocks);
-	world.loadChunk({ 1,1 }, blocks);
 
 	render();
 	glfwSwapBuffers(window);
@@ -102,7 +95,7 @@ GLFWwindow* Application::glfwWindowInit(const std::string& name) {
 }
 
 void Application::update() {
-	world.update(camera, blocks);
+	world.update(camera);
 }
 
 void Application::render() {

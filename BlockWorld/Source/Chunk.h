@@ -8,6 +8,7 @@
 #include "Blocks.h"
 
 #include <unordered_set>
+#include <future>
 
 namespace bwgame
 {
@@ -36,18 +37,7 @@ namespace bwgame
 			blockMap.erase(coords);
 		}
 
-		void setBlock(const BlockCoords& coords, const Block& block)
-		{
-			BW_ASSERT(coords.x <= CHUNK_WIDTH_BLOCKS 
-				&& coords.z <= CHUNK_WIDTH_BLOCKS, // Note: block_coord_t already puts cap on y coord range
-				"Block outside chunk range.");
-			if (const auto& it = blockMap.find(coords); it != blockMap.end())
-			{
-				it->second = block;
-				return;
-			}
-			blockMap.emplace(coords, block);
-		}
+		void setBlock(const BlockCoords& coords, const Block& block);
 
 	private:
 		const ChunkCoords chunkCoords;

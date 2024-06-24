@@ -21,17 +21,17 @@ namespace bwrenderer {
         {
             GL_ASSERT(buff_address != 0, "Bound buffer is uninitialized.");
             glBindBuffer(GL_ARRAY_BUFFER, buff_address);
-            GL_INFO("[Vertex Buffer] %d bound.", buff_address);
+            //GL_INFO("[Vertex Buffer] %d bound.", buff_address);
         }
         inline void unbind() const
         {
             glBindBuffer(GL_ARRAY_BUFFER, 0);
-            GL_INFO("[Vertex Buffer] unbound.");
+            //GL_INFO("[Vertex Buffer] unbound.");
         }
 
         inline void attachBuffer(const GLfloat* data, GLuint size, GLenum usage = GL_STATIC_DRAW)
         {
-            GL_INFO("[Vertex Buffer] Buffer attached.");
+            //GL_INFO("[Vertex Buffer] Buffer attached.");
             glBufferData(GL_ARRAY_BUFFER, size, data, usage);
             byte_size = size;
         }
@@ -60,12 +60,12 @@ namespace bwrenderer {
         {
             GL_ASSERT(buff_address != 0, "Bound buffer is uninitialized.");
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buff_address);
-            GL_INFO("[Index Buffer] %d bound.", buff_address);
+            //GL_INFO("[Index Buffer] %d bound.", buff_address);
         }
         inline void unbind() const
         {
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-            GL_INFO("[Index Buffer] unbound.");
+            //GL_INFO("[Index Buffer] unbound.");
         }
 
         inline void attachBuffer(const GLuint* data, GLuint size, GLenum usage = GL_STATIC_DRAW)
