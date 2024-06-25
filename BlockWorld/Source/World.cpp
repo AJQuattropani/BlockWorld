@@ -4,23 +4,7 @@
 namespace bwgame {
 
 	void World::build_func(ChunkCoords coords, Chunk* chunk) {
-		srand(coords.seed);
-
-		for (uint16_t y = 0; y < 256; y++)
-		{
-			for (uint8_t z = 0; z < 15; z++)
-			{
-				for (uint8_t x = 0; x < 15; x++)
-				{
-					if (y < 60 + 5 * cos((15 * coords.x + x) / 7.5) * sin((15 * coords.z + z) / 7.5))
-					{
-						if (y < 55) chunk->setBlock({ x, (uint8_t)y, z }, blocks->stone);
-						if (y < 59 && y >= 55) chunk->setBlock({ x, (uint8_t)y, z }, blocks->dirt);
-						if (y >= 59) chunk->setBlock({ x, (uint8_t)y, z }, blocks->grass);
-					}
-				}
-			}
-		}
+		worldGen->buildChunk(coords, *chunk);
 	}
 
 	void World::update(const bwrenderer::Camera& camera) // todo created shared instance of camera/player
@@ -114,25 +98,8 @@ namespace bwgame {
 		const auto& [Iterator, success] = chunkMap.emplace(coords, coords);
 		auto& chunk = Iterator->second;
 		//todo move to own function
-		srand(coords.seed);
-
-		for (uint16_t y = 0; y < 256; y++)
-		{
-			for (uint8_t z = 0; z < 15; z++)
-			{
-				for (uint8_t x = 0; x < 15; x++)
-				{
-					if (y < 60 + 5 * cos((15 * coords.x + x) / 7.5) * sin((15 * coords.z + z) / 7.5))
-					{
-						if (y < 55) chunk.setBlock({ x, (uint8_t)y, z }, blocks->stone);
-						if (y < 59 && y >= 55) chunk.setBlock({ x, (uint8_t)y, z }, blocks->dirt);
-						if (y >= 59) chunk.setBlock({ x, (uint8_t)y, z }, blocks->grass);
-					}
-				}
-			}
-		}
-
-
+		
+		build_func(coords, &chunk);
 	}
 
 

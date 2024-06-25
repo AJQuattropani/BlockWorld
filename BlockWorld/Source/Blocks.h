@@ -18,7 +18,7 @@ namespace bwgame
 		Block& operator=(const Block& other) = default;
 		Block& operator=(Block&& other) = default;
 
-		inline bool isAir() { return type == BlockType::AIR; }
+		inline bool isAir() const { return type == BlockType::AIR; }
 
 		glm::vec2 getTexture(BlockDirection dir) const;
 	private:

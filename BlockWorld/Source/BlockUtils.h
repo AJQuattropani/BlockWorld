@@ -5,7 +5,7 @@
 
 namespace bwgame
 {
-	using w_block_coord_t = uint64_t;
+	
 
 	enum class BlockType {
 		AIR = 0,
@@ -33,6 +33,8 @@ namespace bwgame
 		block_coord_t data[3];
 
 	};
+	
+	using w_block_coord_t = int64_t;
 
 	struct TexData
 	{

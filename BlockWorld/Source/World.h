@@ -4,6 +4,7 @@
 #include "Chunk.h"
 #include "Camera.h"
 #include "Timer.h"
+#include "WorldGenerator.h"
 
 #include <unordered_map>
 #include <future>
@@ -24,7 +25,8 @@ namespace bwgame {
 	{
 	public:
 		World(const std::shared_ptr<BlockRegister>& block_register, WorldLoadData data 
-			= {.ch_render_load_distance = 16, .ch_render_unload_distance = 16}) : blocks(block_register),
+			= {.ch_render_load_distance = 16, .ch_render_unload_distance = 16}, uint64_t seed = 0) 
+			: worldGen(std::make_unique<WorldGenerator>(seed, block_register)),
 			worldLoadData(data)
 		{
 			BW_INFO("World created.");
@@ -48,14 +50,13 @@ namespace bwgame {
 
 	private:
 		std::unordered_map<ChunkCoords, Chunk> chunkMap;
-		std::shared_ptr<const BlockRegister> blocks;
+		std::unique_ptr<WorldGenerator> worldGen;
 		WorldLoadData worldLoadData;
-		// todo implement capability to have a chunk loaded in RAM even if is not being updated.
+
 	private:
 		void mt_loadChunks(const bwrenderer::Camera& camera);
 		void loadChunks(const bwrenderer::Camera& camera);
 		void build_func(ChunkCoords coords, Chunk* chunk);
-
 		void loadChunk(ChunkCoords coords);
 		
 		

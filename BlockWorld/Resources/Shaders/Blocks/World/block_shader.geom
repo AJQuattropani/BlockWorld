@@ -38,8 +38,9 @@ void main() {
 
 	for (int i = 0; i < 4; i++)
 	{
-		offset = mat2(0, 1, -1, 0) * offset;
-		texCoords[i] = 16 * (gs_in[0].texCoords + 0.5 * (center + offset)) / image_size;
+		offset = mat2(0, 1, -1, 0) * offset; 
+		// slight offset from 0.5 is meant to prevent some minor texture overlap
+		texCoords[i] = 16 * (gs_in[0].texCoords + (0.5 - 0.01) * (center + offset)) / image_size;
 	}
 
 	f_normal = normal;
