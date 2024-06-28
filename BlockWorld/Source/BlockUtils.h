@@ -5,15 +5,6 @@
 
 namespace bwgame
 {
-	
-
-	enum class BlockType {
-		AIR = 0,
-		DIRT,
-		GRASS,
-		STONE,
-		COBBLESTONE
-	};
 
 	enum class BlockDirection {
 		UP, DOWN, LEFT, RIGHT, FORWARD, BACKWARD

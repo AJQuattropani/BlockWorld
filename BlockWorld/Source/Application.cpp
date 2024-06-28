@@ -35,6 +35,7 @@ world(blocks)
 
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
+	glDisable(GL_MULTISAMPLE);
 
 	const char* version(reinterpret_cast<const char*>(glGetString(GL_VERSION)));
 	GL_INFO(version);
@@ -96,6 +97,8 @@ GLFWwindow* Application::glfwWindowInit(const std::string& name) {
 
 void Application::update() {
 	world.update(camera);
+
+	BW_DEBUG("Player coords: { %f, %f, %f }", camera.position.x, camera.position.y, camera.position.z);
 }
 
 void Application::render() {

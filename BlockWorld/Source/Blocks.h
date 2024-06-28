@@ -7,6 +7,16 @@
 
 namespace bwgame
 {
+	enum class BlockType {
+		AIR = 0,
+		DIRT,
+		GRASS,
+		STONE,
+		COBBLESTONE,
+		SAND,
+		GRAVEL
+	};
+
 	class Block {
 	public:
 		Block(BlockType type, std::shared_ptr<CubeTexData>&& textureData);
@@ -33,6 +43,8 @@ namespace bwgame
 		const Block full_grass;
 		const Block stone;
 		const Block cobblestone;
+		const Block sand;
+		const Block gravel;
 
 		BlockRegister();
 	};

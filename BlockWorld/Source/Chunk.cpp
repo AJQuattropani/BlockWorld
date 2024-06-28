@@ -9,6 +9,7 @@ namespace bwgame {
 		flags = ~flags;
 		BW_INFO("Chunk generated.");
 
+		blockMap.reserve(256*100);
 		model->setModelMatrix(chunkCoords);
 	}
 
@@ -41,12 +42,7 @@ namespace bwgame {
 			BW_WARN("Air block instruction ignored.");
 			return;
 		}
-		if (const auto& it = blockMap.find(coords); it != blockMap.end())
-		{
-			it->second = block;
-			return;
-		}
-		blockMap.emplace(coords, block);
+		blockMap.try_emplace(coords, block);
 	}
 
 	std::vector<bwrenderer::BlockVertex> Chunk::packageRenderData() const

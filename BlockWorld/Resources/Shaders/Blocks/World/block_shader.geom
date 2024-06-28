@@ -28,7 +28,8 @@ void main() {
 	offshoots[0] = normal + cross(normal, -vec3(0,1,0)) - vec3(normal.y,abs(normal.x+normal.z),normal.y);
 
 	vec2 center = vec2(1.0, 1.0);
-	vec2 offset = center;
+	// slight short-scaling is meant to prevent some minor texture overlap
+	vec2 offset = 0.97 * center;
 	vec2 texCoords[4];
 
 	for (int i = 1; i < 4; i++)
@@ -39,8 +40,7 @@ void main() {
 	for (int i = 0; i < 4; i++)
 	{
 		offset = mat2(0, 1, -1, 0) * offset; 
-		// slight offset from 0.5 is meant to prevent some minor texture overlap
-		texCoords[i] = 16 * (gs_in[0].texCoords + (0.5 - 0.01) * (center + offset)) / image_size;
+		texCoords[i] = 16 * (gs_in[0].texCoords + 0.5 * (center + offset)) / image_size;
 	}
 
 	f_normal = normal;

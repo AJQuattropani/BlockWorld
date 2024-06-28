@@ -12,17 +12,23 @@ namespace bwgame {
 		mt_loadChunks(camera);
 
 		{
-			TIME_FUNC("World Unload and Update");
+			uint8_t unload_count = 0;
+			TIME_FUNC("World Unload");
 			for (auto it = chunkMap.begin(); it != chunkMap.end(); )
 			{
-				if (abs(it->first.x - camera.position.x / 15) > worldLoadData.ch_render_unload_distance / 2
-					|| abs(it->first.z - camera.position.z / 15) > worldLoadData.ch_render_unload_distance / 2)
+				if (abs(it->first.x - int64_t(camera.position.x) / 15) > worldLoadData.ch_render_unload_distance / 2
+					|| abs(it->first.z - int64_t(camera.position.z) / 15) > worldLoadData.ch_render_unload_distance / 2)
+				{
 					it = unloadChunk(it);
+					unload_count++;
+				}
 				else {
 					it->second.update();
 					it++;
 				}
 			}
+			GL_DEBUG("%i chunks unloaded.", unload_count);
+
 		}
 	}
 
@@ -42,6 +48,8 @@ namespace bwgame {
 		ChunkCoords coords{};
 		std::vector<std::jthread> async_chunk_loads;
 
+		uint8_t load_count = 0;
+
 		for (coords.x = camera.position.x/15 - worldLoadData.ch_render_load_distance / 2; 
 			coords.x <= camera.position.x/15 + worldLoadData.ch_render_load_distance / 2;
 			coords.x++)
@@ -56,11 +64,12 @@ namespace bwgame {
 				const auto& [Iterator, success] = chunkMap.emplace(coords, coords);
 				auto& chunk = Iterator->second;
 				//todo move to own function
-				srand(coords.seed);
 				async_chunk_loads.push_back(std::jthread(&World::build_func, this, coords, &chunk));
+				load_count++;
 			}
 		}
-		
+		GL_DEBUG("%i chunks loaded.", load_count);
+
 	}
 
 	void World::loadChunks(const bwrenderer::Camera& camera)

@@ -11,7 +11,7 @@
 
 struct Timer
 {
-	std::chrono::time_point<std::chrono::steady_clock> startTime;
+	std::chrono::time_point<std::chrono::high_resolution_clock> startTime;
 	const char* functionName;
 	Timer(void)
 	{
@@ -27,7 +27,14 @@ struct Timer
 
 	~Timer()
 	{
-		std::chrono::duration<float> duration = std::chrono::high_resolution_clock::now() - startTime;
-		BW_DEBUG("<%s> took %Lf ms", functionName, duration.count() * 1000.0);
+		Stop();
+	}
+
+	inline void Stop()
+	{
+		using namespace std::chrono;
+		int64_t duration = time_point_cast<microseconds>(high_resolution_clock::now()).time_since_epoch().count()
+			- time_point_cast<microseconds>(startTime).time_since_epoch().count();
+		BW_DEBUG("<%s> took %Lf ms", functionName, duration * 0.001);
 	}
 };

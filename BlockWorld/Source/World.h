@@ -25,7 +25,7 @@ namespace bwgame {
 	{
 	public:
 		World(const std::shared_ptr<BlockRegister>& block_register, WorldLoadData data 
-			= {.ch_render_load_distance = 16, .ch_render_unload_distance = 16}, uint64_t seed = 0) 
+			= {.ch_render_load_distance = 24, .ch_render_unload_distance = 24}, uint64_t seed = 0) 
 			: worldGen(std::make_unique<WorldGenerator>(seed, block_register)),
 			worldLoadData(data)
 		{

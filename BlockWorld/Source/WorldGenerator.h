@@ -32,7 +32,7 @@ namespace bwgame {
 		uint64_t seed;
 		std::shared_ptr<const BlockRegister> blocks;
 
-		inline const Block& getBlockLayered(int64_t depth) const;
+		inline const Block& getBlockLayered(int64_t depth, uint8_t height) const;
 	};
 
 

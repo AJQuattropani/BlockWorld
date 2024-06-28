@@ -66,7 +66,9 @@ namespace bwgame {
 		grass(BlockType::GRASS, utils::makePillarTexData({ 2,0 }, { 1,0 }, { 0,0 })),
 		full_grass(BlockType::GRASS, utils::makeCubeTexData({ 2,0 })),
 		stone(BlockType::STONE, utils::makeCubeTexData({ 3,0 })),
-		cobblestone(BlockType::COBBLESTONE, utils::makeCubeTexData({ 4,0 }))
+		cobblestone(BlockType::COBBLESTONE, utils::makeCubeTexData({ 4,0 })),
+		sand(BlockType::SAND, utils::makeCubeTexData({ 5,0 })),
+		gravel(BlockType::GRAVEL, utils::makeCubeTexData({ 6,0 }))
 	{
 		BW_INFO("Blocks initialized.");
 	}
