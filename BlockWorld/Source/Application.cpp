@@ -13,7 +13,7 @@ frameRateSeconds(1 / fps),
 gameUpdateRateSeconds(1 / ups),
 renderContext(nullptr),
 blocks(std::make_shared<bwgame::BlockRegister>()),
-world(blocks)
+world(blocks, ups)
 {
 	window = glfwWindowInit("Block World");
 	BW_ASSERT(window != nullptr, "Window failed to initialize.");

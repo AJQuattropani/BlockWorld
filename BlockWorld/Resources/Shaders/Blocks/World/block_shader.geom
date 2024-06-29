@@ -10,6 +10,7 @@ in VS_OUT {
 
 out vec2 f_texCoords;
 out vec3 f_normal;
+out vec4 f_pos;
 
 uniform mat4 model;
 uniform mat4 view;
@@ -43,31 +44,37 @@ void main() {
 		texCoords[i] = 16 * (gs_in[0].texCoords + 0.5 * (center + offset)) / image_size;
 	}
 
-	f_normal = normal;
+	f_normal = mat3(transpose(inverse(view * model))) * normal;
 
-	gl_Position = projection * view * model * (vec4(pos + offshoots[0]/2, 1.0)/chunk_width);
+	f_pos = view * model * (vec4(pos + offshoots[0]/2, 1.0)/chunk_width);
+	gl_Position = projection * f_pos;
 	f_texCoords = texCoords[0];
 	EmitVertex();
-
-	gl_Position = projection * view * model * (vec4(pos + offshoots[1]/2, 1.0)/chunk_width);
+	
+	f_pos = view * model * (vec4(pos + offshoots[1]/2, 1.0)/chunk_width);
+	gl_Position = projection * f_pos;
 	f_texCoords = texCoords[1];
 	EmitVertex();
 
-	gl_Position = projection * view * model * (vec4(pos + offshoots[2]/2, 1.0)/chunk_width);
+	f_pos = view * model * (vec4(pos + offshoots[2]/2, 1.0)/chunk_width);
+	gl_Position =  projection * f_pos;
 	f_texCoords = texCoords[2];
 	EmitVertex();
 
 	EndPrimitive();
-
-	gl_Position = projection * view * model * (vec4(pos + offshoots[0]/2, 1.0)/chunk_width);
+	
+	f_pos = view * model * (vec4(pos + offshoots[0]/2, 1.0)/chunk_width);
+	gl_Position = projection * f_pos;
 	f_texCoords = texCoords[0];
 	EmitVertex();
 
-	gl_Position = projection * view * model * (vec4(pos + offshoots[2]/2, 1.0)/chunk_width);
+	f_pos = view * model * (vec4(pos + offshoots[2]/2, 1.0)/chunk_width);
+	gl_Position = projection * f_pos;
 	f_texCoords = texCoords[2];
 	EmitVertex();
 
-	gl_Position = projection * view * model * (vec4(pos + offshoots[3]/2, 1.0)/chunk_width);
+	f_pos = view * model * (vec4(pos + offshoots[3]/2, 1.0)/chunk_width);
+	gl_Position = projection * f_pos;
 	f_texCoords = texCoords[3];
 	EmitVertex();
 

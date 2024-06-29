@@ -30,11 +30,16 @@ namespace bwgame {
 			GL_DEBUG("%i chunks unloaded.", unload_count);
 
 		}
+
+		dayLightCycle.update();
 	}
 
 	void World::render(bwrenderer::RenderContext& context) const
 	{
 		TIME_FUNC("World Render");
+		
+		bwrenderer::setSunShaderInfo(context, dayLightCycle);
+		//context.shader.setUniform3f("Sun", dayLightCycle.sun_Angle);
 		for (auto& [coords, chunk] : chunkMap)
 		{
 			chunk.render(context);

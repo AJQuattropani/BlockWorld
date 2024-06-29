@@ -179,6 +179,7 @@
     <ClInclude Include="Source\Chunk.h" />
     <ClInclude Include="Source\ChunkData.h" />
     <ClInclude Include="Source\ChunkModel.h" />
+    <ClInclude Include="Source\DayCycle.h" />
     <ClInclude Include="Source\Debug.h" />
     <ClInclude Include="Source\ExtendLong.h" />
     <ClInclude Include="Source\Input.h" />
@@ -191,6 +192,7 @@
     <ClInclude Include="Source\Vertices.h" />
     <ClInclude Include="Source\World.h" />
     <ClInclude Include="Source\WorldGenerator.h" />
+    <ClInclude Include="Source\WorldRenderer.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\Textures\Blocks\blockmap.jpeg" />

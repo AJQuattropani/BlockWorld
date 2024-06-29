@@ -8,7 +8,7 @@
 #ifndef DIST
 #ifdef RELEASE
 #define BW_DEFAULT_LOG_LEVEL Log_Level::ERROR
-#define GL_DEFAULT_LOG_LEVEL Log_Level::ERROR
+#define GL_DEFAULT_LOG_LEVEL Log_Level::WARN
 #endif
 #ifdef DEBUGGER
 #define BW_DEFAULT_LOG_LEVEL Log_Level::WARN

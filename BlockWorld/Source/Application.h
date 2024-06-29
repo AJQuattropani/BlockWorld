@@ -22,10 +22,10 @@ public:
 	~Application();
 private:
 	GLFWwindow* window;
-	double frameRateSeconds, gameUpdateRateSeconds;
 	InputContext inputContext;
 	std::shared_ptr<bwrenderer::RenderContext> renderContext;
 	bwrenderer::Camera camera;
+	double frameRateSeconds, gameUpdateRateSeconds;
 	struct {
 		double lastTimeSeconds, deltaTimeSeconds;
 		double lastFrameTimeSeconds, lastUpdateTimeSeconds;

@@ -1,16 +1,19 @@
 #pragma once
 
 #include "Debug.h"
+#include "Timer.h"
 #include "Chunk.h"
 #include "Camera.h"
-#include "Timer.h"
 #include "WorldGenerator.h"
+#include "WorldRenderer.h"
+#include "DayCycle.h"
 
 #include <unordered_map>
 #include <future>
 #include <thread>
 
 namespace bwgame {
+
 
 	struct WorldLoadData
 	{
@@ -24,10 +27,10 @@ namespace bwgame {
 	class World
 	{
 	public:
-		World(const std::shared_ptr<BlockRegister>& block_register, WorldLoadData data 
+		World(const std::shared_ptr<BlockRegister>& block_register, float ticks_per_second, float minutes_per_day = 1.0, WorldLoadData data
 			= {.ch_render_load_distance = 24, .ch_render_unload_distance = 24}, uint64_t seed = 0) 
 			: worldGen(std::make_unique<WorldGenerator>(seed, block_register)),
-			worldLoadData(data)
+			worldLoadData(data), dayLightCycle(minutes_per_day, ticks_per_second)
 		{
 			BW_INFO("World created.");
 		}
@@ -52,6 +55,7 @@ namespace bwgame {
 		std::unordered_map<ChunkCoords, Chunk> chunkMap;
 		std::unique_ptr<WorldGenerator> worldGen;
 		WorldLoadData worldLoadData;
+		DayLightCycle dayLightCycle;
 
 	private:
 		void mt_loadChunks(const bwrenderer::Camera& camera);

@@ -212,6 +212,12 @@
     <ClInclude Include="Source\WorldGenerator.h">
       <Filter>Header Files\Game\Utils</Filter>
     </ClInclude>
+    <ClInclude Include="Source\DayCycle.h">
+      <Filter>Header Files\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\WorldRenderer.h">
+      <Filter>Header Files\Render\Block</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\Textures\Blocks\blockmap.jpeg">
