@@ -7,6 +7,20 @@ namespace bwgame {
 		worldGen->buildChunk(coords, *chunk);
 	}
 
+	World::World(const std::shared_ptr<BlockRegister>& block_register, float ticks_per_second, float minutes_per_day, WorldLoadData data, uint64_t seed)
+		: worldGen(std::make_unique<WorldGenerator>(seed, block_register)),
+		worldLoadData(data), dayLightCycle(minutes_per_day, ticks_per_second),
+		blockShader("Blocks/World", "block_shader")
+	{
+		BW_INFO("World created.");
+	}
+
+	World::~World()
+	{
+		unloadAllChunks();
+		BW_INFO("World destroyed.");
+	}
+
 	void World::update(const bwrenderer::Camera& camera) // todo created shared instance of camera/player
 	{
 		mt_loadChunks(camera);
@@ -57,6 +71,11 @@ namespace bwgame {
 		}
 
 		skybox.render(context, dayLightCycle);
+	}
+
+	void World::storeChunk()
+	{
+		// todo add storage
 	}
 	
 	void World::mt_loadChunks(const bwrenderer::Camera& camera)
@@ -141,6 +160,12 @@ namespace bwgame {
 	{
 		//storeChunk(it);
 		return chunkMap.erase(it);
+	}
+
+	void World::unloadAllChunks()
+	{
+		chunkMap.clear();
+		BW_INFO("All chunks unloaded.");
 	}
 
 }

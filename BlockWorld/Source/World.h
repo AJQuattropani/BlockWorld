@@ -27,30 +27,16 @@ namespace bwgame {
 	class World
 	{
 	public:
-		World(const std::shared_ptr<BlockRegister>& block_register, float ticks_per_second, float minutes_per_day = 0.5, WorldLoadData data
-			= {.ch_render_load_distance = 24, .ch_render_unload_distance = 24}, uint64_t seed = 0) 
-			: worldGen(std::make_unique<WorldGenerator>(seed, block_register)),
-			worldLoadData(data), dayLightCycle(minutes_per_day, ticks_per_second),
-			blockShader("Blocks/World", "block_shader")
-		{
-			BW_INFO("World created.");
-		}
+		World(const std::shared_ptr<BlockRegister>& block_register, float ticks_per_second, float minutes_per_day = 5.0, WorldLoadData data
+			= { .ch_render_load_distance = 24, .ch_render_unload_distance = 24 }, uint64_t seed = 0);
 
-		~World()
-		{
-			unloadAllChunks();
-			BW_INFO("World destroyed.");
-		}
+		~World();
 
 		void update(const bwrenderer::Camera& camera);
 
 		void render(bwrenderer::RenderContext& context);
 
-
-		void storeChunk()
-		{
-			// todo add storage
-		}
+		void storeChunk();
 
 	private:
 		std::unordered_map<ChunkCoords, Chunk> chunkMap;
@@ -71,11 +57,7 @@ namespace bwgame {
 
 		const std::unordered_map<ChunkCoords, Chunk>::iterator unloadChunk(const std::unordered_map<ChunkCoords, Chunk>::iterator& it);
 
-		void unloadAllChunks()
-		{
-			chunkMap.clear();
-			BW_INFO("All chunks unloaded.");
-		}
+		void unloadAllChunks();
 	};
 
 

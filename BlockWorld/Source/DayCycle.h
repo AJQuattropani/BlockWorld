@@ -23,7 +23,7 @@ struct DayLightCycle {
 		time_game_days += game_days_per_tick;
 		if (time_game_days >= 365.0) time_game_days = 0.0;
 
-		sun_Angle = 6.28 * time_game_days;
+		sun_Angle = 6.2831855 * time_game_days;
 
 		BW_DEBUG("Time: %f", time_game_days);
 	}

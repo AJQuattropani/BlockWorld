@@ -12,12 +12,12 @@ namespace bwrenderer {
 		buffer[4].type = "World";
 		buffer[5].type = "World";
 
-		buffer[0].filePath = makePath("World", "skybox_pos_x.jpeg");
-		buffer[1].filePath = makePath("World", "skybox_neg_x.jpeg");
-		buffer[2].filePath = makePath("World", "skybox_pos_y.jpeg");
-		buffer[3].filePath = makePath("World", "skybox_neg_y.jpeg");
-		buffer[4].filePath = makePath("World", "skybox_pos_z.jpeg");
-		buffer[5].filePath = makePath("World", "skybox_neg_z.jpeg");
+		buffer[0].filePath = makePath("World", "skybox_pos_x.png");
+		buffer[1].filePath = makePath("World", "skybox_neg_x.png");
+		buffer[2].filePath = makePath("World", "skybox_pos_y.png");
+		buffer[3].filePath = makePath("World", "skybox_neg_y.png");
+		buffer[4].filePath = makePath("World", "skybox_pos_z.png");
+		buffer[5].filePath = makePath("World", "skybox_neg_z.png");
 
 		createCubeMap();
 
