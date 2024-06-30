@@ -79,6 +79,12 @@
     <Filter Include="Header Files\Game\Utils">
       <UniqueIdentifier>{e2e62aa5-cdec-477b-b32a-c1de3ab50656}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\Shaders\World\Blocks">
+      <UniqueIdentifier>{2e3d4a89-64cb-4fc1-876a-dff06c117f81}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Shaders\World\Skybox">
+      <UniqueIdentifier>{e2393df2-55b2-4f42-a495-45a067a32ebc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Application.cpp">
@@ -140,6 +146,9 @@
     </ClCompile>
     <ClCompile Include="Source\WorldGenerator.cpp">
       <Filter>Source Files\Game\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Skybox.cpp">
+      <Filter>Source Files\Render\Utils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -218,6 +227,9 @@
     <ClInclude Include="Source\WorldRenderer.h">
       <Filter>Header Files\Render\Block</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Skybox.h">
+      <Filter>Header Files\Render\Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\Textures\Blocks\blockmap.jpeg">
@@ -226,13 +238,19 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Shaders\Blocks\World\block_shader.frag">
-      <Filter>Resource Files\Shaders\World</Filter>
+      <Filter>Resource Files\Shaders\World\Blocks</Filter>
     </None>
     <None Include="Resources\Shaders\Blocks\World\block_shader.geom">
-      <Filter>Resource Files\Shaders\World</Filter>
+      <Filter>Resource Files\Shaders\World\Blocks</Filter>
     </None>
     <None Include="Resources\Shaders\Blocks\World\block_shader.vert">
-      <Filter>Resource Files\Shaders\World</Filter>
+      <Filter>Resource Files\Shaders\World\Blocks</Filter>
+    </None>
+    <None Include="Resources\Shaders\World\skybox.frag">
+      <Filter>Resource Files\Shaders\World\Skybox</Filter>
+    </None>
+    <None Include="Resources\Shaders\World\skybox.vert">
+      <Filter>Resource Files\Shaders\World\Skybox</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

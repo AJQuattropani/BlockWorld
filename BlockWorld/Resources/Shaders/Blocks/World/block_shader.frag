@@ -6,17 +6,18 @@ in vec4 f_pos;
 
 out vec4 o_Color;
 
-struct DirectionalLight {
+struct SunLight {
 	vec3 ambient;
 	vec3 diffuse;
 	vec3 specular;
+
+	float day_time;
 };
 
 uniform sampler2D block_texture;
-uniform DirectionalLight dir_light;
+uniform SunLight dir_light;
 uniform mat4 view;
 
-uniform float day_time;
 
 // todo make a uniform
 const vec4 day_color = vec4(0.17, 0.55, 0.99, 1.0);
@@ -24,33 +25,49 @@ const vec4 night_color = vec4(0.17/10, 0.55/10, 0.99/10, 1.0);
 
 const float density = 0.07;
 const float gradient = 30.0;
-const float shininess = 32.0;
+const float shininess = 128.0;
 
-vec3 calcDirectionalLight(DirectionalLight light, vec3 normal, vec3 viewDir, vec3 direction);
+float calcRadialTime(float dayTime);
+vec3 calcDirection(float radialTime);
+vec3 calcDirectionalLight(SunLight light, vec3 normal, vec3 viewDir, vec3 direction, float radialTime);
+vec4 addFog(vec3 fragColor, float fragDistance, float radialTime);
 
 void main()
 {
-	float radial_time = 2.0 * 3.1416 * day_time;
-
-	vec3 result = vec3(0.0);
-
 	vec3 norm = normalize(f_normal);
 	vec3 fragPos = f_pos.xyz;
 	vec3 viewDir = normalize(-fragPos);
+	float fragDistance = length(fragPos.xz);
+	
+	vec3 fragColor = vec3(0.0);
 
-	vec3 direction = -vec3(cos(radial_time), sin(radial_time), 0.0);
+	float radialTime = calcRadialTime(dir_light.day_time);
+	vec3 direction = calcDirection(radialTime);
+	fragColor += calcDirectionalLight(dir_light, norm, viewDir, direction, radialTime);
 
-	result += calcDirectionalLight(dir_light, norm, viewDir, direction);
-
-	float f_distance = length(fragPos.xz);
-	float visibility = clamp(exp(-pow(f_distance*density,gradient)), 0.0, 1.0);
-
-	float sky_transition = sin(radial_time / 2) * sin(radial_time / 2);
-	vec4 skyColor = mix(day_color, night_color, sky_transition);
-	o_Color = mix(skyColor, vec4(result, 1.0), visibility);
+	o_Color = addFog(fragColor, fragDistance, radialTime);
 }
 
-vec3 calcDirectionalLight(DirectionalLight light, vec3 normal, vec3 viewDir, vec3 direction)
+float calcRadialTime(float dayTime)
+{
+	return 2.0 * 3.1416 * dayTime;
+}
+
+vec4 addFog(vec3 fragColor, float fragDistance, float radialTime)
+{
+	float visbility = clamp((exp(-pow(fragDistance*density,gradient))), 0.0, 1.0);
+	float skyTransition = sin(radialTime / 2) * sin(radialTime / 2);
+	vec4 skyColor = mix(day_color, night_color, skyTransition);
+
+	return mix(skyColor, vec4(fragColor, 1.0), visbility);
+}
+
+vec3 calcDirection(float radialTime)
+{
+	return -normalize(vec3(0.0, sin(radialTime), cos(radialTime)));
+}
+
+vec3 calcDirectionalLight(SunLight light, vec3 normal, vec3 viewDir, vec3 direction, float radialTime)
 {
 
 	vec3 lightDir = normalize(-(mat3(view) * direction));

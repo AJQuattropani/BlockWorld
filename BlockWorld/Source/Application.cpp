@@ -9,11 +9,11 @@ Application::Application(unsigned int screen_width, unsigned int screen_height, 
 		.mouse_handler{screen_width / 2.0, screen_height / 2.0,0,0}
 },
 timer{ 0, 0, 0, 0 },
-frameRateSeconds(1 / fps),
-gameUpdateRateSeconds(1 / ups),
+frameRateSeconds(1.0 / fps),
+gameUpdateRateSeconds(1.0 / ups),
 renderContext(nullptr),
 blocks(std::make_shared<bwgame::BlockRegister>()),
-world(blocks, ups)
+world(nullptr)
 {
 	window = glfwWindowInit("Block World");
 	BW_ASSERT(window != nullptr, "Window failed to initialize.");
@@ -27,11 +27,12 @@ world(blocks, ups)
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 	renderContext = std::make_shared<bwrenderer::RenderContext>
-		(screen_width, screen_height, bwrenderer::Shader("Blocks/World", "block_shader"), glm::mat4(1.0), glm::mat4(1.0f));
+		(screen_width, screen_height, glm::mat4(1.0), glm::mat4(1.0f));
+	world = std::make_unique<bwgame::World>(blocks, ups);
 
 	camera.attachContext(renderContext);
 
-	glClearColor(0.3f, 0.4f, 1.0f, 1.0f);
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
@@ -96,7 +97,7 @@ GLFWwindow* Application::glfwWindowInit(const std::string& name) {
 }
 
 void Application::update() {
-	world.update(camera);
+	world->update(camera);
 
 	BW_DEBUG("Player coords: { %f, %f, %f }", camera.position.x, camera.position.y, camera.position.z);
 }
@@ -166,7 +167,7 @@ void Application::render() {
 	//chunk3.render(*renderContext);
 	//chunk4.render(*renderContext);
 
-	world.render(*renderContext);
+	world->render(*renderContext);
 
 }
 

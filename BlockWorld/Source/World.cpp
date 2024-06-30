@@ -34,16 +34,29 @@ namespace bwgame {
 		dayLightCycle.update();
 	}
 
-	void World::render(bwrenderer::RenderContext& context) const
+	void World::render(bwrenderer::RenderContext& context)
 	{
 		TIME_FUNC("World Render");
 		
-		bwrenderer::setSunShaderInfo(context, dayLightCycle);
-		//context.shader.setUniform3f("Sun", dayLightCycle.sun_Angle);
+
+		bwrenderer::setSunShaderInfo(blockShader, dayLightCycle);
+
+
+		blockShader.bind();
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, context.texture_cache.findOrLoad("Blocks", "blockmap.jpeg").textureID);
+
+		blockShader.setUniform2f("image_size", 256.0, 256.0);
+		blockShader.setUniformMat4f("view", context.viewMatrix);
+		blockShader.setUniformMat4f("projection", context.projectionMatrix);
+		blockShader.setUniform1f("chunk_width", bwgame::CHUNK_WIDTH_BLOCKS);
+		blockShader.setUniform1i("block_texture", 0);
 		for (auto& [coords, chunk] : chunkMap)
 		{
-			chunk.render(context);
+			chunk.render(blockShader);
 		}
+
+		skybox.render(context);
 	}
 	
 	void World::mt_loadChunks(const bwrenderer::Camera& camera)

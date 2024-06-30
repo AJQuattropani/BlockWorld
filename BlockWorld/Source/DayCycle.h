@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Debug.h"
+
 struct DayLightCycle {
 	// 1 day-night cycle = 1.0
 	float time_game_days = 0.0;
@@ -9,7 +11,7 @@ struct DayLightCycle {
 	DayLightCycle(float minutes_per_game_day, float ticks_per_second)
 		: game_days_per_tick(gameHoursPerTickFunc(minutes_per_game_day, ticks_per_second)) {
 		update();
-		GL_DEBUG("Time rate: %f", game_days_per_tick);
+		BW_DEBUG("Time rate: %f", game_days_per_tick);
 	}
 
 	inline static constexpr float gameHoursPerTickFunc(float minutes_per_game_day, float ticks_per_second)
@@ -23,7 +25,7 @@ struct DayLightCycle {
 
 		sun_Angle = 6.28 * time_game_days;
 
-		GL_DEBUG("Time: %f", time_game_days);
+		BW_DEBUG("Time: %f", time_game_days);
 	}
 
 };

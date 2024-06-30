@@ -31,7 +31,7 @@ private:
 		double lastFrameTimeSeconds, lastUpdateTimeSeconds;
 	} timer;
 	std::shared_ptr<bwgame::BlockRegister> blocks;
-	bwgame::World world;
+	std::unique_ptr<bwgame::World> world;
 
 private:
 	GLFWwindow* glfwWindowInit(const std::string& name);

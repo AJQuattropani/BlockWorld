@@ -27,10 +27,11 @@ namespace bwgame {
 	class World
 	{
 	public:
-		World(const std::shared_ptr<BlockRegister>& block_register, float ticks_per_second, float minutes_per_day = 1.0, WorldLoadData data
+		World(const std::shared_ptr<BlockRegister>& block_register, float ticks_per_second, float minutes_per_day = 0.5, WorldLoadData data
 			= {.ch_render_load_distance = 24, .ch_render_unload_distance = 24}, uint64_t seed = 0) 
 			: worldGen(std::make_unique<WorldGenerator>(seed, block_register)),
-			worldLoadData(data), dayLightCycle(minutes_per_day, ticks_per_second)
+			worldLoadData(data), dayLightCycle(minutes_per_day, ticks_per_second),
+			blockShader("Blocks/World", "block_shader")
 		{
 			BW_INFO("World created.");
 		}
@@ -43,7 +44,7 @@ namespace bwgame {
 
 		void update(const bwrenderer::Camera& camera);
 
-		void render(bwrenderer::RenderContext& context) const;
+		void render(bwrenderer::RenderContext& context);
 
 
 		void storeChunk()
@@ -54,8 +55,10 @@ namespace bwgame {
 	private:
 		std::unordered_map<ChunkCoords, Chunk> chunkMap;
 		std::unique_ptr<WorldGenerator> worldGen;
+		bwrenderer::Shader blockShader;
 		WorldLoadData worldLoadData;
 		DayLightCycle dayLightCycle;
+		bwrenderer::SkyBox skybox;
 
 	private:
 		void mt_loadChunks(const bwrenderer::Camera& camera);

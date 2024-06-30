@@ -10,7 +10,6 @@ namespace bwrenderer
 	struct RenderContext
 	{
 		unsigned int screen_width_px, screen_height_px;
-		Shader shader;
 		glm::mat4 viewMatrix;
 		glm::mat4 projectionMatrix;
         bwrenderer::TextureCache texture_cache;

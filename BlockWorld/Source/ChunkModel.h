@@ -23,7 +23,7 @@ namespace bwrenderer {
 		ChunkModel(ChunkModel&& other) = default;
 		ChunkModel& operator=(ChunkModel&& other) = default;
 
-		void render(RenderContext& context) const;
+		void render(Shader& shader) const;
 
 		inline void updateRenderData(std::vector<BlockVertex> blockVertices)
 		{

@@ -21,7 +21,7 @@ namespace bwgame
 
 		void update();
 
-		void render(bwrenderer::RenderContext& context) const;
+		void render(bwrenderer::Shader& shader) const;
 
 		inline const ChunkCoords getChunkCoords() const { return chunkCoords; }
 		inline const Block& getBlock(block_coord_t x, block_coord_t y, block_coord_t z) const 

@@ -161,6 +161,7 @@
     <ClCompile Include="Source\Main.cpp" />
     <ClCompile Include="Source\RenderContext.cpp" />
     <ClCompile Include="Source\Shader.cpp" />
+    <ClCompile Include="Source\Skybox.cpp" />
     <ClCompile Include="Source\Texture.cpp" />
     <ClCompile Include="Source\Vendor\stb_image.cpp" />
     <ClCompile Include="Source\Vertices.cpp" />
@@ -186,6 +187,7 @@
     <ClInclude Include="Source\Log.h" />
     <ClInclude Include="Source\RenderContext.h" />
     <ClInclude Include="Source\Shader.h" />
+    <ClInclude Include="Source\Skybox.h" />
     <ClInclude Include="Source\Texture.h" />
     <ClInclude Include="Source\Timer.h" />
     <ClInclude Include="Source\Vendor\stb_image.h" />
@@ -201,6 +203,8 @@
     <None Include="Resources\Shaders\Blocks\World\block_shader.frag" />
     <None Include="Resources\Shaders\Blocks\World\block_shader.geom" />
     <None Include="Resources\Shaders\Blocks\World\block_shader.vert" />
+    <None Include="Resources\Shaders\World\skybox.frag" />
+    <None Include="Resources\Shaders\World\skybox.vert" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="BlockWorld.rc" />

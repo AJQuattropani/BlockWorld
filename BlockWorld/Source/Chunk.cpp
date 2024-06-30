@@ -27,9 +27,9 @@ namespace bwgame {
 		}
 	}
 
-	void Chunk::render(bwrenderer::RenderContext& context) const
+	void Chunk::render(bwrenderer::Shader& shader) const
 	{
-		model->render(context);
+		model->render(shader);
 	}
 
 	void Chunk::setBlock(const BlockCoords& coords, const Block& block)

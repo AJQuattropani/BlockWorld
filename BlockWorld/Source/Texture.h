@@ -10,7 +10,8 @@
 namespace bwrenderer
 {
 	inline const std::string TEXTURE_PATH = "Resources/Textures/";
-
+	std::string makePath(const std::string& type, const std::string& file);
+	
 	struct TextureBuffer
 	{
 		std::string type = "";
@@ -24,6 +25,7 @@ namespace bwrenderer
 	GLuint createTexture(TextureBuffer* buffer, const std::string& type, const std::string& filePath);
 
 	void deleteTexture(TextureBuffer* buffer);
+	int updateFormat(int nrChannels);
 
 	class TextureCache
 	{
