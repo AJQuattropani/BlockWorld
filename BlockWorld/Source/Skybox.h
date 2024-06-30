@@ -5,6 +5,7 @@
 #include "RenderContext.h"
 #include "Vertices.h"
 #include "Texture.h"
+#include "WorldRenderer.h"
 
 namespace bwrenderer {
 
@@ -14,7 +15,7 @@ namespace bwrenderer {
 
 		~SkyBox();
 
-		void render(RenderContext& context);
+		void render(RenderContext& context, DayLightCycle& dayLightCycle);
 	private:
 		TextureBuffer buffer[6];
 		vertex_buffer vbo;

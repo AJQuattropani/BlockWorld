@@ -32,13 +32,15 @@ namespace bwrenderer {
 		}
 	}
 
-	void SkyBox::render(RenderContext& context)
+	void SkyBox::render(RenderContext& context, DayLightCycle& dayLightCycle)
 	{
 		glDepthFunc(GL_LEQUAL);
 
 		shader.bind();
 		shader.setUniformMat4f("projection", context.projectionMatrix);
 		shader.setUniformMat4f("view", context.viewMatrix);
+
+		setSunShaderInfo(shader, dayLightCycle);
 
 		vao.bind();
 		glBindTexture(GL_TEXTURE_CUBE_MAP, buffer[0].textureID);

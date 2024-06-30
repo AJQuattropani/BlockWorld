@@ -64,7 +64,7 @@ vec4 addFog(vec3 fragColor, float fragDistance, float radialTime)
 
 vec3 calcDirection(float radialTime)
 {
-	return -normalize(vec3(0.0, sin(radialTime), cos(radialTime)));
+	return -normalize(vec3(cos(radialTime), sin(radialTime), 0.0));
 }
 
 vec3 calcDirectionalLight(SunLight light, vec3 normal, vec3 viewDir, vec3 direction, float radialTime)

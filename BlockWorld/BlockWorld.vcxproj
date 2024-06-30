@@ -198,6 +198,12 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\Textures\Blocks\blockmap.jpeg" />
+    <Image Include="Resources\Textures\World\skybox_neg_x.jpeg" />
+    <Image Include="Resources\Textures\World\skybox_neg_y.jpeg" />
+    <Image Include="Resources\Textures\World\skybox_neg_z.jpeg" />
+    <Image Include="Resources\Textures\World\skybox_pos_x.jpeg" />
+    <Image Include="Resources\Textures\World\skybox_pos_y.jpeg" />
+    <Image Include="Resources\Textures\World\skybox_pos_z.jpeg" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Shaders\Blocks\World\block_shader.frag" />

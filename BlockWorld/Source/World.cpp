@@ -39,7 +39,7 @@ namespace bwgame {
 		TIME_FUNC("World Render");
 		
 
-		bwrenderer::setSunShaderInfo(blockShader, dayLightCycle);
+		bwrenderer::setDaylightShaderInfo(blockShader, dayLightCycle);
 
 
 		blockShader.bind();
@@ -56,7 +56,7 @@ namespace bwgame {
 			chunk.render(blockShader);
 		}
 
-		skybox.render(context);
+		skybox.render(context, dayLightCycle);
 	}
 	
 	void World::mt_loadChunks(const bwrenderer::Camera& camera)

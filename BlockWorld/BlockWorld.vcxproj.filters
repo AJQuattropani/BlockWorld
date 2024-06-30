@@ -85,6 +85,9 @@
     <Filter Include="Resource Files\Shaders\World\Skybox">
       <UniqueIdentifier>{e2393df2-55b2-4f42-a495-45a067a32ebc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\Textures\Skybox">
+      <UniqueIdentifier>{b0296d1f-fd0b-4704-bed6-67102aa7324d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Application.cpp">
@@ -234,6 +237,24 @@
   <ItemGroup>
     <Image Include="Resources\Textures\Blocks\blockmap.jpeg">
       <Filter>Resource Files\Textures\Blocks</Filter>
+    </Image>
+    <Image Include="Resources\Textures\World\skybox_neg_x.jpeg">
+      <Filter>Resource Files\Textures\Skybox</Filter>
+    </Image>
+    <Image Include="Resources\Textures\World\skybox_neg_y.jpeg">
+      <Filter>Resource Files\Textures\Skybox</Filter>
+    </Image>
+    <Image Include="Resources\Textures\World\skybox_neg_z.jpeg">
+      <Filter>Resource Files\Textures\Skybox</Filter>
+    </Image>
+    <Image Include="Resources\Textures\World\skybox_pos_x.jpeg">
+      <Filter>Resource Files\Textures\Skybox</Filter>
+    </Image>
+    <Image Include="Resources\Textures\World\skybox_pos_y.jpeg">
+      <Filter>Resource Files\Textures\Skybox</Filter>
+    </Image>
+    <Image Include="Resources\Textures\World\skybox_pos_z.jpeg">
+      <Filter>Resource Files\Textures\Skybox</Filter>
     </Image>
   </ItemGroup>
   <ItemGroup>
