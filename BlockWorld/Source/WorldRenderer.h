@@ -13,7 +13,7 @@ namespace bwrenderer {
 
 		//float ambience = 0.2 + 0.1 * glm::sin(dayLightCycle.sun_Angle);
 
-		block_shader.setUniform3f("dir_light.ambient", 0.3f, 0.3f, 0.3f);
+		block_shader.setUniform3f("dir_light.ambient", 0.5f, 0.5f, 0.5f);
 		block_shader.setUniform3f("dir_light.diffuse", 0.5f, 0.5f, 0.5f);
 		block_shader.setUniform3f("dir_light.specular", 0.2f, 0.2f, 0.2f);
 

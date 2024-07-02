@@ -26,12 +26,6 @@ namespace bwrenderer {
 		GLuint texture;
 		glGenTextures(1, &texture);
 
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	// set texture wrapping to GL_REPEAT (default wrapping method)
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-		// set texture filtering parameters
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
 		//// STB IMAGE
 		stbi_set_flip_vertically_on_load(false);
 		unsigned char* data = stbi_load(buffer->filePath.c_str(), &buffer->width, &buffer->height, &buffer->nrChannels, 0);
@@ -39,13 +33,23 @@ namespace bwrenderer {
 
 		GL_ASSERT(data, "Failed to load image at %s", buffer->filePath.c_str());
 
+		glBindTexture(GL_TEXTURE_2D, texture);
+
 		glTexImage2D(GL_TEXTURE_2D, 0, buffer->format, buffer->width, buffer->height, 0, buffer->format, GL_UNSIGNED_BYTE, data);
 		//glGenerateMipmap(GL_TEXTURE_2D);
 
-		GL_INFO("Texture successfully generated as: %s | Type: %s | ID: %x | %d x %d : %d",
+		GL_DEBUG("Texture successfully generated as: %s | Type: %s | ID: %x | %d x %d : %d",
 			buffer->filePath.c_str(), buffer->type.c_str(), buffer->textureID, buffer->width, buffer->height, buffer->nrChannels);
 
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	// set texture wrapping to GL_REPEAT (default wrapping method)
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		// set texture filtering parameters
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
 		stbi_image_free(data);
+
+		buffer->textureID = texture;
 
 		return buffer->textureID;
 	}

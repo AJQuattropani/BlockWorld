@@ -1,9 +1,9 @@
 #version 330 core
 out vec4 o_Color;
 
-in vec3 TexCoords;
+in vec2 TexCoords;
 
-uniform samplerCube skyBox;
+uniform sampler2D skyBox;
 
 void main()
 {

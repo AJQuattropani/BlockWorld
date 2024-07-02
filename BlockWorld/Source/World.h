@@ -27,7 +27,7 @@ namespace bwgame {
 	class World
 	{
 	public:
-		World(const std::shared_ptr<BlockRegister>& block_register, float ticks_per_second, float minutes_per_day = 5.0, WorldLoadData data
+		World(const std::shared_ptr<BlockRegister>& block_register, float ticks_per_second, float minutes_per_day = 1.0, WorldLoadData data
 			= { .ch_render_load_distance = 24, .ch_render_unload_distance = 24 }, uint64_t seed = 0);
 
 		~World();

@@ -27,6 +27,8 @@ const float density = 0.07;
 const float gradient = 30.0;
 const float shininess = 128.0;
 
+const float daylight_to_night = 3.0;
+
 float calcRadialTime(float dayTime);
 vec3 calcDirection(float radialTime);
 vec3 calcDirectionalLight(SunLight light, vec3 normal, vec3 viewDir, vec3 direction, float radialTime);
@@ -42,7 +44,7 @@ void main()
 	vec3 fragColor = vec3(0.0);
 
 	float radialTime = calcRadialTime(dir_light.day_time);
-	vec3 direction = calcDirection(radialTime);
+	vec3 direction = calcDirection(mod(radialTime, 3.1416));
 	fragColor += calcDirectionalLight(dir_light, norm, viewDir, direction, radialTime);
 
 	o_Color = addFog(fragColor, fragDistance, radialTime);
@@ -56,7 +58,7 @@ float calcRadialTime(float dayTime)
 vec4 addFog(vec3 fragColor, float fragDistance, float radialTime)
 {
 	float visbility = clamp((exp(-pow(fragDistance*density,gradient))), 0.0, 1.0);
-	float skyTransition = sin(radialTime / 2) * sin(radialTime / 2);
+	float skyTransition = clamp(0.5 - 2.0 * sin(radialTime), 0.0, 1.0);
 	vec4 skyColor = mix(day_color, night_color, skyTransition);
 
 	return mix(skyColor, vec4(fragColor, 1.0), visbility);
@@ -69,7 +71,8 @@ vec3 calcDirection(float radialTime)
 
 vec3 calcDirectionalLight(SunLight light, vec3 normal, vec3 viewDir, vec3 direction, float radialTime)
 {
-
+	float amb = (daylight_to_night * sqrt(abs(sin(radialTime))) + sin(radialTime) + pow(cos(radialTime), 3)) / (1.0 + daylight_to_night);
+	
 	vec3 lightDir = normalize(-(mat3(view) * direction));
 	// diffuse
 	float diff = max(dot(normal, lightDir), 0.0);
@@ -77,8 +80,8 @@ vec3 calcDirectionalLight(SunLight light, vec3 normal, vec3 viewDir, vec3 direct
 	vec3 reflectDir = reflect(-lightDir, normal);
 	float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32.0);
 	// combine
-	vec3 ambient = light.ambient * vec3(texture(block_texture, f_texCoords));
-	vec3 diffuse = light.diffuse * diff * vec3(texture(block_texture, f_texCoords));
+	vec3 ambient = light.ambient * amb * vec3(texture(block_texture, f_texCoords));
+	vec3 diffuse = light.diffuse * diff * amb * vec3(texture(block_texture, f_texCoords));
 	vec3 specular = light.specular * spec * vec3(texture(block_texture, f_texCoords));
 	return (ambient + diffuse + specular);
 }

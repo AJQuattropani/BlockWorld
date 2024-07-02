@@ -17,12 +17,12 @@ namespace bwrenderer {
 
 		void render(RenderContext& context, DayLightCycle& dayLightCycle);
 	private:
-		TextureBuffer buffer[6];
+		//TextureBuffer buffer;
 		vertex_buffer vbo;
 		vertex_array vao;
 		Shader shader;
 	private:
-		void createCubeMap();
+		/*void createCubeMap();*/
 		vertex_buffer setupVertexBuffer();
 		vertex_array setupVertexArray();
 	};

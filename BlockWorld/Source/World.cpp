@@ -55,12 +55,13 @@ namespace bwgame {
 
 		bwrenderer::setDaylightShaderInfo(blockShader, dayLightCycle);
 
+		bwrenderer::TextureBuffer& texture = context.texture_cache.findOrLoad("Blocks", "blockmap.jpeg");
 
 		blockShader.bind();
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, context.texture_cache.findOrLoad("Blocks", "blockmap.jpeg").textureID);
+		glBindTexture(GL_TEXTURE_2D, texture.textureID);
 
-		blockShader.setUniform2f("image_size", 256.0, 256.0);
+		blockShader.setUniform2f("image_size", texture.width, texture.height);
 		blockShader.setUniformMat4f("view", context.viewMatrix);
 		blockShader.setUniformMat4f("projection", context.projectionMatrix);
 		blockShader.setUniform1f("chunk_width", bwgame::CHUNK_WIDTH_BLOCKS);
