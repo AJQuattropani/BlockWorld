@@ -60,6 +60,9 @@ vec4 addFog(vec3 fragColor, float fragDistance, float radialTime)
 	float visbility = clamp((exp(-pow(fragDistance*density,gradient))), 0.0, 1.0);
 	float skyTransition = clamp(0.5 - 2.0 * sin(radialTime), 0.0, 1.0);
 	vec4 skyColor = mix(day_color, night_color, skyTransition);
+	float sunsetTransition = 1-sqrt(abs(sin(radialTime)));
+
+	skyColor = mix(skyColor, vec4(1.0, 0.4, 0.3, 1.0), sunsetTransition);
 
 	return mix(skyColor, vec4(fragColor, 1.0), visbility);
 }
