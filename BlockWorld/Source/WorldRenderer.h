@@ -8,7 +8,7 @@
 
 namespace bwrenderer {
 
-	inline void setDaylightShaderInfo(bwrenderer::Shader& block_shader, const DayLightCycle& dayLightCycle) {
+	inline void setDaylightShaderInfo(bwrenderer::Shader& block_shader, const bwrenderer::Shader& shadow_shader, const DayLightCycle& dayLightCycle) {
 		block_shader.bind();
 
 		//float ambience = 0.2 + 0.1 * glm::sin(dayLightCycle.sun_Angle);

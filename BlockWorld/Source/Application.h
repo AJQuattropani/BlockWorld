@@ -27,8 +27,8 @@ private:
 	bwrenderer::Camera camera;
 	double frameRateSeconds, gameUpdateRateSeconds;
 	struct {
-		double lastTimeSeconds, deltaTimeSeconds;
-		double lastFrameTimeSeconds, lastUpdateTimeSeconds;
+		double lastTimeSeconds = 0.0, deltaTimeSeconds = 0.0;
+		double lastFrameTimeSeconds = 0.0, lastUpdateTimeSeconds = 0.0;
 	} timer;
 	std::shared_ptr<bwgame::BlockRegister> blocks;
 	std::unique_ptr<bwgame::World> world;

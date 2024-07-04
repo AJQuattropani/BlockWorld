@@ -40,6 +40,11 @@ namespace bwrenderer {
 			model = modelMatrixInit(glm::translate(glm::mat4(1.0), position * 15.0f));
 		}
 
+		inline const glm::mat4& getModelMatrix()
+		{
+			return model;
+		}
+
 	private:
 		BlockMesh mesh;
 		glm::mat4 model = modelMatrixInit(glm::mat4(1.0));

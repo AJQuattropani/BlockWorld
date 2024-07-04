@@ -6,6 +6,30 @@
 
 namespace bwrenderer {
 
+    class frame_buffer
+    {
+    public:
+        frame_buffer();
+        ~frame_buffer();
+        frame_buffer(frame_buffer&& other) noexcept;
+        frame_buffer& operator=(frame_buffer&& other) noexcept;
+        frame_buffer(const frame_buffer& other);
+        frame_buffer& operator=(const frame_buffer& other);
+
+        inline void bind() const {
+            GL_ASSERT(buff_address != 0, "Frame buffer is uninitialized.");
+            glBindFramebuffer(GL_FRAMEBUFFER, buff_address);
+        }
+
+        inline void unbind() const
+        {
+            glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        }
+    private:
+        GLuint buff_address;
+        size_t* control_head = nullptr;
+    };
+
     class vertex_buffer
     {
     public:

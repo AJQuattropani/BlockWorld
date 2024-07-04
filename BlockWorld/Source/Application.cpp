@@ -8,7 +8,6 @@ Application::Application(unsigned int screen_width, unsigned int screen_height, 
 		.key_handler{.keyCache = std::map<unsigned int, bool>()},
 		.mouse_handler{screen_width / 2.0, screen_height / 2.0,0,0}
 },
-timer{ 0, 0, 0, 0 },
 frameRateSeconds(1.0 / fps),
 gameUpdateRateSeconds(1.0 / ups),
 renderContext(nullptr),
@@ -27,8 +26,9 @@ world(nullptr)
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 	renderContext = std::make_shared<bwrenderer::RenderContext>
-		(screen_width, screen_height, glm::mat4(1.0), glm::mat4(1.0f));
-	world = std::make_unique<bwgame::World>(blocks, ups);
+		(bwrenderer::RenderContext{ .screen_width_px = screen_width, .screen_height_px = screen_height,
+			.ch_render_load_distance = 24, .ch_render_unload_distance = 24 });
+	world = std::make_unique<bwgame::World>(blocks, renderContext, ups, 5.0, 1);
 
 	camera.attachContext(renderContext);
 
@@ -101,71 +101,11 @@ void Application::update() {
 }
 
 void Application::render() {
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glViewport(0, 0, renderContext->screen_width_px, renderContext->screen_height_px);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	/*static bwrenderer::TexturedNormalCubeMesh texturedCube(&renderContext->texture_cache.findOrLoad("Blocks", "blockmap.jpeg"), glm::vec3(0.0f, 0.0f, 0.0f));
-
-	renderContext->shader.bind();
-	renderContext->shader.setUniform2f("image_size", 256, 256);
-	renderContext->shader.setUniformMat4f("view", renderContext->viewMatrix);
-	renderContext->shader.setUniformMat4f("projection", renderContext->projectionMatrix);
-	renderContext->shader.setUniform1i("block_texture", 0);
-
-	texturedCube.render(renderContext->shader);*/
-
-	/*static bwrenderer::ChunkModel model;
-	static bwrenderer::ChunkModel model2;
-	static bool flag = true;
-	if (flag) {
-		model.updateRenderData({
- {glm::vec3(0.0f, 0.0f, 0.0f),  glm::vec3(0.0f, 1.0f, 0.0f),  glm::vec2(1.0f, 0.0f) },
- {glm::vec3(1.0f, 0.0f, 0.0f),  glm::vec3(0.0f, 1.0f, 0.0f),  glm::vec2(1.0f, 0.0f) },
- {glm::vec3(2.0f, 0.0f, 0.0f),  glm::vec3(0.0f, 1.0f, 0.0f),  glm::vec2(1.0f, 0.0f) },
- {glm::vec3(3.0f, 0.0f, 0.0f),  glm::vec3(0.0f, 1.0f, 0.0f),  glm::vec2(1.0f, 0.0f) },
- {glm::vec3(4.0f, 0.0f, 0.0f),  glm::vec3(0.0f, 1.0f, 0.0f),  glm::vec2(1.0f, 0.0f) },
- {glm::vec3(5.0f, 0.0f, 0.0f),  glm::vec3(0.0f, 1.0f, 0.0f),  glm::vec2(1.0f, 0.0f) },
- {glm::vec3(6.0f, 0.0f, 0.0f),  glm::vec3(0.0f, 1.0f, 0.0f),  glm::vec2(3.0f, 0.0f) },
- {glm::vec3(7.0f, 0.0f, 0.0f),  glm::vec3(0.0f, 1.0f, 0.0f),  glm::vec2(2.0f, 0.0f) },
- {glm::vec3(8.0f, 0.0f, 0.0f),  glm::vec3(0.0f, 1.0f, 0.0f),  glm::vec2(4.0f, 0.0f) },
- {glm::vec3(9.0f, 0.0f, 0.0f),  glm::vec3(0.0f, 1.0f, 0.0f),  glm::vec2(3.0f, 0.0f) },
- {glm::vec3(10.0f, 0.0f, 0.0f),  glm::vec3(0.0f, 1.0f, 0.0f),  glm::vec2(2.0f, 0.0f) },
- {glm::vec3(11.0f, 0.0f, 0.0f),  glm::vec3(0.0f, 1.0f, 0.0f),  glm::vec2(4.0f, 0.0f) },
- {glm::vec3(12.0f, 0.0f, 0.0f),  glm::vec3(0.0f, 1.0f, 0.0f),  glm::vec2(3.0f, 0.0f) },
- {glm::vec3(13.0f, 0.0f, 0.0f),  glm::vec3(0.0f, 1.0f, 0.0f),  glm::vec2(2.0f, 0.0f) },
- {glm::vec3(14.0f, 0.0f, 0.0f),  glm::vec3(0.0f, 1.0f, 0.0f),  glm::vec2(4.0f, 0.0f) },
-			});
-		model2.updateRenderData({
- {glm::vec3(0.0f, 0.0f, 0.0f),  glm::vec3(0.0f, 1.0f, 0.0f),  glm::vec2(1.0f, 0.0f) },
- {glm::vec3(1.0f, 0.0f, 0.0f),  glm::vec3(0.0f, 1.0f, 0.0f),  glm::vec2(1.0f, 0.0f) },
- {glm::vec3(2.0f, 0.0f, 0.0f),  glm::vec3(0.0f, 1.0f, 0.0f),  glm::vec2(1.0f, 0.0f) },
- {glm::vec3(3.0f, 0.0f, 0.0f),  glm::vec3(0.0f, 1.0f, 0.0f),  glm::vec2(1.0f, 0.0f) },
- {glm::vec3(4.0f, 0.0f, 0.0f),  glm::vec3(0.0f, 1.0f, 0.0f),  glm::vec2(1.0f, 0.0f) },
- {glm::vec3(5.0f, 0.0f, 0.0f),  glm::vec3(0.0f, 1.0f, 0.0f),  glm::vec2(1.0f, 0.0f) },
- {glm::vec3(6.0f, 0.0f, 0.0f),  glm::vec3(0.0f, 1.0f, 0.0f),  glm::vec2(3.0f, 0.0f) },
- {glm::vec3(7.0f, 0.0f, 0.0f),  glm::vec3(0.0f, 1.0f, 0.0f),  glm::vec2(2.0f, 0.0f) },
- {glm::vec3(8.0f, 0.0f, 0.0f),  glm::vec3(0.0f, 1.0f, 0.0f),  glm::vec2(4.0f, 0.0f) },
- {glm::vec3(9.0f, 0.0f, 0.0f),  glm::vec3(0.0f, 1.0f, 0.0f),  glm::vec2(3.0f, 0.0f) },
- {glm::vec3(10.0f, 0.0f, 0.0f),  glm::vec3(0.0f, 1.0f, 0.0f),  glm::vec2(2.0f, 0.0f) },
- {glm::vec3(11.0f, 0.0f, 0.0f),  glm::vec3(0.0f, 1.0f, 0.0f),  glm::vec2(4.0f, 0.0f) },
- {glm::vec3(12.0f, 0.0f, 0.0f),  glm::vec3(0.0f, 1.0f, 0.0f),  glm::vec2(3.0f, 0.0f) },
- {glm::vec3(13.0f, 0.0f, 0.0f),  glm::vec3(0.0f, 1.0f, 0.0f),  glm::vec2(2.0f, 0.0f) },
- {glm::vec3(14.0f, 0.0f, 0.0f),  glm::vec3(0.0f, 1.0f, 0.0f),  glm::vec2(4.0f, 0.0f) },
-			});
-		model2.setModelMatrix(glm::vec3(15.0, 0.0, 0.0));
-		flag = false;
-	}
-
-	model.render(*renderContext);
-	model2.render(*renderContext);*/
-
-	//static bwgame::BlockRegister blocks;
-	//static bwgame::Chunk chunk({0, 0}, blocks), chunk2({ 1, 0 }, blocks), chunk3({ 0, 1 }, blocks), chunk4({ 1, 1 }, blocks);
-	//chunk.render(*renderContext);
-	//chunk2.render(*renderContext);
-	//chunk3.render(*renderContext);
-	//chunk4.render(*renderContext);
-
-	world->render(*renderContext);
+	world->render();
 
 }
 
@@ -174,7 +114,6 @@ void Application::handleInput() {
 	renderContext->screen_width_px = inputContext.screen_handler.screen_width_px;
 	renderContext->screen_height_px = inputContext.screen_handler.screen_height_px;
 
-	glViewport(0, 0, renderContext->screen_width_px, renderContext->screen_height_px);
 
 	// Key Input
 	for (const auto& key : inputContext.key_handler.keyCache)

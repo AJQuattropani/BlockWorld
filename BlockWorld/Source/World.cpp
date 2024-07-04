@@ -7,11 +7,38 @@ namespace bwgame {
 		worldGen->buildChunk(coords, *chunk);
 	}
 
-	World::World(const std::shared_ptr<BlockRegister>& block_register, float ticks_per_second, float minutes_per_day, WorldLoadData data, uint64_t seed)
+	World::World(const std::shared_ptr<BlockRegister>& block_register, const std::shared_ptr<bwrenderer::RenderContext>& context,
+		float ticks_per_second, float minutes_per_day, uint64_t seed)
 		: worldGen(std::make_unique<WorldGenerator>(seed, block_register)),
-		worldLoadData(data), dayLightCycle(minutes_per_day, ticks_per_second),
-		blockShader("Blocks/World", "block_shader")
+		context(context), dayLightCycle(minutes_per_day, ticks_per_second),
+		blockShader("Blocks/World", "block_shader"), shadowShader("Blocks/World", "shadows"), depth_buffer()
 	{
+		GLuint depth_map;
+		glGenTextures(1, &depth_map);
+		glBindTexture(GL_TEXTURE_2D, depth_map);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		this->depth_map = context->texture_cache.push("world_depth_buffer", bwrenderer::TextureBuffer{.textureID = depth_map, .width = SHADOW_WIDTH, .height = SHADOW_HEIGHT});
+
+		depth_buffer.bind();
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depth_map, 0);
+		glDrawBuffer(GL_NONE);
+		glReadBuffer(GL_NONE);
+		depth_buffer.unbind();
+
+		bwrenderer::TextureBuffer& texture = context->texture_cache.findOrLoad("Blocks", "blockmap.jpeg");
+		blockShader.bind();
+		blockShader.setUniform1f("chunk_width", bwgame::CHUNK_WIDTH_BLOCKS);
+		blockShader.setUniform1i("block_texture", 0);
+		blockShader.setUniform1i("shadow_map", 1);
+		blockShader.setUniform2f("image_size", texture.width, texture.height);
+		blockShader.unbind();
+
 		BW_INFO("World created.");
 	}
 
@@ -30,8 +57,8 @@ namespace bwgame {
 			TIME_FUNC("World Unload");
 			for (auto it = chunkMap.begin(); it != chunkMap.end(); )
 			{
-				if (abs(it->first.x - int64_t(camera.position.x) / 15) > worldLoadData.ch_render_unload_distance / 2
-					|| abs(it->first.z - int64_t(camera.position.z) / 15) > worldLoadData.ch_render_unload_distance / 2)
+				if (abs(it->first.x - int64_t(camera.position.x) / 15) > context->ch_render_unload_distance / 2
+					|| abs(it->first.z - int64_t(camera.position.z) / 15) > context->ch_render_unload_distance / 2)
 				{
 					it = unloadChunk(it);
 					unload_count++;
@@ -48,30 +75,54 @@ namespace bwgame {
 		dayLightCycle.update();
 	}
 
-	void World::render(bwrenderer::RenderContext& context)
+	void World::render()
 	{
 		TIME_FUNC("World Render");
 		
 
-		bwrenderer::setDaylightShaderInfo(blockShader, dayLightCycle);
+		bwrenderer::setDaylightShaderInfo(blockShader, shadowShader, dayLightCycle);
 
-		bwrenderer::TextureBuffer& texture = context.texture_cache.findOrLoad("Blocks", "blockmap.jpeg");
+		bwrenderer::TextureBuffer& texture = context->texture_cache.findOrLoad("Blocks", "blockmap.jpeg");
+		
+		glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+		depth_buffer.bind();
+		glClear(GL_DEPTH_BUFFER_BIT);
 
+		shadowShader.bind();
+		const float near_plane = 1.0f, far_plane = 7.5f;
+		glm::mat4 lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
+		glm::mat4 lightView = glm::lookAt(glm::vec3
+			(glm::cos(dayLightCycle.time_game_days * glm::radians(360.0)), 
+			glm::sin(dayLightCycle.time_game_days * glm::radians(360.0)), 
+			0.0),
+			glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0));
+		glm::mat4 lightSpaceMatrix = lightProjection * lightView;
+		shadowShader.setUniformMat4f("lightSpaceMatrix", lightSpaceMatrix);
+		for (auto& [coords, chunk] : chunkMap)
+		{
+			chunk.render(shadowShader);
+		}
+
+		depth_buffer.unbind();
+
+		
+		glViewport(0, 0, context->screen_width_px, context->screen_height_px);
+		
 		blockShader.bind();
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, texture.textureID);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, depth_map.textureID);
 
-		blockShader.setUniform2f("image_size", texture.width, texture.height);
-		blockShader.setUniformMat4f("view", context.viewMatrix);
-		blockShader.setUniformMat4f("projection", context.projectionMatrix);
-		blockShader.setUniform1f("chunk_width", bwgame::CHUNK_WIDTH_BLOCKS);
-		blockShader.setUniform1i("block_texture", 0);
+		blockShader.setUniformMat4f("view", context->viewMatrix);
+		blockShader.setUniformMat4f("projection", context->projectionMatrix);
+		blockShader.setUniformMat4f("lightSpaceMatrix", lightSpaceMatrix);
 		for (auto& [coords, chunk] : chunkMap)
 		{
 			chunk.render(blockShader);
 		}
 
-		skybox.render(context, dayLightCycle);
+		skybox.render(*context, dayLightCycle);
 	}
 
 	void World::storeChunk()
@@ -88,12 +139,12 @@ namespace bwgame {
 
 		uint8_t load_count = 0;
 
-		for (coords.x = camera.position.x/15 - worldLoadData.ch_render_load_distance / 2; 
-			coords.x <= camera.position.x/15 + worldLoadData.ch_render_load_distance / 2;
+		for (coords.x = camera.position.x/15 - context->ch_render_load_distance / 2;
+			coords.x <= camera.position.x/15 + context->ch_render_load_distance / 2;
 			coords.x++)
 		{
-			for (coords.z = camera.position.z/15 - worldLoadData.ch_render_load_distance / 2;
-				coords.z <= camera.position.z/15 + worldLoadData.ch_render_load_distance / 2;
+			for (coords.z = camera.position.z/15 - context->ch_render_load_distance / 2;
+				coords.z <= camera.position.z/15 + context->ch_render_load_distance / 2;
 				coords.z++)
 			{
 
@@ -117,11 +168,11 @@ namespace bwgame {
 		ChunkCoords coords{};
 		std::vector<std::jthread> async_chunk_loads;
 
-		for (coords.x = camera.position.x/15 - worldLoadData.ch_render_load_distance / 2;
-			coords.x <= camera.position.x/15 + worldLoadData.ch_render_load_distance / 2;
+		for (coords.x = camera.position.x/15 - context->ch_render_load_distance / 2;
+			coords.x <= camera.position.x/15 + context->ch_render_load_distance / 2;
 			coords.x++)
-			for (coords.z = camera.position.z/15 - worldLoadData.ch_render_load_distance / 2;
-				coords.z <= camera.position.z/15 + worldLoadData.ch_render_load_distance / 2;
+			for (coords.z = camera.position.z/15 - context->ch_render_load_distance / 2;
+				coords.z <= camera.position.z/15 + context->ch_render_load_distance / 2;
 				coords.z++)
 		{
 

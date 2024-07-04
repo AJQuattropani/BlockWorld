@@ -8,13 +8,17 @@ in VS_OUT {
 	vec2 texCoords;
 } gs_in[];
 
-out vec2 f_texCoords;
-out vec3 f_normal;
-out vec4 f_pos;
+out GS_OUT {
+	vec2 f_texCoords;
+	vec3 f_normal;
+	vec4 f_pos_vs;
+	vec4 f_pos_ls;
+} gs_out;
 
 uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
+uniform mat4 lightSpaceMatrix;
 
 uniform vec2 image_size;
 uniform float chunk_width;
@@ -44,38 +48,50 @@ void main() {
 		texCoords[i] = 16 * (gs_in[0].texCoords + 0.5 * (center + offset)) / image_size;
 	}
 
-	f_normal = mat3(transpose(inverse(view * model))) * normal;
+	gs_out.f_normal = mat3(transpose(inverse(view * model))) * normal;
 
-	f_pos = view * model * (vec4(pos + offshoots[0]/2, 1.0)/chunk_width);
-	gl_Position = projection * f_pos;
-	f_texCoords = texCoords[0];
+	vec4 fPosws = model * (vec4(pos + offshoots[0]/2, 1.0)/chunk_width);
+	gs_out.f_pos_vs = view * fPosws;
+	gs_out.f_pos_ls = lightSpaceMatrix * fPosws;
+	gs_out.f_texCoords = texCoords[0];
+	gl_Position = projection * gs_out.f_pos_vs;
 	EmitVertex();
 	
-	f_pos = view * model * (vec4(pos + offshoots[1]/2, 1.0)/chunk_width);
-	gl_Position = projection * f_pos;
-	f_texCoords = texCoords[1];
+	fPosws = model * (vec4(pos + offshoots[1]/2, 1.0)/chunk_width);
+	gs_out.f_pos_vs = view * fPosws;
+	gs_out.f_pos_ls = lightSpaceMatrix * fPosws;
+	gs_out.f_texCoords = texCoords[1];
+	gl_Position = projection * gs_out.f_pos_vs;
 	EmitVertex();
 
-	f_pos = view * model * (vec4(pos + offshoots[2]/2, 1.0)/chunk_width);
-	gl_Position =  projection * f_pos;
-	f_texCoords = texCoords[2];
+	fPosws = model * (vec4(pos + offshoots[2]/2, 1.0)/chunk_width);
+	gs_out.f_pos_vs = view * fPosws;
+	gs_out.f_pos_ls = lightSpaceMatrix * fPosws;
+	gs_out.f_texCoords = texCoords[2];
+	gl_Position =  projection * gs_out.f_pos_vs;
 	EmitVertex();
 
 	EndPrimitive();
 	
-	f_pos = view * model * (vec4(pos + offshoots[0]/2, 1.0)/chunk_width);
-	gl_Position = projection * f_pos;
-	f_texCoords = texCoords[0];
+	fPosws = model * (vec4(pos + offshoots[0]/2, 1.0)/chunk_width);
+	gs_out.f_pos_vs = view * fPosws;
+	gs_out.f_pos_ls = lightSpaceMatrix * fPosws;
+	gs_out.f_texCoords = texCoords[0];
+	gl_Position = projection * gs_out.f_pos_vs;
+	EmitVertex();
+	
+	fPosws = model * (vec4(pos + offshoots[2]/2, 1.0)/chunk_width);
+	gs_out.f_pos_vs = view * fPosws;
+	gs_out.f_pos_ls = lightSpaceMatrix * fPosws;
+	gs_out.f_texCoords = texCoords[2];
+	gl_Position = projection * gs_out.f_pos_vs;
 	EmitVertex();
 
-	f_pos = view * model * (vec4(pos + offshoots[2]/2, 1.0)/chunk_width);
-	gl_Position = projection * f_pos;
-	f_texCoords = texCoords[2];
-	EmitVertex();
-
-	f_pos = view * model * (vec4(pos + offshoots[3]/2, 1.0)/chunk_width);
-	gl_Position = projection * f_pos;
-	f_texCoords = texCoords[3];
+	fPosws = model * (vec4(pos + offshoots[3]/2, 1.0)/chunk_width);
+	gs_out.f_pos_vs = view * fPosws;
+	gs_out.f_pos_ls = lightSpaceMatrix * fPosws;
+	gs_out.f_texCoords = texCoords[3];
+	gl_Position = projection * gs_out.f_pos_vs;
 	EmitVertex();
 
 	EndPrimitive();

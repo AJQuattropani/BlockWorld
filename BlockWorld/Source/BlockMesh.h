@@ -20,7 +20,7 @@ namespace bwrenderer
 
 		BlockMesh(const vertex_vector& vertices);
 
-		void draw(const Shader& shader) const;
+		void draw() const;
 
 		inline const vertex_buffer& getVertexBuffer() const { return vbo; }
 		inline const vertex_array& getVertexArray() const { return vao; }

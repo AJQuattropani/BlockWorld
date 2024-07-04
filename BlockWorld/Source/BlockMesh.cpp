@@ -13,9 +13,8 @@ bwrenderer::BlockMesh::BlockMesh(const vertex_vector& vertices)
 	//BW_INFO("BlockMesh initialized in place.");
 }
 
-void BlockMesh::draw(const Shader& shader) const
+void BlockMesh::draw() const
 {
-	shader.bind();
 	vao.bind();
 	glDrawArrays(GL_POINTS, 0, vertices.size());
 	vao.unbind();

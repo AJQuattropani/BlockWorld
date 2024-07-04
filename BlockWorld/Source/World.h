@@ -17,8 +17,6 @@ namespace bwgame {
 
 	struct WorldLoadData
 	{
-		chunk_diff_t ch_render_load_distance;
-		chunk_diff_t ch_render_unload_distance;
 	};
 
 	/*
@@ -27,24 +25,28 @@ namespace bwgame {
 	class World
 	{
 	public:
-		World(const std::shared_ptr<BlockRegister>& block_register, float ticks_per_second, float minutes_per_day = 5.0, WorldLoadData data
-			= { .ch_render_load_distance = 24, .ch_render_unload_distance = 24 }, uint64_t seed = 0);
+		World(const std::shared_ptr<BlockRegister>& block_register, const std::shared_ptr<bwrenderer::RenderContext>& context, 
+			float ticks_per_second,
+			float minutes_per_day = 1.0, uint64_t seed = 0);
 
 		~World();
 
 		void update(const bwrenderer::Camera& camera);
 
-		void render(bwrenderer::RenderContext& context);
+		void render();
 
 		void storeChunk();
 
 	private:
 		std::unordered_map<ChunkCoords, Chunk> chunkMap;
 		std::unique_ptr<WorldGenerator> worldGen;
-		bwrenderer::Shader blockShader;
-		WorldLoadData worldLoadData;
+		std::shared_ptr<bwrenderer::RenderContext> context;
+		bwrenderer::Shader blockShader, shadowShader;
 		DayLightCycle dayLightCycle;
 		bwrenderer::SkyBox skybox;
+		bwrenderer::frame_buffer depth_buffer;
+		bwrenderer::TextureBuffer depth_map;
+		const int SHADOW_WIDTH = 1024, SHADOW_HEIGHT = 1024;
 
 	private:
 		void mt_loadChunks(const bwrenderer::Camera& camera);

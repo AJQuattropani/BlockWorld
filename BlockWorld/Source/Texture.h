@@ -38,6 +38,8 @@ namespace bwrenderer
 
 		TextureBuffer& findOrLoad_impl(const std::string& type, const std::string& filePath);
 
+		TextureBuffer& push(const std::string& name, TextureBuffer&& textureBuffer);
+
 	private:
 		std::unordered_map<std::string, TextureBuffer> loaded_textures;
 	};

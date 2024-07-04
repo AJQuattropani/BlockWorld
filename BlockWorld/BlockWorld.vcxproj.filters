@@ -88,6 +88,9 @@
     <Filter Include="Resource Files\Textures\Skybox">
       <UniqueIdentifier>{b0296d1f-fd0b-4704-bed6-67102aa7324d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\Shaders\World\Shadows">
+      <UniqueIdentifier>{825ae27e-64f9-4ffc-9e37-5a0f7f6cdec8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Application.cpp">
@@ -238,23 +241,8 @@
     <Image Include="Resources\Textures\Blocks\blockmap.jpeg">
       <Filter>Resource Files\Textures\Blocks</Filter>
     </Image>
-    <Image Include="Resources\Textures\World\skybox_neg_x.jpeg">
-      <Filter>Resource Files\Textures\Skybox</Filter>
-    </Image>
-    <Image Include="Resources\Textures\World\skybox_neg_y.jpeg">
-      <Filter>Resource Files\Textures\Skybox</Filter>
-    </Image>
-    <Image Include="Resources\Textures\World\skybox_neg_z.jpeg">
-      <Filter>Resource Files\Textures\Skybox</Filter>
-    </Image>
-    <Image Include="Resources\Textures\World\skybox_pos_x.jpeg">
-      <Filter>Resource Files\Textures\Skybox</Filter>
-    </Image>
-    <Image Include="Resources\Textures\World\skybox_pos_y.jpeg">
-      <Filter>Resource Files\Textures\Skybox</Filter>
-    </Image>
-    <Image Include="Resources\Textures\World\skybox_pos_z.jpeg">
-      <Filter>Resource Files\Textures\Skybox</Filter>
+    <Image Include="Resources\Textures\World\sky_textures.jpeg">
+      <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>
   <ItemGroup>
@@ -271,6 +259,15 @@
       <Filter>Resource Files\Shaders\World\Skybox</Filter>
     </None>
     <None Include="Resources\Shaders\World\skybox.vert">
+      <Filter>Resource Files\Shaders\World\Skybox</Filter>
+    </None>
+    <None Include="Resources\Shaders\Blocks\World\shadows.vert">
+      <Filter>Resource Files\Shaders\World\Shadows</Filter>
+    </None>
+    <None Include="Resources\Shaders\Blocks\World\shadows.frag">
+      <Filter>Resource Files\Shaders\World\Shadows</Filter>
+    </None>
+    <None Include="Resources\Shaders\Blocks\World\shadows.geom">
       <Filter>Resource Files\Shaders\World\Skybox</Filter>
     </None>
   </ItemGroup>

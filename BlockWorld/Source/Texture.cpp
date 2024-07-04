@@ -35,7 +35,7 @@ namespace bwrenderer {
 
 		glBindTexture(GL_TEXTURE_2D, texture);
 
-		glTexImage2D(GL_TEXTURE_2D, 0, buffer->format, buffer->width, buffer->height, 0, buffer->format, GL_UNSIGNED_BYTE, data);
+		glTexImage2D(GL_TEXTURE_2D, 0, (buffer->format == GL_RGB ? GL_SRGB : buffer->format), buffer->width, buffer->height, 0, buffer->format, GL_UNSIGNED_BYTE, data);
 		//glGenerateMipmap(GL_TEXTURE_2D);
 
 		GL_DEBUG("Texture successfully generated as: %s | Type: %s | ID: %x | %d x %d : %d",
@@ -96,5 +96,10 @@ namespace bwrenderer {
 		createTexture(&loadedBuffer, type, filePath);
 
 		return (loaded_textures[filePath] = std::move(loadedBuffer));
+	}
+
+	TextureBuffer& TextureCache::push(const std::string& name, TextureBuffer&& textureBuffer)
+	{
+		return loaded_textures.emplace(name, textureBuffer).first->second;
 	}
 }
