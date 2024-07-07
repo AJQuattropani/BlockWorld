@@ -204,6 +204,8 @@
     <None Include="Resources\Shaders\Blocks\World\block_shader.frag" />
     <None Include="Resources\Shaders\Blocks\World\block_shader.geom" />
     <None Include="Resources\Shaders\Blocks\World\block_shader.vert" />
+    <None Include="Resources\Shaders\Blocks\World\debugshader.frag" />
+    <None Include="Resources\Shaders\Blocks\World\debugshader.vert" />
     <None Include="Resources\Shaders\Blocks\World\shadows.frag" />
     <None Include="Resources\Shaders\Blocks\World\shadows.geom" />
     <None Include="Resources\Shaders\Blocks\World\shadows.vert" />

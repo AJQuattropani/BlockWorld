@@ -27,8 +27,8 @@ world(nullptr)
 
 	renderContext = std::make_shared<bwrenderer::RenderContext>
 		(bwrenderer::RenderContext{ .screen_width_px = screen_width, .screen_height_px = screen_height,
-			.ch_render_load_distance = 24, .ch_render_unload_distance = 24 });
-	world = std::make_unique<bwgame::World>(blocks, renderContext, ups, 5.0, 1);
+			.ch_render_load_distance = 8, .ch_render_unload_distance = 8 });
+	world = std::make_unique<bwgame::World>(blocks, renderContext, ups, 3.0, 1);
 
 	camera.attachContext(renderContext);
 
@@ -95,9 +95,10 @@ GLFWwindow* Application::glfwWindowInit(const std::string& name) {
 }
 
 void Application::update() {
-	world->update(camera);
-
-	BW_DEBUG("Player coords: { %f, %f, %f }", camera.position.x, camera.position.y, camera.position.z);
+	world->update();
+	
+	BW_DEBUG("Player coords: { %f, %f, %f }", renderContext->player_position_x,
+		renderContext->player_position_y, renderContext->player_position_z);
 }
 
 void Application::render() {

@@ -9,15 +9,9 @@
 namespace bwrenderer {
 
 	inline void setDaylightShaderInfo(bwrenderer::Shader& block_shader, const bwrenderer::Shader& shadow_shader, const DayLightCycle& dayLightCycle) {
-		block_shader.bind();
-
+		
 		//float ambience = 0.2 + 0.1 * glm::sin(dayLightCycle.sun_Angle);
 
-		block_shader.setUniform3f("dir_light.ambient", 0.5f, 0.5f, 0.5f);
-		block_shader.setUniform3f("dir_light.diffuse", 0.5f, 0.5f, 0.5f);
-		block_shader.setUniform3f("dir_light.specular", 0.2f, 0.2f, 0.2f);
-
-		block_shader.setUniform1f("dir_light.day_time", dayLightCycle.time_game_days);
 	}
 
 	inline void setSunShaderInfo(bwrenderer::Shader& sky_shader, const DayLightCycle& dayLightCycle) {

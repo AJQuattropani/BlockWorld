@@ -91,6 +91,9 @@
     <Filter Include="Resource Files\Shaders\World\Shadows">
       <UniqueIdentifier>{825ae27e-64f9-4ffc-9e37-5a0f7f6cdec8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\Shaders\World\Debug">
+      <UniqueIdentifier>{2007fbcb-0a70-4c7b-a143-72c5ff0d0eeb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Application.cpp">
@@ -268,7 +271,13 @@
       <Filter>Resource Files\Shaders\World\Shadows</Filter>
     </None>
     <None Include="Resources\Shaders\Blocks\World\shadows.geom">
-      <Filter>Resource Files\Shaders\World\Skybox</Filter>
+      <Filter>Resource Files\Shaders\World\Shadows</Filter>
+    </None>
+    <None Include="Resources\Shaders\Blocks\World\debugshader.vert">
+      <Filter>Resource Files\Shaders\World\Debug</Filter>
+    </None>
+    <None Include="Resources\Shaders\Blocks\World\debugshader.frag">
+      <Filter>Resource Files\Shaders\World\Debug</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

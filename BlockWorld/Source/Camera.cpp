@@ -1,6 +1,6 @@
 #include "Camera.h"
 
-bwrenderer::Camera::Camera(bwrenderer::RenderContext* context, const glm::vec3 position, const glm::vec3 up, float yaw, float pitch)
+bwrenderer::Camera::Camera(const std::shared_ptr<bwrenderer::RenderContext>& context, const glm::vec3 position, const glm::vec3 up, float yaw, float pitch)
     : outputContext(context), position(position), front(glm::vec3(0.0f, 0.0f, -1.0f)), up(up), yaw(yaw), pitch(pitch),
     movementSpeed(SPEED), mouseSensitivity(SENSITIVITY), fov(ZOOM), updateFlags(0b00)
 {
@@ -74,6 +74,10 @@ void bwrenderer::Camera::updateContext()
     if (updateFlags & UPDATE_PROJECTION_FLAG) outputContext->projectionMatrix =
         glm::perspective(glm::radians(fov), static_cast<float>(outputContext->screen_width_px) / outputContext->screen_height_px, 0.1f, 256.0f);
     if (updateFlags & UPDATE_VIEW_FLAG) outputContext->viewMatrix = glm::lookAt(position, position + front, up);
+
+    outputContext->player_position_x = position.x;
+    outputContext->player_position_y = position.y;
+    outputContext->player_position_z = position.z;
 
     updateFlags = DEFAULT;
 }

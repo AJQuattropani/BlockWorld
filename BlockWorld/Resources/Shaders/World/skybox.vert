@@ -12,6 +12,6 @@ uniform mat4 view;
 void main()
 {
 	TexCoords = tex_coords / vec2(2.0, 1.0);
-	vec4 pos = projection * mat4(mat3(view)) * mat4(mat3(rotation)) * (vec4(position, 1.0) * vec4(1.0f, 0.125f, 0.125f, 1.0f));
+	vec4 pos = projection * mat4(mat3(view)) * mat4(mat3(rotation)) * (vec4(position, 1.0) * vec4(1.0, 0.125, 0.125, 1.0));
 	gl_Position = pos.xyww;
 }

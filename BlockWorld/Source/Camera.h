@@ -19,7 +19,7 @@ namespace bwrenderer
 	class Camera
 	{
 	public:
-		Camera(bwrenderer::RenderContext* context, const glm::vec3 position = glm::vec3(0.0f, 60.0f, 0.0f),
+		Camera(const std::shared_ptr<bwrenderer::RenderContext>& context, const glm::vec3 position = glm::vec3(0.0f, 60.0f, 0.0f),
 			const glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), float yaw = YAW, float pitch = PITCH);
 
 		Camera();
@@ -39,8 +39,9 @@ namespace bwrenderer
 		void updateContext();
 
 
-		glm::vec3 position; // replace back after new data structure created.
 	private:
+
+		glm::vec3 position; // replace back after new data structure created.
 
 		std::shared_ptr<bwrenderer::RenderContext> outputContext;
 

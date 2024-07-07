@@ -31,7 +31,7 @@ namespace bwgame {
 
 		~World();
 
-		void update(const bwrenderer::Camera& camera);
+		void update();
 
 		void render();
 
@@ -46,11 +46,11 @@ namespace bwgame {
 		bwrenderer::SkyBox skybox;
 		bwrenderer::frame_buffer depth_buffer;
 		bwrenderer::TextureBuffer depth_map;
-		const int SHADOW_WIDTH = 1024, SHADOW_HEIGHT = 1024;
+		const int SHADOW_WIDTH = 720, SHADOW_HEIGHT = 720;
 
 	private:
-		void mt_loadChunks(const bwrenderer::Camera& camera);
-		void loadChunks(const bwrenderer::Camera& camera);
+		void mt_loadChunks();
+		void loadChunks();
 		void build_func(ChunkCoords coords, Chunk* chunk);
 		void loadChunk(ChunkCoords coords);
 		
