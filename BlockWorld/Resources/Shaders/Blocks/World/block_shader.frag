@@ -106,12 +106,12 @@ float shadowCalculation(vec4 fragPosLightSpace, vec3 normal, vec3 direction)
 	float closestDepth = texture(shadow_map, projCoords.xy).r;
 	float currentDepth = projCoords.z;
 
-	float bias = max(0.005 * (1.0 - dot(normal, direction)), 0.001);
+	float bias = max(0.001 * (1.0 - dot(normal, direction)), 0.0005);
 	//float shadow = currentDepth - bias > closestDepth ? 1.0 : 0.0;
 
 	float shadow = 0.0;
 	vec2 texelSize = 1.0 / textureSize(shadow_map, 0);
-	const int sampling = 5;
+	const int sampling = 6;
 	const float samplingNumber = (2.0*sampling+1.0);//*(2.0*sampling+1);
 	for(int x = -sampling; x <= sampling; ++x)
 	{

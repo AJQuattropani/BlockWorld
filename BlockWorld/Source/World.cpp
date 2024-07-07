@@ -16,7 +16,7 @@ namespace bwgame {
 		GLuint depth_map;
 		glGenTextures(1, &depth_map);
 		glBindTexture(GL_TEXTURE_2D, depth_map);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, 4 * context->screen_width_px, 4 * context->screen_height_px, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, 8 * context->screen_width_px, 8 * context->screen_height_px, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
@@ -42,6 +42,9 @@ namespace bwgame {
 		blockShader.setUniform1i("block_texture", 0);
 		blockShader.setUniform1i("shadow_map", 1);
 		blockShader.setUniform2f("image_size", texture.width, texture.height);
+		blockShader.setUniform3f("dir_light.ambient", 0.2f, 0.2f, 0.2f);
+		blockShader.setUniform3f("dir_light.diffuse", 0.85f, 0.85f, 0.85f);
+		blockShader.setUniform3f("dir_light.specular", 0.2f, 0.2f, 0.2f);
 		blockShader.unbind();
 
 		shadowShader.bind();
@@ -110,7 +113,7 @@ namespace bwgame {
 
 		bwrenderer::TextureBuffer& texture = context->texture_cache.findOrLoad("Blocks", "blockmap.jpeg");
 		
-		glViewport(0, 0, 4 * context->screen_width_px, 4 * context->screen_height_px);
+		glViewport(0, 0, 8 * context->screen_width_px, 8 * context->screen_height_px);
 		depth_buffer.bind();
 		glClear(GL_DEPTH_BUFFER_BIT);
 
@@ -118,7 +121,7 @@ namespace bwgame {
 
 		shadowShader.setUniformMat4f("lightSpaceMatrix", lightSpaceMatrix);
 		glDisable(GL_CULL_FACE);
-		glCullFace(GL_FRONT);
+		//glCullFace(GL_FRONT);
 		for (auto& [coords, chunk] : chunkMap)
 		{
 			chunk.render(shadowShader);
@@ -183,9 +186,6 @@ namespace bwgame {
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, depth_map.textureID);
 
-		blockShader.setUniform3f("dir_light.ambient", 0.3f, 0.3f, 0.3f);
-		blockShader.setUniform3f("dir_light.diffuse", 0.7f, 0.7f, 0.7f);
-		blockShader.setUniform3f("dir_light.specular", 0.2f, 0.2f, 0.2f);
 		blockShader.setUniform3f("dir_light.position", lightPosition.x, lightPosition.y, lightPosition.z);
 		blockShader.setUniform1f("dir_light.day_time", dayLightCycle.time_game_days);
 		blockShader.setUniform1f("dir_light.radial_time", dayLightCycle.time_game_days * glm::radians(360.0));
