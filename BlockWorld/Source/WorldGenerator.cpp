@@ -20,7 +20,7 @@ namespace bwgame {
 				{
 					int64_t w_x = coords.x * 15 + x;
 					int64_t w_z = coords.z * 15 + z;
-					int64_t threshold = 60.0 + 5.0 * cos(w_x / 16.0);
+					int64_t threshold = 70.0 + 5.0 * cos(w_x / 16.0) + 30.0 * sin(w_z/40.0) + 6.0 * sin(w_z/8.0-sin(w_x));
 					if (y < threshold)
 						chunk.setBlock(blockIdx, getBlockLayered(threshold - y, y));
 				}
@@ -33,9 +33,9 @@ namespace bwgame {
 
 	inline const Block& WorldGenerator::getBlockLayered(int64_t depth, uint8_t height) const
 	{
-		//if (height < 70) {
-		//	if (depth < 5) return rand() % 2 ? blocks->sand : blocks->gravel;
-		//}
+		if (height < 70) {
+			if (depth < 5) return rand() % 2 ? blocks->sand : blocks->gravel;
+		}
 		if (depth > 5) return blocks->stone;
 		if (depth > 1) return blocks->dirt;
 		return blocks->grass;
