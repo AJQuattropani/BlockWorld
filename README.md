@@ -1,13 +1,16 @@
 # BlockWorld
 
-A performant, open, procedurally-generated voxel world with interactive block placement and gameplay elements such as entity physics similar to Beta Minecraft built with C++, OpenGL, and GLMath.
-This is my first from-scratch programming project in C++, and am using it to familiarize myself with graphics programming, data structures, and writing performance-aware code using modern techniques.
+A performance-aware, open, procedurally-generated voxel world with interactive block placement and gameplay elements such as entity physics similar to Beta Minecraft built with C++, OpenGL, and GLMath.
+This is my first from-scratch programming project in C++, and I am using it to familiarize myself with graphics programming, data structures, and writing performance-aware code for modern hardware.
 
 Currently a work-in-progress.
 
 <img src="Photos/6.30.2024.png" alt="Daylight, 6/30/2024" style="width=200">
 <img src="Photos/6.30.2024 (2).png" alt="Moonlight, 6/30/2024" style = "width=200">
 <img src="Photos/6.28.2024.png" alt="Moonlight, 6/30/2024" style = "width=200">
+<img srec="Photos/7.7.2024 (2).png" alt="Shadows, 7/30/2024" style = "width=200">
+<img srec="Photos/7.7.2024 (3).png" alt="Shadows, 7/30/2024" style = "width=200">
+<img srec="Photos/7.7.2024.png" alt="Shadows, 7/30/2024" style = "width=200">
 
 ## Features
 -Multithreading
@@ -35,9 +38,9 @@ Currently a work-in-progress.
 11. Non-AVX2-friendliness.
 
 # How to Install and Run
--Ensure processor has at least AVX2 x64 capabilities and computer is running Windows.
--Download the BlockWorld.exe from "bin/Distribution-x64" and move it to any folder, so long as "Resources" is also present in the folder.
--Click to run, press Esc to exit.
+1. Ensure processor has at least AVX2 x64 capabilities and computer is running Windows.
+2. Download the BlockWorld.exe from "bin/Distribution-x64" and move it to any folder, so long as "Resources" is also present in the folder.
+3. Click to run, press Esc to exit.
 
 # How to Contribute
-- Requires Visual Studio to compile currently.
+- Currently requires Visual Studio to compile.
