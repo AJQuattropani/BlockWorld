@@ -13,10 +13,10 @@ Currently a work-in-progress.
 <img src="Photos/7.7.2024.png" alt="Shadows, 7/30/2024" style = "width=200">
 
 ## Features
--Multithreading
--SIMD intrinsics (AVX2)
--Binary-meshing system
--Geometry shaders
+- Multithreading
+- SIMD intrinsics (AVX2)
+- Binary-meshing system
+- Geometry shaders
 
 ## Challenges
 1. Binary-meshing. Like many voxel engines, BlockWorld handles a large amount of data that has to be live-loaded. A prominent source of slow-down, especially in procedurally-generated worlds or those where chunks may be alterred in real-time, handling large batches of data at runtime is tantamount. BlockWorld optimizes the speed of converting blocks in a chunk into a mesh for rendering. This is accomplished by loading the data as a binary array with 3D structure, and operated upon using bitwise logic operations to transform the data, and iterate over the array to find what block faces to push the a batch. Chunks in BlockWorld are 15x256x15 to maximize the efficiency of these operations, and AVX2 intrinsics are used to further speed up the process. All of this was difficult to implement, but significantly decreased the expense of loading Chunks.
