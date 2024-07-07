@@ -38,9 +38,10 @@ Currently a work-in-progress.
 11. Non-AVX2-friendliness.
 
 # How to Install and Run
-1. Ensure processor has at least AVX2 x64 capabilities and computer is running Windows.
-2. Download the BlockWorld.exe from "bin/Distribution-x64" and move it to any folder, so long as "Resources" is also present in the folder.
-3. Click to run, press Esc to exit.
+1. Ensure processor has at least AVX2 x64 capabilities and computer is running Windows, and have a directory for glew, glfw, and glm libraries installed.
+2. Compile the program on Distribution, Release, or Debug.
+3. Optionally move the BlockWorld.exe from any of the folders in "bin/" and move it to any folder, so long as "Resources" is also present in the folder.
+4. Click to run, press Esc to exit, or run in the Visual Studio environment.
 
 # How to Contribute
 - Currently requires Visual Studio to compile.
