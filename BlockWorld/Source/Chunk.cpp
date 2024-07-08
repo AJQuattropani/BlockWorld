@@ -162,48 +162,47 @@ namespace bwgame {
 	void Chunk::bc_vertex_helper_ikj(uint8_t u, utils::data_IKJ& n_xzy, utils::data_IKJ& p_xzy,
 		utils::data_IKJ& n_zxy, utils::data_IKJ& p_zxy, std::vector<bwrenderer::BlockVertex>& vertices) const
 	{
+		uint8_t b, trailing_zeros, i;
 		// chunks are 15x15x256
-		for (uint8_t b = 0; b < 16; b++)
+		for (b = 0; b < 16; b++)
 		{
-			for (uint8_t trailing_zeros = std::countr_zero<uint16_t>(n_xzy[u].v16i_u16[b]);
+			for (trailing_zeros = std::countr_zero<uint16_t>(n_xzy[u].v16i_u16[b]);
 				trailing_zeros < 16 - 1;
 				trailing_zeros = std::countr_zero<uint16_t>(n_xzy[u].v16i_u16[b]))
 			{
-				uint8_t i = trailing_zeros;
+				n_xzy[u].v16i_u16[b] &= ~(1U << trailing_zeros);
+				i = trailing_zeros;
 				vertices.emplace_back(
 					packageBlockRenderData({ i, u, b }, BlockDirection::FORWARD));
-				n_xzy[u].v16i_u16[b] &= ~(1U << trailing_zeros);
 			}
-			for (uint8_t trailing_zeros = std::countr_zero<uint16_t>(p_xzy[u].v16i_u16[b]);
+			for (trailing_zeros = std::countr_zero<uint16_t>(p_xzy[u].v16i_u16[b]);
 				trailing_zeros < 16;
 				trailing_zeros = std::countr_zero<uint16_t>(p_xzy[u].v16i_u16[b]))
 			{
-				uint8_t i = trailing_zeros - 1;
-				if (trailing_zeros == 0) goto end_xzy;
+				p_xzy[u].v16i_u16[b] &= ~(1U << trailing_zeros);
+				if (trailing_zeros == 0) continue;
+				i = trailing_zeros - 1;
 				vertices.emplace_back(
 					packageBlockRenderData({ i, u, b }, BlockDirection::BACKWARD));
-			end_xzy:
-				p_xzy[u].v16i_u16[b] &= ~(1U << trailing_zeros);
 			}
-			for (uint8_t trailing_zeros = std::countr_zero<uint16_t>(n_zxy[u].v16i_u16[b]);
+			for (trailing_zeros = std::countr_zero<uint16_t>(n_zxy[u].v16i_u16[b]);
 				trailing_zeros < 16 - 1;
 				trailing_zeros = std::countr_zero<uint16_t>(n_zxy[u].v16i_u16[b]))
 			{
-				uint8_t i = trailing_zeros;
+				n_zxy[u].v16i_u16[b] &= ~(1U << trailing_zeros);
+				i = trailing_zeros;
 				vertices.emplace_back(
 					packageBlockRenderData({ b, u, i }, BlockDirection::RIGHT));
-				n_zxy[u].v16i_u16[b] &= ~(1U << trailing_zeros);
 			}
-			for (uint8_t trailing_zeros = std::countr_zero<uint16_t>(p_zxy[u].v16i_u16[b]);
+			for (trailing_zeros = std::countr_zero<uint16_t>(p_zxy[u].v16i_u16[b]);
 				trailing_zeros < 16;
 				trailing_zeros = std::countr_zero<uint16_t>(p_zxy[u].v16i_u16[b]))
 			{
-				uint8_t i = trailing_zeros - 1;
-				if (trailing_zeros == 0) goto end_zxy;
+				p_zxy[u].v16i_u16[b] &= ~(1U << trailing_zeros);
+				if (trailing_zeros == 0) continue;
+				i = trailing_zeros - 1;
 				vertices.emplace_back(
 					packageBlockRenderData({b, u, i}, BlockDirection::LEFT));
-			end_zxy:
-				p_zxy[u].v16i_u16[b] &= ~(1U << trailing_zeros);
 			}
 		}
 	}
@@ -212,25 +211,27 @@ namespace bwgame {
 		utils::data_JIK& n_yxz, utils::data_JIK& p_yxz, std::vector<bwrenderer::BlockVertex>& vertices) const
 
 	{
+		uint8_t j, trailing_zeros;
 		for (uint8_t b = 0; b < 4; b++)
 		{
-			for (uint8_t trailing_zeros = std::countr_zero<uint64_t>(n_yxz[k][i].v4i_u64[b]);
+			for (trailing_zeros = std::countr_zero<uint64_t>(n_yxz[k][i].v4i_u64[b]);
 				trailing_zeros < 64;
 				trailing_zeros = std::countr_zero<uint64_t>(n_yxz[k][i].v4i_u64[b]))
 			{
-				uint8_t j = b << 6 | (63 - trailing_zeros);
+				n_yxz[k][i].v4i_u64[b] &= ~(1ULL << trailing_zeros);
+				//if (trailing_zeros == 1) continue;
+				j = b << 6 | (63 - trailing_zeros);
 				vertices.emplace_back(
 					packageBlockRenderData({ i, j, k }, BlockDirection::DOWN));
-				n_yxz[k][i].v4i_u64[b] &= ~(1ULL << trailing_zeros);
 			}
-			for (uint8_t trailing_zeros = std::countr_zero<uint64_t>(p_yxz[k][i].v4i_u64[b]);
+			for (trailing_zeros = std::countr_zero<uint64_t>(p_yxz[k][i].v4i_u64[b]);
 				trailing_zeros < 64;
 				trailing_zeros = std::countr_zero<uint64_t>(p_yxz[k][i].v4i_u64[b]))
 			{
-				uint8_t j = b << 6 | (63 - trailing_zeros);
+				p_yxz[k][i].v4i_u64[b] &= ~(1ULL << trailing_zeros);
+				j = b << 6 | (63 - trailing_zeros);
 				vertices.emplace_back(
 					packageBlockRenderData({ i, j, k }, BlockDirection::UP));
-				p_yxz[k][i].v4i_u64[b] &= ~(1ULL << trailing_zeros);
 			}
 		}
 	}
