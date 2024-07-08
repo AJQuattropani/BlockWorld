@@ -235,7 +235,7 @@ namespace bwgame {
 
 				if (const auto& It = chunkMap.find(coords); It != chunkMap.end()) continue;
 
-				const auto& [Iterator, success] = chunkMap.emplace(coords, coords);
+				const auto& [Iterator, success] = chunkMap.emplace(coords, Chunk(coords, chunkMap));
 				auto& chunk = Iterator->second;
 				//todo move to own function
 				async_chunk_loads.push_back(std::jthread(&World::build_func, this, coords, &chunk));
@@ -263,7 +263,7 @@ namespace bwgame {
 
 			if (const auto& It = chunkMap.find(coords); It != chunkMap.end()) continue;
 
-			const auto& [Iterator, success] = chunkMap.emplace(coords, coords);
+			const auto& [Iterator, success] = chunkMap.emplace(coords, Chunk(coords, chunkMap));
 			auto& chunk = Iterator->second;
 			//todo move to own function
 			srand(coords.seed);
@@ -278,7 +278,7 @@ namespace bwgame {
 
 		if (const auto& It = chunkMap.find(coords); It != chunkMap.end()) return;
 
-		const auto& [Iterator, success] = chunkMap.emplace(coords, coords);
+		const auto& [Iterator, success] = chunkMap.emplace(coords, Chunk(coords, chunkMap));
 		auto& chunk = Iterator->second;
 		//todo move to own function
 		

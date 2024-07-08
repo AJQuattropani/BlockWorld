@@ -1,10 +1,13 @@
 #include "Chunk.h"
 
+#include "Timer.h"
+#include <ranges>
+
 namespace bwgame {
 
 
-	Chunk::Chunk(ChunkCoords chunkCoords)
-		: chunkCoords(chunkCoords), blockMap(), model(std::make_unique<bwrenderer::ChunkModel>())
+	Chunk::Chunk(ChunkCoords chunkCoords, const std::unordered_map<ChunkCoords, Chunk>& chunkMap)
+		: chunkCoords(chunkCoords), blockMap(), chunkMap(chunkMap), model(std::make_unique<bwrenderer::ChunkModel>())
 	{
 		flags = ~flags;
 		BW_INFO("Chunk generated.");
@@ -47,10 +50,11 @@ namespace bwgame {
 
 	std::vector<bwrenderer::BlockVertex> Chunk::packageRenderData() const
 	{
+		TIME_FUNC("Packaging");
 
 		//// may need to reallocate up to 6 times. TODO change allocator
 		std::vector<bwrenderer::BlockVertex> vertices;
-		vertices.reserve(256 * 15 * 15);
+		vertices.reserve(256 * 15);
 
 		/*for (const auto& block : blockMap)
 		{
@@ -100,8 +104,44 @@ namespace bwgame {
 			utils::set(binary_chunk->n_zxy, coords.z, coords.y, coords.x);
 			utils::set(binary_chunk->p_zxy, coords.z + 1, coords.y, coords.x);
 		}
-
-
+#define OPTIMIZATION 1
+#if OPTIMIZATION == 1
+		{
+			TIME_FUNC("Optimization");
+			if (const auto& n_x_Chunk = chunkMap.find(ChunkCoords{ chunkCoords.x + 1, chunkCoords.z }); n_x_Chunk != chunkMap.end())
+			{
+				auto n_x_It_func = [](const BlockCoords& coords) -> bool { return coords.x == 0; };
+				for (const auto coords : std::views::keys(n_x_Chunk->second.blockMap) | std::views::filter(n_x_It_func))
+				{
+					utils::set(binary_chunk->n_xzy, 15, coords.y, coords.z);
+				}
+			}
+			if (const auto& n_z_Chunk = chunkMap.find(ChunkCoords{ chunkCoords.x, chunkCoords.z + 1 }); n_z_Chunk != chunkMap.end())
+			{
+				auto n_z_It_func = [](const BlockCoords& coords) -> bool { return coords.z == 0; };
+				for (const auto coords : std::views::keys(n_z_Chunk->second.blockMap) | std::views::filter(n_z_It_func))
+				{
+					utils::set(binary_chunk->n_zxy, 15, coords.y, coords.x);
+				}
+			}
+			if (const auto& p_x_Chunk = chunkMap.find(ChunkCoords{ chunkCoords.x - 1, chunkCoords.z }); p_x_Chunk != chunkMap.end())
+			{
+				auto p_x_It_func = [](const BlockCoords& coords) -> bool { return coords.x == 14; };
+				for (const auto coords : std::views::keys(p_x_Chunk->second.blockMap) | std::views::filter(p_x_It_func))
+				{
+					utils::set(binary_chunk->p_xzy, 0, coords.y, coords.z);
+				}
+			}
+			if (const auto& p_z_Chunk = chunkMap.find(ChunkCoords{ chunkCoords.x, chunkCoords.z - 1 }); p_z_Chunk != chunkMap.end())
+			{
+				auto p_z_It_func = [](const BlockCoords& coords) -> bool { return coords.z == 14; };
+				for (const auto coords : std::views::keys(p_z_Chunk->second.blockMap) | std::views::filter(p_z_It_func))
+				{
+					utils::set(binary_chunk->p_zxy, 0, coords.y, coords.x);
+				}
+			}
+		}
+#endif
 
 		//// convert block placement data to block exposure data
 		bc_face_bits_inplace(*binary_chunk);
@@ -126,7 +166,7 @@ namespace bwgame {
 		for (uint8_t b = 0; b < 16; b++)
 		{
 			for (uint8_t trailing_zeros = std::countr_zero<uint16_t>(n_xzy[u].v16i_u16[b]);
-				trailing_zeros < 16;
+				trailing_zeros < 16 - 1;
 				trailing_zeros = std::countr_zero<uint16_t>(n_xzy[u].v16i_u16[b]))
 			{
 				uint8_t i = trailing_zeros;
@@ -139,12 +179,14 @@ namespace bwgame {
 				trailing_zeros = std::countr_zero<uint16_t>(p_xzy[u].v16i_u16[b]))
 			{
 				uint8_t i = trailing_zeros - 1;
+				if (trailing_zeros == 0) goto end_xzy;
 				vertices.emplace_back(
 					packageBlockRenderData({ i, u, b }, BlockDirection::BACKWARD));
+			end_xzy:
 				p_xzy[u].v16i_u16[b] &= ~(1U << trailing_zeros);
 			}
 			for (uint8_t trailing_zeros = std::countr_zero<uint16_t>(n_zxy[u].v16i_u16[b]);
-				trailing_zeros < 16;
+				trailing_zeros < 16 - 1;
 				trailing_zeros = std::countr_zero<uint16_t>(n_zxy[u].v16i_u16[b]))
 			{
 				uint8_t i = trailing_zeros;
@@ -157,8 +199,10 @@ namespace bwgame {
 				trailing_zeros = std::countr_zero<uint16_t>(p_zxy[u].v16i_u16[b]))
 			{
 				uint8_t i = trailing_zeros - 1;
+				if (trailing_zeros == 0) goto end_zxy;
 				vertices.emplace_back(
 					packageBlockRenderData({b, u, i}, BlockDirection::LEFT));
+			end_zxy:
 				p_zxy[u].v16i_u16[b] &= ~(1U << trailing_zeros);
 			}
 		}
