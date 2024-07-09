@@ -7,13 +7,15 @@ namespace bwgame {
 	void WorldGenerator::buildChunk(const ChunkCoords& coords, Chunk& chunk) const
 	{
 		srand(coords.seed);
+		
+		chunk.reserve(80 * CHUNK_WIDTH_BLOCKS * CHUNK_WIDTH_BLOCKS);
 
 		BlockCoords blockIdx{0,0,0};
 		while (1)
 		{
-			for (blockIdx.z = 0; blockIdx.z < 15; blockIdx.z++)
+			for (blockIdx.z = 0; blockIdx.z < CHUNK_WIDTH_BLOCKS; blockIdx.z++)
 			{
-				for (blockIdx.x = 0; blockIdx.x < 15; blockIdx.x++)
+				for (blockIdx.x = 0; blockIdx.x < CHUNK_WIDTH_BLOCKS; blockIdx.x++)
 				{
 					int64_t w_x = coords.x * 15 + blockIdx.x;
 					int64_t w_z = coords.z * 15 + blockIdx.z;
@@ -23,7 +25,7 @@ namespace bwgame {
 				}
 			}
 
-			if (blockIdx.y == 255) break;
+			if (blockIdx.y == CHUNK_HEIGHT_BLOCKS - 1) break;
 			blockIdx.y++;
 		}
 	}

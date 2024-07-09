@@ -34,6 +34,22 @@ namespace bwgame
 		inline const Block& getBlock(block_coord_t x, block_coord_t y, block_coord_t z) const 
 		{	return getBlock({ x,y,z });	}
 
+		inline void reserve(uint16_t amount) {
+			if (blockMap.size() >= CHUNK_VOLUME)
+			{
+				BW_WARN("Reserve failed - Chunk is already at full capacity.");
+				return;
+			}
+			if (blockMap.size() + amount > CHUNK_VOLUME)
+			{
+				BW_WARN("Reserve attempted - Chunk has been set to maximum capacity.");
+				blockMap.reserve(CHUNK_VOLUME-blockMap.size());
+				return;
+			}
+			blockMap.reserve(amount);
+
+		}
+
 		inline const Block& getBlock(const BlockCoords& coords) const
 		{
 			if (const auto& block = blockMap.find(coords); block != blockMap.end()) return block->second;
@@ -54,7 +70,6 @@ namespace bwgame
 		std::unique_ptr<bwrenderer::ChunkModel> model;
 		// TODO make shared_ptr
 		const std::unordered_map<ChunkCoords, Chunk>& chunkMap;
-
 	private:
 		std::vector<bwrenderer::BlockVertex> packageRenderData() const;
 		void bc_vertex_helper_ikj(uint8_t u, utils::data_IKJ& n_xzy, utils::data_IKJ& p_xzy, utils::data_IKJ& n_zxy, utils::data_IKJ& p_zxy,

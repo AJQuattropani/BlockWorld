@@ -8,8 +8,9 @@ namespace bwgame {
 	using chunk_coord_t = int32_t;
 	using chunk_diff_t = int32_t;
 
-	constexpr uint16_t CHUNK_WIDTH_BLOCKS = 15;
-	constexpr uint16_t CHUNK_HEIGHT_BLOCKS = 256;
+	static constexpr uint16_t CHUNK_WIDTH_BLOCKS = 15;
+	static constexpr uint16_t CHUNK_HEIGHT_BLOCKS = 256;
+	static constexpr uint32_t CHUNK_VOLUME = CHUNK_WIDTH_BLOCKS * CHUNK_WIDTH_BLOCKS * CHUNK_HEIGHT_BLOCKS;
 
 	union ChunkCoords
 	{

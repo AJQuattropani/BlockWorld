@@ -53,7 +53,7 @@ namespace bwgame {
 
 		//// may need to reallocate up to 6 times. TODO change allocator
 		std::vector<bwrenderer::BlockVertex> vertices;
-		vertices.reserve(256 * CHUNK_WIDTH_BLOCKS);
+		vertices.reserve(CHUNK_HEIGHT_BLOCKS * CHUNK_WIDTH_BLOCKS);
 
 		utils::BinaryChunk* binary_chunk = new utils::BinaryChunk{};
 
@@ -121,7 +121,7 @@ namespace bwgame {
 						if (blockMap.find(coords) != blockMap.end())
 							utils::set(binary_chunk->n_xzy, CHUNK_WIDTH_BLOCKS, coords.y, coords.z);
 					}
-					if (coords.y == 255) break;
+					if (coords.y == CHUNK_HEIGHT_BLOCKS - 1) break;
 				}
 			}
 			if (const auto& n_z_Chunk = chunkMap.find(ChunkCoords{ chunkCoords.x, chunkCoords.z + 1 }); n_z_Chunk != chunkMap.end())
@@ -135,7 +135,7 @@ namespace bwgame {
 						if (blockMap.find(coords) != blockMap.end())
 							utils::set(binary_chunk->n_zxy, CHUNK_WIDTH_BLOCKS, coords.y, coords.x);
 					}
-					if (coords.y == 255) break;
+					if (coords.y == CHUNK_HEIGHT_BLOCKS - 1) break;
 				}
 			}
 			if (const auto& p_x_Chunk = chunkMap.find(ChunkCoords{ chunkCoords.x - 1, chunkCoords.z }); p_x_Chunk != chunkMap.end())
@@ -149,7 +149,7 @@ namespace bwgame {
 						if (blockMap.find(coords) != blockMap.end())
 							utils::set(binary_chunk->p_xzy, 0, coords.y, coords.z);
 					}
-					if (coords.y == 255) break;
+					if (coords.y == CHUNK_HEIGHT_BLOCKS - 1) break;
 				}
 			}
 			if (const auto& p_z_Chunk = chunkMap.find(ChunkCoords{ chunkCoords.x, chunkCoords.z - 1 }); p_z_Chunk != chunkMap.end())
@@ -163,7 +163,7 @@ namespace bwgame {
 						if (blockMap.find(coords) != blockMap.end())
 							utils::set(binary_chunk->p_zxy, 0, coords.y, coords.x);
 					}
-					if (coords.y == 255) break;
+					if (coords.y == CHUNK_HEIGHT_BLOCKS - 1) break;
 				}
 			}
 
@@ -178,7 +178,7 @@ namespace bwgame {
 		{
 			bc_vertex_helper_ikj(u, binary_chunk->n_xzy, binary_chunk->p_xzy, binary_chunk->n_zxy, binary_chunk->p_zxy, vertices);
 			bc_vertex_helper_jik(u % 16, u / 16, binary_chunk->n_yxz, binary_chunk->p_yxz, vertices);
-		} while (u++ < 255);
+		} while (u++ < CHUNK_HEIGHT_BLOCKS - 1);
 
 		delete binary_chunk;
 
