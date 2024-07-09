@@ -1,7 +1,6 @@
 #include "Chunk.h"
 
 #include "Timer.h"
-#include <ranges>
 
 namespace bwgame {
 
@@ -192,7 +191,7 @@ namespace bwgame {
 	{
 		uint8_t b, trailing_zeros, i;
 		// chunks are 15x15x256
-		for (b = 0; b < 16; b++)
+		for (b = 0; b < 15; b++)
 		{
 			for (trailing_zeros = std::countr_zero<uint16_t>(n_xzy[u].v16i_u16[b]);
 				trailing_zeros < 16 - 1;

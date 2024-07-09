@@ -18,7 +18,9 @@ namespace bwgame
 	union BlockCoords
 	{
 		struct {
-			block_coord_t x, y, z;
+			block_coord_t x;
+			block_coord_t y;
+			block_coord_t z;
 		};
 		uint32_t index;
 		block_coord_t data[3];

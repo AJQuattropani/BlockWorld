@@ -7,6 +7,7 @@
 #include "BinaryChunk.h"
 #include "Blocks.h"
 
+#include <ranges>
 #include <unordered_set>
 #include <future>
 

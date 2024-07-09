@@ -9,25 +9,22 @@ namespace bwgame {
 		srand(coords.seed);
 
 		BlockCoords blockIdx{0,0,0};
-		auto& x = blockIdx.x;
-		auto& y = blockIdx.y;
-		auto& z = blockIdx.z;
 		while (1)
 		{
-			for (z = 0; z < 15; z++)
+			for (blockIdx.z = 0; blockIdx.z < 15; blockIdx.z++)
 			{
-				for (x = 0; x < 15; x++)
+				for (blockIdx.x = 0; blockIdx.x < 15; blockIdx.x++)
 				{
-					int64_t w_x = coords.x * 15 + x;
-					int64_t w_z = coords.z * 15 + z;
-					int64_t threshold = 70.0 + 5.0 * cos(w_x / 16.0) + 30.0 * sin(w_z/40.0) + 6.0 * sin(w_z/8.0-sin(w_x));
-					if (y < threshold)
-						chunk.setBlock(blockIdx, getBlockLayered(threshold - y, y));
+					int64_t w_x = coords.x * 15 + blockIdx.x;
+					int64_t w_z = coords.z * 15 + blockIdx.z;
+					int64_t threshold = 10.0 + 5.0 * cos(w_x / 16.0) + 30.0 * sin(w_z/40.0) + 6.0 * sin(w_z/8.0-sin(w_x));
+					if (blockIdx.y < threshold)
+						chunk.setBlock(blockIdx, getBlockLayered(threshold - blockIdx.y, blockIdx.y));
 				}
 			}
 
-			if (y == 255) break;
-			y++;
+			if (blockIdx.y == 255) break;
+			blockIdx.y++;
 		}
 	}
 
