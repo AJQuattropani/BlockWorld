@@ -56,40 +56,6 @@ namespace bwgame {
 		std::vector<bwrenderer::BlockVertex> vertices;
 		vertices.reserve(256 * 15);
 
-		/*for (const auto& block : blockMap)
-		{
-			vertices.emplace_back(bwrenderer::BlockVertex{
-				glm::vec3(block.first.x,block.first.y,block.first.z),
-				blockDirectionToNormal(BlockDirection::UP),
-				block.second.getPackagedRenderData(BlockDirection::UP)
-				});
-			vertices.emplace_back(bwrenderer::BlockVertex{
-				glm::vec3(block.first.x,block.first.y,block.first.z),
-				blockDirectionToNormal(BlockDirection::DOWN),
-				block.second.getPackagedRenderData(BlockDirection::DOWN)
-				});
-			vertices.emplace_back(bwrenderer::BlockVertex{
-				glm::vec3(block.first.x,block.first.y,block.first.z),
-				blockDirectionToNormal(BlockDirection::RIGHT),
-				block.second.getPackagedRenderData(BlockDirection::RIGHT)
-				});
-			vertices.emplace_back(bwrenderer::BlockVertex{
-				glm::vec3(block.first.x,block.first.y,block.first.z),
-				blockDirectionToNormal(BlockDirection::LEFT),
-				block.second.getPackagedRenderData(BlockDirection::LEFT)
-				});
-			vertices.emplace_back(bwrenderer::BlockVertex{
-				glm::vec3(block.first.x,block.first.y,block.first.z),
-				blockDirectionToNormal(BlockDirection::FORWARD),
-				block.second.getPackagedRenderData(BlockDirection::FORWARD)
-				});
-			vertices.emplace_back(bwrenderer::BlockVertex{
-				glm::vec3(block.first.x,block.first.y,block.first.z),
-				blockDirectionToNormal(BlockDirection::BACKWARD),
-				block.second.getPackagedRenderData(BlockDirection::BACKWARD)
-				});
-		}*/
-
 		utils::BinaryChunk* binary_chunk = new utils::BinaryChunk{};
 
 		//// package all data into blockmap
@@ -104,10 +70,10 @@ namespace bwgame {
 			utils::set(binary_chunk->n_zxy, coords.z, coords.y, coords.x);
 			utils::set(binary_chunk->p_zxy, coords.z + 1, coords.y, coords.x);
 		}
-#define OPTIMIZATION 1
+#define OPTIMIZATION 2
 #if OPTIMIZATION == 1
 		{
-			TIME_FUNC("Optimization");
+			TIME_FUNC("Optimization 1");
 			if (const auto& n_x_Chunk = chunkMap.find(ChunkCoords{ chunkCoords.x + 1, chunkCoords.z }); n_x_Chunk != chunkMap.end())
 			{
 				auto n_x_It_func = [](const BlockCoords& coords) -> bool { return coords.x == 0; };
@@ -142,7 +108,69 @@ namespace bwgame {
 			}
 		}
 #endif
+#if OPTIMIZATION == 2
+		{
+			TIME_FUNC("Optimization 2");
+			if (const auto& n_x_Chunk = chunkMap.find(ChunkCoords{ chunkCoords.x + 1, chunkCoords.z }); n_x_Chunk != chunkMap.end())
+			{
+				const auto& blockMap = n_x_Chunk->second.blockMap;
+				BlockCoords coords{ 0,0,0 };
+				for (coords.y = 0; ; coords.y++)
+				{
+					for (coords.z = 0; coords.z < 15; coords.z++)
+					{
+						if (blockMap.find(coords) != blockMap.end())
+							utils::set(binary_chunk->n_xzy, 15, coords.y, coords.z);
+					}
+					if (coords.y == 255) break;
+				}
+			}
+			if (const auto& n_z_Chunk = chunkMap.find(ChunkCoords{ chunkCoords.x, chunkCoords.z + 1 }); n_z_Chunk != chunkMap.end())
+			{
+				const auto& blockMap = n_z_Chunk->second.blockMap;
+				BlockCoords coords{ 0,0,0 };
+				for (coords.y = 0; ; coords.y++)
+				{
+					for (coords.x = 0; coords.x < 15; coords.x++)
+					{
+						if (blockMap.find(coords) != blockMap.end())
+							utils::set(binary_chunk->n_zxy, 15, coords.y, coords.x);
+					}
+					if (coords.y == 255) break;
+				}
+			}
+			if (const auto& p_x_Chunk = chunkMap.find(ChunkCoords{ chunkCoords.x - 1, chunkCoords.z }); p_x_Chunk != chunkMap.end())
+			{
+				const auto& blockMap = p_x_Chunk->second.blockMap;
+				BlockCoords coords{ 14,0,0 };
+				for (coords.y = 0; ; coords.y++)
+				{
+					for (coords.z = 0; coords.z < 15; coords.z++)
+					{
+						if (blockMap.find(coords) != blockMap.end())
+							utils::set(binary_chunk->p_xzy, 0, coords.y, coords.z);
+					}
+					if (coords.y == 255) break;
+				}
+			}
+			if (const auto& p_z_Chunk = chunkMap.find(ChunkCoords{ chunkCoords.x, chunkCoords.z - 1 }); p_z_Chunk != chunkMap.end())
+			{
+				const auto& blockMap = p_z_Chunk->second.blockMap;
+				BlockCoords coords{ 0,0,14 };
+				for (coords.y = 0; ; coords.y++)
+				{
+					for (coords.x = 0; coords.x < 15; coords.x++)
+					{
+						if (blockMap.find(coords) != blockMap.end())
+							utils::set(binary_chunk->p_zxy, 0, coords.y, coords.x);
+					}
+					if (coords.y == 255) break;
+				}
+			}
 
+		}
+		
+#endif
 		//// convert block placement data to block exposure data
 		bc_face_bits_inplace(*binary_chunk);
 
