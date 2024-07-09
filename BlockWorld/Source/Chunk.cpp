@@ -11,7 +11,7 @@ namespace bwgame {
 		flags = ~flags;
 		BW_INFO("Chunk generated.");
 
-		blockMap.reserve(256*100);
+		blockMap.reserve(CHUNK_HEIGHT_BLOCKS*100);
 		model->setModelMatrix(chunkCoords);
 	}
 
@@ -53,7 +53,7 @@ namespace bwgame {
 
 		//// may need to reallocate up to 6 times. TODO change allocator
 		std::vector<bwrenderer::BlockVertex> vertices;
-		vertices.reserve(256 * 15);
+		vertices.reserve(256 * CHUNK_WIDTH_BLOCKS);
 
 		utils::BinaryChunk* binary_chunk = new utils::BinaryChunk{};
 
@@ -78,7 +78,7 @@ namespace bwgame {
 				auto n_x_It_func = [](const BlockCoords& coords) -> bool { return coords.x == 0; };
 				for (const auto coords : std::views::keys(n_x_Chunk->second.blockMap) | std::views::filter(n_x_It_func))
 				{
-					utils::set(binary_chunk->n_xzy, 15, coords.y, coords.z);
+					utils::set(binary_chunk->n_xzy, CHUNK_WIDTH_BLOCKS, coords.y, coords.z);
 				}
 			}
 			if (const auto& n_z_Chunk = chunkMap.find(ChunkCoords{ chunkCoords.x, chunkCoords.z + 1 }); n_z_Chunk != chunkMap.end())
@@ -86,7 +86,7 @@ namespace bwgame {
 				auto n_z_It_func = [](const BlockCoords& coords) -> bool { return coords.z == 0; };
 				for (const auto coords : std::views::keys(n_z_Chunk->second.blockMap) | std::views::filter(n_z_It_func))
 				{
-					utils::set(binary_chunk->n_zxy, 15, coords.y, coords.x);
+					utils::set(binary_chunk->n_zxy, CHUNK_WIDTH_BLOCKS, coords.y, coords.x);
 				}
 			}
 			if (const auto& p_x_Chunk = chunkMap.find(ChunkCoords{ chunkCoords.x - 1, chunkCoords.z }); p_x_Chunk != chunkMap.end())
@@ -116,10 +116,10 @@ namespace bwgame {
 				BlockCoords coords{ 0,0,0 };
 				for (coords.y = 0; ; coords.y++)
 				{
-					for (coords.z = 0; coords.z < 15; coords.z++)
+					for (coords.z = 0; coords.z < CHUNK_WIDTH_BLOCKS; coords.z++)
 					{
 						if (blockMap.find(coords) != blockMap.end())
-							utils::set(binary_chunk->n_xzy, 15, coords.y, coords.z);
+							utils::set(binary_chunk->n_xzy, CHUNK_WIDTH_BLOCKS, coords.y, coords.z);
 					}
 					if (coords.y == 255) break;
 				}
@@ -130,10 +130,10 @@ namespace bwgame {
 				BlockCoords coords{ 0,0,0 };
 				for (coords.y = 0; ; coords.y++)
 				{
-					for (coords.x = 0; coords.x < 15; coords.x++)
+					for (coords.x = 0; coords.x < CHUNK_WIDTH_BLOCKS; coords.x++)
 					{
 						if (blockMap.find(coords) != blockMap.end())
-							utils::set(binary_chunk->n_zxy, 15, coords.y, coords.x);
+							utils::set(binary_chunk->n_zxy, CHUNK_WIDTH_BLOCKS, coords.y, coords.x);
 					}
 					if (coords.y == 255) break;
 				}
@@ -144,7 +144,7 @@ namespace bwgame {
 				BlockCoords coords{ 14,0,0 };
 				for (coords.y = 0; ; coords.y++)
 				{
-					for (coords.z = 0; coords.z < 15; coords.z++)
+					for (coords.z = 0; coords.z < CHUNK_WIDTH_BLOCKS; coords.z++)
 					{
 						if (blockMap.find(coords) != blockMap.end())
 							utils::set(binary_chunk->p_xzy, 0, coords.y, coords.z);
@@ -158,7 +158,7 @@ namespace bwgame {
 				BlockCoords coords{ 0,0,14 };
 				for (coords.y = 0; ; coords.y++)
 				{
-					for (coords.x = 0; coords.x < 15; coords.x++)
+					for (coords.x = 0; coords.x < CHUNK_WIDTH_BLOCKS; coords.x++)
 					{
 						if (blockMap.find(coords) != blockMap.end())
 							utils::set(binary_chunk->p_zxy, 0, coords.y, coords.x);
@@ -191,10 +191,10 @@ namespace bwgame {
 	{
 		uint8_t b, trailing_zeros, i;
 		// chunks are 15x15x256
-		for (b = 0; b < 15; b++)
+		for (b = 0; b < CHUNK_WIDTH_BLOCKS; b++)
 		{
 			for (trailing_zeros = std::countr_zero<uint16_t>(n_xzy[u].v16i_u16[b]);
-				trailing_zeros < 16 - 1;
+				trailing_zeros < CHUNK_WIDTH_BLOCKS;
 				trailing_zeros = std::countr_zero<uint16_t>(n_xzy[u].v16i_u16[b]))
 			{
 				n_xzy[u].v16i_u16[b] &= ~(1U << trailing_zeros);
@@ -203,7 +203,7 @@ namespace bwgame {
 					packageBlockRenderData({ i, u, b }, BlockDirection::FORWARD));
 			}
 			for (trailing_zeros = std::countr_zero<uint16_t>(p_xzy[u].v16i_u16[b]);
-				trailing_zeros < 16;
+				trailing_zeros < CHUNK_WIDTH_BLOCKS + 1;
 				trailing_zeros = std::countr_zero<uint16_t>(p_xzy[u].v16i_u16[b]))
 			{
 				p_xzy[u].v16i_u16[b] &= ~(1U << trailing_zeros);
@@ -213,7 +213,7 @@ namespace bwgame {
 					packageBlockRenderData({ i, u, b }, BlockDirection::BACKWARD));
 			}
 			for (trailing_zeros = std::countr_zero<uint16_t>(n_zxy[u].v16i_u16[b]);
-				trailing_zeros < 16 - 1;
+				trailing_zeros < CHUNK_WIDTH_BLOCKS;
 				trailing_zeros = std::countr_zero<uint16_t>(n_zxy[u].v16i_u16[b]))
 			{
 				n_zxy[u].v16i_u16[b] &= ~(1U << trailing_zeros);
@@ -222,7 +222,7 @@ namespace bwgame {
 					packageBlockRenderData({ b, u, i }, BlockDirection::RIGHT));
 			}
 			for (trailing_zeros = std::countr_zero<uint16_t>(p_zxy[u].v16i_u16[b]);
-				trailing_zeros < 16;
+				trailing_zeros < CHUNK_WIDTH_BLOCKS + 1;
 				trailing_zeros = std::countr_zero<uint16_t>(p_zxy[u].v16i_u16[b]))
 			{
 				p_zxy[u].v16i_u16[b] &= ~(1U << trailing_zeros);
@@ -242,7 +242,7 @@ namespace bwgame {
 		for (uint8_t b = 0; b < 4; b++)
 		{
 			for (trailing_zeros = std::countr_zero<uint64_t>(n_yxz[k][i].v4i_u64[b]);
-				trailing_zeros < 64;
+				trailing_zeros < CHUNK_HEIGHT_BLOCKS / 4;
 				trailing_zeros = std::countr_zero<uint64_t>(n_yxz[k][i].v4i_u64[b]))
 			{
 				n_yxz[k][i].v4i_u64[b] &= ~(1ULL << trailing_zeros);
@@ -252,7 +252,7 @@ namespace bwgame {
 					packageBlockRenderData({ i, j, k }, BlockDirection::DOWN));
 			}
 			for (trailing_zeros = std::countr_zero<uint64_t>(p_yxz[k][i].v4i_u64[b]);
-				trailing_zeros < 64;
+				trailing_zeros < CHUNK_HEIGHT_BLOCKS / 4;
 				trailing_zeros = std::countr_zero<uint64_t>(p_yxz[k][i].v4i_u64[b]))
 			{
 				p_yxz[k][i].v4i_u64[b] &= ~(1ULL << trailing_zeros);
