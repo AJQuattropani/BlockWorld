@@ -247,7 +247,7 @@ namespace bwgame {
 				trailing_zeros = std::countr_zero<uint64_t>(n_yxz[k][i].v4i_u64[b]))
 			{
 				n_yxz[k][i].v4i_u64[b] &= ~(1ULL << trailing_zeros);
-				//if (trailing_zeros == 1) continue;
+				if (trailing_zeros == 63 && b == 0) continue;
 				j = b << 6 | (63 - trailing_zeros);
 				vertices.emplace_back(
 					packageBlockRenderData({ i, j, k }, BlockDirection::DOWN));
