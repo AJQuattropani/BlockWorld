@@ -275,7 +275,6 @@ namespace bwgame {
 
 	void World::loadChunk(ChunkCoords coords)
 	{
-
 		if (const auto& It = chunkMap.find(coords); It != chunkMap.end()) return;
 
 		const auto& [Iterator, success] = chunkMap.emplace(coords, Chunk(coords, chunkMap));

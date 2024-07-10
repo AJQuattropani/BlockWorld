@@ -5,10 +5,11 @@
 namespace bwgame {
 
 
-	Chunk::Chunk(ChunkCoords chunkCoords, const std::unordered_map<ChunkCoords, Chunk>& chunkMap)
+	Chunk::Chunk(ChunkCoords chunkCoords, std::unordered_map<ChunkCoords, Chunk>& chunkMap)
 		: chunkCoords(chunkCoords), blockMap(), chunkMap(chunkMap), model(std::make_unique<bwrenderer::ChunkModel>())
 	{
-		flags = ~flags;
+		flags.set(CHUNK_FLAGS::MODEL_UPDATE_FLAG);
+
 		BW_INFO("Chunk generated.");
 
 		blockMap.reserve(CHUNK_HEIGHT_BLOCKS*100);
@@ -24,8 +25,8 @@ namespace bwgame {
 	{
 		if (flags.test(CHUNK_FLAGS::MODEL_UPDATE_FLAG))
 		{
-			model->updateRenderData(packageRenderData());
-			flags.flip(CHUNK_FLAGS::MODEL_UPDATE_FLAG);
+			reloadModelData();
+			flags.reset(CHUNK_FLAGS::MODEL_UPDATE_FLAG);
 		}
 	}
 
@@ -72,7 +73,7 @@ namespace bwgame {
 #define OPTIMIZATION 2
 #if OPTIMIZATION == 1
 		{
-			TIME_FUNC("Optimization 1");
+			//TIME_FUNC("Optimization 1");
 			if (const auto& n_x_Chunk = chunkMap.find(ChunkCoords{ chunkCoords.x + 1, chunkCoords.z }); n_x_Chunk != chunkMap.end())
 			{
 				auto n_x_It_func = [](const BlockCoords& coords) -> bool { return coords.x == 0; };
@@ -109,7 +110,7 @@ namespace bwgame {
 #endif
 #if OPTIMIZATION == 2
 		{
-			TIME_FUNC("Optimization 2");
+			//TIME_FUNC("Optimization 2");
 			if (const auto& n_x_Chunk = chunkMap.find(ChunkCoords{ chunkCoords.x + 1, chunkCoords.z }); n_x_Chunk != chunkMap.end())
 			{
 				const auto& blockMap = n_x_Chunk->second.blockMap;

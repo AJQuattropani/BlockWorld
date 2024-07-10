@@ -16,7 +16,7 @@ namespace bwgame
 	class Chunk
 	{
 	public:
-		Chunk(ChunkCoords chunkCoords, const std::unordered_map<ChunkCoords, Chunk>& chunkMap);
+		Chunk(ChunkCoords chunkCoords, std::unordered_map<ChunkCoords, Chunk>& chunkMap);
 		
 		Chunk(const Chunk&) = default;
 		Chunk(Chunk&&) = default;
@@ -69,8 +69,11 @@ namespace bwgame
 		std::unordered_map<BlockCoords, Block> blockMap;
 		std::unique_ptr<bwrenderer::ChunkModel> model;
 		// TODO make shared_ptr
-		const std::unordered_map<ChunkCoords, Chunk>& chunkMap;
+		std::unordered_map<ChunkCoords, Chunk>& chunkMap;
 	private:
+		inline void reloadModelData() const {
+			model->updateRenderData(packageRenderData());
+		}
 		std::vector<bwrenderer::BlockVertex> packageRenderData() const;
 		void bc_vertex_helper_ikj(uint8_t u, utils::data_IKJ& n_xzy, utils::data_IKJ& p_xzy, utils::data_IKJ& n_zxy, utils::data_IKJ& p_zxy,
 			std::vector<bwrenderer::BlockVertex>& vertices) const;
