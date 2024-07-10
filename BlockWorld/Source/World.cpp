@@ -36,6 +36,8 @@ namespace bwgame {
 
 		depth_buffer.unbind();
 
+		static constexpr float gradient = 30.0f;
+		static constexpr float inv_grad = 1.0f / gradient;
 
 		bwrenderer::TextureBuffer& texture = context->texture_cache.findOrLoad("Blocks", "blockmap.jpeg");
 		blockShader.bind();
@@ -45,6 +47,8 @@ namespace bwgame {
 		blockShader.setUniform3f("dir_light.ambient", 0.2f, 0.2f, 0.2f);
 		blockShader.setUniform3f("dir_light.diffuse", 0.85f, 0.85f, 0.85f);
 		blockShader.setUniform3f("dir_light.specular", 0.2f, 0.2f, 0.2f);
+		blockShader.setUniform1f("fog.gradient", gradient);
+		blockShader.setUniform1f("fog.density", glm::pow(1 - inv_grad, inv_grad) / (context->ch_render_unload_distance * 15.0/2.0));
 		blockShader.unbind();
 
 		shadowShader.bind();
@@ -97,12 +101,12 @@ namespace bwgame {
 			glm::sin(glm::mod(radialTime, glm::radians(180.0f))),
 			0.0);
 
-		const float near_plane = 0.1f, far_plane = 2.0f * 15.0f * context->ch_render_load_distance;
+		const float near_plane = 1.0f, far_plane = 256.0f * 2.0f;
 		glm::mat4 lightProjection = glm::ortho(
-			-15.0f * context->ch_render_load_distance, 
-			15.0f * context->ch_render_load_distance, 
-			-15.0f * context->ch_render_load_distance, 
-			15.0f * context->ch_render_load_distance, near_plane, far_plane);
+			-15.0f * context->ch_shadow_window_distance/2, 
+			15.0f * context->ch_shadow_window_distance/2,
+			-15.0f * context->ch_shadow_window_distance/2,
+			15.0f * context->ch_shadow_window_distance/2, near_plane, far_plane);
 		glm::mat4 lightView = glm::lookAt(
 			lightPosition 
 			+ glm::vec3(context->player_position_x, context->player_position_y, context->player_position_z),
@@ -201,6 +205,7 @@ namespace bwgame {
 		blockShader.setUniformMat4f("projection", lightProjection);
 #endif
 		blockShader.setUniformMat4f("lightSpaceMatrix", lightSpaceMatrix);
+		blockShader.setUniform3f("camPos", context->player_position_x, context->player_position_y, context->player_position_z);
 		for (auto& [coords, chunk] : chunkMap)
 		{
 			chunk.render(blockShader);

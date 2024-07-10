@@ -13,6 +13,7 @@ out GS_OUT {
 	vec3 f_normal;
 	vec4 f_pos_vs;
 	vec4 f_pos_ls;
+	vec3 rel_fragPos_ws;
 } gs_out;
 
 uniform mat4 model;
@@ -22,6 +23,8 @@ uniform mat4 lightSpaceMatrix;
 
 uniform vec2 image_size;
 uniform float chunk_width;
+
+uniform vec3 camPos;
 
 void main() {
 	
@@ -51,6 +54,7 @@ void main() {
 	gs_out.f_normal = mat3(transpose(inverse(view * model))) * normal;
 
 	vec4 fPosws = model * vec4(pos + offshoots[0]/2, 1.0);
+	gs_out.rel_fragPos_ws = vec3(fPosws.xyz - camPos);
 	gs_out.f_pos_vs = view * fPosws;
 	gs_out.f_pos_ls = lightSpaceMatrix * fPosws;
 	gs_out.f_texCoords = texCoords[0];
@@ -58,6 +62,7 @@ void main() {
 	EmitVertex();
 	
 	fPosws = model * vec4(pos + offshoots[1]/2, 1.0);
+	gs_out.rel_fragPos_ws = vec3(fPosws.xyz - camPos);
 	gs_out.f_pos_vs = view * fPosws;
 	gs_out.f_pos_ls = lightSpaceMatrix * fPosws;
 	gs_out.f_texCoords = texCoords[1];
@@ -65,6 +70,7 @@ void main() {
 	EmitVertex();
 
 	fPosws = model * vec4(pos + offshoots[2]/2, 1.0);
+	gs_out.rel_fragPos_ws = vec3(fPosws.xyz - camPos);
 	gs_out.f_pos_vs = view * fPosws;
 	gs_out.f_pos_ls = lightSpaceMatrix * fPosws;
 	gs_out.f_texCoords = texCoords[2];
@@ -74,6 +80,7 @@ void main() {
 	EndPrimitive();
 	
 	fPosws = model * vec4(pos + offshoots[0]/2, 1.0);
+	gs_out.rel_fragPos_ws = vec3(fPosws.xyz - camPos);
 	gs_out.f_pos_vs = view * fPosws;
 	gs_out.f_pos_ls = lightSpaceMatrix * fPosws;
 	gs_out.f_texCoords = texCoords[0];
@@ -81,6 +88,7 @@ void main() {
 	EmitVertex();
 	
 	fPosws = model * vec4(pos + offshoots[2]/2, 1.0);
+	gs_out.rel_fragPos_ws = vec3(fPosws.xyz - camPos);
 	gs_out.f_pos_vs = view * fPosws;
 	gs_out.f_pos_ls = lightSpaceMatrix * fPosws;
 	gs_out.f_texCoords = texCoords[2];
@@ -88,6 +96,7 @@ void main() {
 	EmitVertex();
 
 	fPosws = model * vec4(pos + offshoots[3]/2, 1.0);
+	gs_out.rel_fragPos_ws = vec3(fPosws.xyz - camPos);
 	gs_out.f_pos_vs = view * fPosws;
 	gs_out.f_pos_ls = lightSpaceMatrix * fPosws;
 	gs_out.f_texCoords = texCoords[3];

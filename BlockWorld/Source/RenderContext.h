@@ -16,6 +16,8 @@ namespace bwrenderer
         uint32_t ch_render_load_distance;
         uint32_t ch_render_unload_distance;
 
+		uint32_t ch_shadow_window_distance;
+
 		double player_position_x = 0.0f;
 		double player_position_y = 0.0f;
 		double player_position_z = 0.0f;

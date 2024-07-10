@@ -5,6 +5,7 @@ in GS_OUT {
 	vec3 f_normal;
 	vec4 f_pos_vs;
 	vec4 f_pos_ls;
+	vec3 rel_fragPos_ws;
 } fs_in;
 
 out vec4 o_Color;
@@ -21,11 +22,16 @@ struct SunLight {
 
 	float environmental_brightness;
 };
+struct Fog {
+	float density;
+	float gradient;
+};
 
 uniform sampler2D block_texture;
 uniform sampler2D shadow_map;
 
 uniform SunLight dir_light;
+uniform Fog fog;
 uniform mat4 view;
 
 
@@ -33,10 +39,10 @@ uniform mat4 view;
 const vec4 day_color = vec4(0.17, 0.55, 0.99, 1.0);
 const vec4 night_color = vec4(0.17/10, 0.55/10, 0.99/10, 1.0);
 
-const float density = 0.005;
-const float gradient = 30.0;
+
 
 const float shininess = 64.0;
+
 
 const float gamma = 2.2;
 
@@ -49,7 +55,7 @@ void main()
 	vec3 norm = normalize(fs_in.f_normal);
 	vec3 fragPos = fs_in.f_pos_vs.xyz;
 	vec3 viewDir = normalize(-fragPos);
-	float fragDistance = length(vec2(fragPos.xz));
+	float fragDistance = max(abs(fs_in.rel_fragPos_ws.x), abs(fs_in.rel_fragPos_ws.z));
 	
 	vec3 fragColor = vec3(0.0);
 
@@ -66,7 +72,7 @@ void main()
 
 vec4 addFog(vec3 fragColor, float fragDistance, float radialTime)
 {
-	float visbility = clamp((exp(-pow(fragDistance*density,gradient))), 0.0, 1.0);
+	float visbility = clamp((exp(-pow(fragDistance*fog.density,fog.gradient))), 0.0, 1.0);
 	float skyTransition = clamp(0.5 - 2.0 * sin(radialTime), 0.0, 1.0);
 	vec4 skyColor = mix(day_color, night_color, skyTransition);
 	float sunsetTransition = 1-sqrt(abs(sin(radialTime)));
