@@ -16,13 +16,21 @@ namespace bwgame
 	class Chunk
 	{
 	public:
-		Chunk(ChunkCoords chunkCoords, std::unordered_map<ChunkCoords, Chunk>& chunkMap);
+		Chunk(ChunkCoords chunkCoords, const std::unordered_map<ChunkCoords, Chunk> const* chunkMap);
 		
-		Chunk(const Chunk&) = default;
-		Chunk(Chunk&&) = default;
+		Chunk(const Chunk&) = delete;
+		Chunk(Chunk&& other) noexcept : chunk_lock(), chunkMap(other.chunkMap),
+			chunkCoords(other.chunkCoords), isReadyToRender(other.isReadyToRender)
+		{
+			other.chunk_lock.lock();
+			blockMap = std::move(other.blockMap);
+			flags = std::move(other.flags);
+			model = std::move(other.model);
+			other.chunk_lock.unlock();
+		}
 
-		Chunk& operator=(const Chunk&) = default;
-		Chunk& operator=(Chunk&&) = default;
+		Chunk& operator=(const Chunk&) = delete;
+		Chunk& operator=(Chunk&&) = delete;
 
 		~Chunk();
 
@@ -30,11 +38,14 @@ namespace bwgame
 
 		void render(bwrenderer::Shader& shader) const;
 
-		inline const ChunkCoords getChunkCoords() const { return chunkCoords; }
+		inline ChunkCoords getChunkCoords() const { return chunkCoords; }
 		inline const Block& getBlock(block_coord_t x, block_coord_t y, block_coord_t z) const 
 		{	return getBlock({ x,y,z });	}
 
 		inline void reserve(uint16_t amount) {
+
+			std::scoped_lock lock{chunk_lock};
+
 			if (blockMap.size() >= CHUNK_VOLUME)
 			{
 				BW_WARN("Reserve failed - Chunk is already at full capacity.");
@@ -57,8 +68,11 @@ namespace bwgame
 
 		inline void deleteBlock(const BlockCoords& coords)
 		{
+			std::scoped_lock lock{ chunk_lock };
 			blockMap.erase(coords);
 		}
+
+		void setBlock_safe(const BlockCoords& coords, const Block& block);
 
 		void setBlock(const BlockCoords& coords, const Block& block);
 
@@ -69,7 +83,11 @@ namespace bwgame
 		std::unordered_map<BlockCoords, Block> blockMap;
 		std::unique_ptr<bwrenderer::ChunkModel> model;
 		// TODO make shared_ptr
-		std::unordered_map<ChunkCoords, Chunk>& chunkMap;
+		const std::unordered_map<ChunkCoords, Chunk> const* chunkMap;
+
+		std::mutex chunk_lock;
+		bool isReadyToRender = false;
+
 	private:
 		inline void reloadModelData() const {
 			model->updateRenderData(packageRenderData());

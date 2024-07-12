@@ -5,34 +5,53 @@
 namespace bwgame {
 
 
-	Chunk::Chunk(ChunkCoords chunkCoords, std::unordered_map<ChunkCoords, Chunk>& chunkMap)
+	Chunk::Chunk(ChunkCoords chunkCoords, const std::unordered_map<ChunkCoords, Chunk> const* chunkMap)
 		: chunkCoords(chunkCoords), blockMap(), chunkMap(chunkMap), model(std::make_unique<bwrenderer::ChunkModel>())
 	{
 		flags.set(CHUNK_FLAGS::MODEL_UPDATE_FLAG);
 
 		BW_INFO("Chunk generated.");
-
-		blockMap.reserve(CHUNK_HEIGHT_BLOCKS*100);
 		model->setModelMatrix(chunkCoords);
 	}
 
 	Chunk::~Chunk()
 	{
+		std::scoped_lock destroylock{ chunk_lock };
 		BW_INFO("Chunk deleted.");
 	}
 
 	void Chunk::update()
 	{
-		if (flags.test(CHUNK_FLAGS::MODEL_UPDATE_FLAG))
+		if (chunk_lock.try_lock())
 		{
-			reloadModelData();
-			flags.reset(CHUNK_FLAGS::MODEL_UPDATE_FLAG);
+			if (flags.test(CHUNK_FLAGS::MODEL_UPDATE_FLAG))
+			{
+				reloadModelData();
+				flags.reset(CHUNK_FLAGS::MODEL_UPDATE_FLAG);
+				isReadyToRender = true;
+			}
+
+
+			chunk_lock.unlock();
+		}
+		else
+		{
+			BW_DEBUG("Update deferred.");
 		}
 	}
 
 	void Chunk::render(bwrenderer::Shader& shader) const
 	{
-		model->render(shader);
+		if (isReadyToRender)
+		{
+			model->render(shader);
+		}
+	}
+
+	void Chunk::setBlock_safe(const BlockCoords& coords, const Block& block)
+	{
+		std::scoped_lock buildlock{ chunk_lock };
+		setBlock(coords, block);
 	}
 
 	void Chunk::setBlock(const BlockCoords& coords, const Block& block)
@@ -111,7 +130,7 @@ namespace bwgame {
 #if OPTIMIZATION == 2
 		{
 			//TIME_FUNC("Optimization 2");
-			if (const auto& n_x_Chunk = chunkMap.find(ChunkCoords{ chunkCoords.x + 1, chunkCoords.z }); n_x_Chunk != chunkMap.end())
+			if (const auto& n_x_Chunk = chunkMap->find(ChunkCoords{ chunkCoords.x + 1, chunkCoords.z }); n_x_Chunk != chunkMap->end())
 			{
 				const auto& blockMap = n_x_Chunk->second.blockMap;
 				BlockCoords coords{ 0,0,0 };
@@ -125,7 +144,7 @@ namespace bwgame {
 					if (coords.y == CHUNK_HEIGHT_BLOCKS - 1) break;
 				}
 			}
-			if (const auto& n_z_Chunk = chunkMap.find(ChunkCoords{ chunkCoords.x, chunkCoords.z + 1 }); n_z_Chunk != chunkMap.end())
+			if (const auto& n_z_Chunk = chunkMap->find(ChunkCoords{ chunkCoords.x, chunkCoords.z + 1 }); n_z_Chunk != chunkMap->end())
 			{
 				const auto& blockMap = n_z_Chunk->second.blockMap;
 				BlockCoords coords{ 0,0,0 };
@@ -139,7 +158,7 @@ namespace bwgame {
 					if (coords.y == CHUNK_HEIGHT_BLOCKS - 1) break;
 				}
 			}
-			if (const auto& p_x_Chunk = chunkMap.find(ChunkCoords{ chunkCoords.x - 1, chunkCoords.z }); p_x_Chunk != chunkMap.end())
+			if (const auto& p_x_Chunk = chunkMap->find(ChunkCoords{ chunkCoords.x - 1, chunkCoords.z }); p_x_Chunk != chunkMap->end())
 			{
 				const auto& blockMap = p_x_Chunk->second.blockMap;
 				BlockCoords coords{ 14,0,0 };
@@ -153,7 +172,7 @@ namespace bwgame {
 					if (coords.y == CHUNK_HEIGHT_BLOCKS - 1) break;
 				}
 			}
-			if (const auto& p_z_Chunk = chunkMap.find(ChunkCoords{ chunkCoords.x, chunkCoords.z - 1 }); p_z_Chunk != chunkMap.end())
+			if (const auto& p_z_Chunk = chunkMap->find(ChunkCoords{ chunkCoords.x, chunkCoords.z - 1 }); p_z_Chunk != chunkMap->end())
 			{
 				const auto& blockMap = p_z_Chunk->second.blockMap;
 				BlockCoords coords{ 0,0,14 };

@@ -48,9 +48,10 @@ namespace bwgame {
 		bwrenderer::TextureBuffer depth_map;
 		const int SHADOW_WIDTH = 720, SHADOW_HEIGHT = 720;
 
+		chunk_coord_t playerLastChunkPosX = 0, playerLastChunkPosZ = 0;
+
 	private:
 		void mt_loadChunks();
-		void loadChunks();
 		void build_func(ChunkCoords coords, Chunk* chunk);
 		void loadChunk(ChunkCoords coords);
 		

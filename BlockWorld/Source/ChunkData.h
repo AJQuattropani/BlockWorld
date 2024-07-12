@@ -17,6 +17,13 @@ namespace bwgame {
 		struct { chunk_coord_t x, z; };
 		chunk_coord_t data[2];
 		uint64_t seed;
+
+		ChunkCoords() = default;
+		ChunkCoords(chunk_coord_t x, chunk_coord_t z) : x(x), z(z) {}
+		ChunkCoords(ChunkCoords&&) = default;
+		ChunkCoords(const ChunkCoords&) = default;
+		ChunkCoords& operator=(ChunkCoords&&) = default;
+		ChunkCoords& operator=(const ChunkCoords&) = default;
 	};
 
 	enum CHUNK_FLAGS

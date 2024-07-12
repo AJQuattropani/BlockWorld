@@ -19,7 +19,7 @@ namespace bwgame {
 				{
 					int64_t w_x = coords.x * 15 + blockIdx.x;
 					int64_t w_z = coords.z * 15 + blockIdx.z;
-					int64_t threshold = 80.0 + ((rand() % 10 == 0) ? 1 : 0);  //1.0 * cos(w_x / 16.0) + 2.0 * sin(w_z/40.0) + 6.0 * sin(w_z/8.0-sin(w_x));
+					int64_t threshold = 40.0 + ((rand() % 10 == 0) ? 1 : 0);  //1.0 * cos(w_x / 16.0) + 2.0 * sin(w_z/40.0) + 6.0 * sin(w_z/8.0-sin(w_x));
 					if (blockIdx.y < threshold)
 						chunk.setBlock(blockIdx, getBlockLayered(threshold - blockIdx.y, blockIdx.y));
 				}

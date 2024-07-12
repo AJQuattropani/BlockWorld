@@ -4,6 +4,8 @@
 #include <unordered_map>
 #include <memory>
 #include <string>
+#include <thread>
+#include <mutex>
 
 #ifndef DIST
 #ifdef RELEASE
@@ -85,6 +87,7 @@ public:
 	template <typename ...Args>
 	void print(Log_Level msg_level, TextColor textColor, const char* message, Args... args) const
 	{
+
 		static const char* TextColorTable[(int)TextColor::COUNT] =
 		{
 			"\x1b[30m",
@@ -110,10 +113,12 @@ public:
 		char* textBuffer = new char[256*3];
 		snprintf(textBuffer, 256*3, formatBuffer, args...);
 
+		log_lock.lock();
 		puts(textBuffer);
-
+		log_lock.unlock();
 		delete[] formatBuffer;
 		delete[] textBuffer;
+
 	}
 	inline void setLevel(Log_Level level) { log_level = level;	}
 	
@@ -126,5 +131,5 @@ private:
 	static std::shared_ptr<Log> AppLog;
 	static std::shared_ptr<Log> GraphicsLog;
 	static std::unordered_map<Log_Level, const char*> names;
-
+	static std::mutex log_lock;
 };
