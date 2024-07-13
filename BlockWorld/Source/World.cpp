@@ -3,16 +3,16 @@
 
 namespace bwgame {
 
-	void World::build_func(ChunkCoords coords, Chunk* chunk) {
-		worldGen->buildChunk(coords, *chunk);
-	}
 
 	World::World(const std::shared_ptr<BlockRegister>& block_register, const std::shared_ptr<bwrenderer::RenderContext>& context,
 		float ticks_per_second, float minutes_per_day, uint64_t seed)
 		: worldGen(std::make_unique<WorldGenerator>(seed, block_register)),
 		context(context), dayLightCycle(minutes_per_day, ticks_per_second),
-		blockShader("Blocks/World", "block_shader"), shadowShader("Blocks/World", "shadows"), depth_buffer()
+		blockShader("Blocks/World", "block_shader"), shadowShader("Blocks/World", "shadows"), depth_buffer(), async_world_operations(32)
 	{
+		chunkMap.reserve((2 * context->ch_render_load_distance + 1) * (2 * context->ch_render_load_distance + 1));
+
+
 		GLuint depth_map;
 		glGenTextures(1, &depth_map);
 		glBindTexture(GL_TEXTURE_2D, depth_map);
@@ -48,7 +48,7 @@ namespace bwgame {
 		blockShader.setUniform3f("dir_light.diffuse", 0.85f, 0.85f, 0.85f);
 		blockShader.setUniform3f("dir_light.specular", 0.2f, 0.2f, 0.2f);
 		blockShader.setUniform1f("fog.gradient", gradient);
-		blockShader.setUniform1f("fog.density", glm::pow(1 - inv_grad, inv_grad) / (context->ch_render_unload_distance * 15.0));
+		blockShader.setUniform1f("fog.density", glm::pow(1 - inv_grad, inv_grad) / (context->ch_render_load_distance * 15.0));
 		blockShader.unbind();
 
 		shadowShader.bind();
@@ -56,23 +56,20 @@ namespace bwgame {
 
 		BW_INFO("World created.");
 
-		std::vector<std::jthread> async_chunk_loads;
 		for (chunk_coord_t x = context->player_position_x - context->ch_render_load_distance; x < context->player_position_x + context->ch_render_load_distance + 1;
 			x++)
 		{
 			for (chunk_coord_t z = context->player_position_x - context->ch_render_load_distance; z < context->player_position_x + context->ch_render_load_distance + 1;
 				z++)
 			{
-				const auto& [Iterator, success] = chunkMap.try_emplace({ x, z }, Chunk({ x, z }, &chunkMap));
-				if (!success) continue;
-
 				//todo move to own function
-				async_chunk_loads.push_back(std::jthread(&World::build_func, this, Iterator->first, &Iterator->second));
+				async_world_operations.pushTask(std::bind(&World::loadChunk, this, ChunkCoords{x,z}));
 				BW_DEBUG("Chunk {%d, %d} loaded.", x, z);
 			}
 		}
 
 	}
+
 
 	World::~World()
 	{
@@ -84,29 +81,13 @@ namespace bwgame {
 	{
 		mt_loadChunks();
 
-		/*{
-			uint8_t unload_count = 0;
-			TIME_FUNC("World Unload");
-			for (auto it = chunkMap.begin(); it != chunkMap.end(); )
-			{
-				if (abs(it->first.x - int64_t(context->player_position_x) / 15) > context->ch_render_unload_distance / 2
-					|| abs(it->first.z - int64_t(context->player_position_z) / 15) > context->ch_render_unload_distance / 2)
-				{
-					it = unloadChunk(it);
-					unload_count++;
-				}
-				else {
-					it->second.update();
-					it++;
-				}
-			}
-			GL_DEBUG("%i chunks unloaded.", unload_count);
-
-		}*/
-
 		dayLightCycle.update();
 
+		std::scoped_lock<std::mutex> updateIteratorLock(worldDataLock);
 		for (auto& [coords, chunk] : chunkMap) chunk.update();
+		
+
+		BW_DEBUG("Total chunks: %d", chunkMap.size());
 
 	}
 
@@ -275,15 +256,14 @@ namespace bwgame {
 		chunk_coord_t differenceZ = ch_player_position_z - playerLastChunkPosZ;
 
 		const chunk_coord_t& render_load_distance = context->ch_render_load_distance;
-		const chunk_coord_t& render_unload_distance = context->ch_render_unload_distance;
 
 		if (differenceX == 0 && differenceZ == 0) return;
 
 		size_t unload_chunks = 0;
 		auto unload_filter = [ch_player_position_x,
-			ch_player_position_z, render_unload_distance](const auto& chunkIt) -> bool {
-			return abs(chunkIt.first.x - ch_player_position_x) > render_unload_distance
-				|| abs(chunkIt.first.z - ch_player_position_z) > render_unload_distance;
+			ch_player_position_z, render_load_distance](const auto& chunkIt) -> bool {
+			return abs(chunkIt.first.x - ch_player_position_x) > render_load_distance
+				|| abs(chunkIt.first.z - ch_player_position_z) > render_load_distance;
 			};
 		for (auto& coords : chunkMap | std::views::filter(unload_filter) | std::views::keys) 
 		{
@@ -300,8 +280,6 @@ namespace bwgame {
 			z2 = ch_player_position_z + render_load_distance,
 			xmod1 = ch_player_position_x - render_load_distance,
 			xmod2 = ch_player_position_x + render_load_distance;
-
-		std::vector<std::jthread> async_chunk_loads;
 
 		BW_DEBUG("Last chunk: {%d, %d} into: {%d, %d}", playerLastChunkPosX, playerLastChunkPosZ, ch_player_position_x, ch_player_position_z);
 
@@ -341,11 +319,8 @@ namespace bwgame {
 			// make rectangle strip WITH corner
 			for (chunk_coord_t z = ch_player_position_z - render_load_distance; z < ch_player_position_z + render_load_distance + 1; z++)
 			{
-				const auto& [Iterator, success] = chunkMap.try_emplace({ x, z }, Chunk({ x, z }, &chunkMap));
-				if (!success) continue;
-
-				//todo move to own function
-				async_chunk_loads.push_back(std::jthread(&World::build_func, this, Iterator->first, &Iterator->second));
+				BW_ASSERT(chunkMap.find({ x,z }) == chunkMap.end(), "Repeat chunk building at {%d,%d}.", x, z);
+				async_world_operations.pushTask(std::bind(&World::loadChunk, this, ChunkCoords{x,z}));
 				chunk_loads++;
 			}
 		}
@@ -355,11 +330,8 @@ namespace bwgame {
 			// make rectangle strip WITHOUT corner
 			for (chunk_coord_t x = xmod1; x < xmod2 + 1; x++)
 			{
-				const auto& [Iterator, success] = chunkMap.try_emplace({ x, z }, Chunk({ x, z }, &chunkMap));
-				if (!success) continue;
-
-				//todo move to own function
-				async_chunk_loads.push_back(std::jthread(&World::build_func, this, Iterator->first, &Iterator->second));
+				//BW_ASSERT(chunkMap.find({ x,z }) == chunkMap.end(), "Repeat chunk building at {%d,%d}.", x, z);
+				async_world_operations.pushTask(std::bind(&World::loadChunk, this, ChunkCoords{ x,z }));
 				chunk_loads++;
 			}
 		}
@@ -374,32 +346,31 @@ namespace bwgame {
 
 	}
 
-
-	void World::loadChunk(ChunkCoords coords)
-	{
-		const auto& [Iterator, success] = chunkMap.try_emplace(coords, Chunk(coords, &chunkMap));
-		auto& chunk = Iterator->second;
-		//todo move to own function
-		
-		build_func(coords, &chunk);
+	void World::loadChunk(ChunkCoords coords) {
+		//todo add
+		Chunk chunk = worldGen->buildChunk(coords, &chunkMap);
+		{
+			std::scoped_lock<std::mutex> addChunkToMapLock(worldDataLock);
+			chunkMap.try_emplace(coords, std::move(chunk));
+		}
 	}
+
 
 
 	void bwgame::World::unloadChunk(const ChunkCoords& coords)
 	{
-		//storeChunk();
-		chunkMap.erase(coords);
+		{
+			std::scoped_lock<std::mutex> removeChunkFromMapLock(worldDataLock);
+			//storeChunk();
+			chunkMap.erase(coords);
+		}
 		BW_INFO("Chunk { %i, %i } unloaded.", coords.x, coords.z);
-	}
-
-	const std::unordered_map<ChunkCoords, Chunk>::iterator World::unloadChunk(const std::unordered_map<ChunkCoords, Chunk>::iterator& it)
-	{
-		//storeChunk(it);
-		return chunkMap.erase(it);
 	}
 
 	void World::unloadAllChunks()
 	{
+		std::scoped_lock<std::mutex> removeChunksFromMap(worldDataLock);
+		//storeChunks
 		chunkMap.clear();
 		BW_INFO("All chunks unloaded.");
 	}

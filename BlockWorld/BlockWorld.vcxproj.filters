@@ -239,6 +239,9 @@
     <ClInclude Include="Source\Skybox.h">
       <Filter>Header Files\Render\Utils</Filter>
     </ClInclude>
+    <ClInclude Include="Source\ThreadList.h">
+      <Filter>Header Files\Game\Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\Textures\Blocks\blockmap.jpeg">

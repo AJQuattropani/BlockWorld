@@ -189,6 +189,7 @@
     <ClInclude Include="Source\Shader.h" />
     <ClInclude Include="Source\Skybox.h" />
     <ClInclude Include="Source\Texture.h" />
+    <ClInclude Include="Source\ThreadList.h" />
     <ClInclude Include="Source\Timer.h" />
     <ClInclude Include="Source\Vendor\stb_image.h" />
     <ClInclude Include="Source\Vertices.h" />

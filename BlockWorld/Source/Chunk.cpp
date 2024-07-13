@@ -6,52 +6,37 @@ namespace bwgame {
 
 
 	Chunk::Chunk(ChunkCoords chunkCoords, const std::unordered_map<ChunkCoords, Chunk> const* chunkMap)
-		: chunkCoords(chunkCoords), blockMap(), chunkMap(chunkMap), model(std::make_unique<bwrenderer::ChunkModel>())
+		: chunkCoords(chunkCoords), blockMap(), chunkMap(chunkMap), model(nullptr), async_chunk_operations(std::make_unique<utils::ThreadList>(1))
 	{
 		flags.set(CHUNK_FLAGS::MODEL_UPDATE_FLAG);
 
 		BW_INFO("Chunk generated.");
-		model->setModelMatrix(chunkCoords);
 	}
 
 	Chunk::~Chunk()
 	{
-		std::scoped_lock destroylock{ chunk_lock };
 		BW_INFO("Chunk deleted.");
 	}
 
 	void Chunk::update()
 	{
-		if (chunk_lock.try_lock())
+		if (flags.test(CHUNK_FLAGS::MODEL_UPDATE_FLAG))
 		{
-			if (flags.test(CHUNK_FLAGS::MODEL_UPDATE_FLAG))
+			if (model.get() == nullptr)
 			{
-				reloadModelData();
-				flags.reset(CHUNK_FLAGS::MODEL_UPDATE_FLAG);
-				isReadyToRender = true;
+				model = std::make_unique<bwrenderer::ChunkModel>();
+				model->setModelMatrix(chunkCoords);
 			}
-
-
-			chunk_lock.unlock();
+			reloadModelData();
+			flags.reset(CHUNK_FLAGS::MODEL_UPDATE_FLAG);
 		}
-		else
-		{
-			BW_DEBUG("Update deferred.");
-		}
+
 	}
 
 	void Chunk::render(bwrenderer::Shader& shader) const
 	{
-		if (isReadyToRender)
-		{
-			model->render(shader);
-		}
-	}
-
-	void Chunk::setBlock_safe(const BlockCoords& coords, const Block& block)
-	{
-		std::scoped_lock buildlock{ chunk_lock };
-		setBlock(coords, block);
+		if (model.get() == nullptr) return;
+		model->render(shader);
 	}
 
 	void Chunk::setBlock(const BlockCoords& coords, const Block& block)
@@ -64,7 +49,10 @@ namespace bwgame {
 			BW_WARN("Air block instruction ignored.");
 			return;
 		}
-		blockMap.try_emplace(coords, block);
+		{
+			std::scoped_lock<std::mutex> transferModelDataLock(chunkDataMutex);
+			blockMap.try_emplace(coords, block);
+		}
 	}
 
 	std::vector<bwrenderer::BlockVertex> Chunk::packageRenderData() const

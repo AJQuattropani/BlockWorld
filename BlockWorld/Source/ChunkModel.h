@@ -25,9 +25,9 @@ namespace bwrenderer {
 
 		void render(Shader& shader) const;
 
-		inline void updateRenderData(std::vector<BlockVertex> blockVertices)
+		inline void updateRenderData(std::vector<BlockVertex>&& blockVertices)
 		{
-			mesh.setVertexBuffer(blockVertices);
+			mesh.setVertexBuffer(std::move(blockVertices));
 		}
 
 		inline void setModelMatrix(bwgame::ChunkCoords coords)

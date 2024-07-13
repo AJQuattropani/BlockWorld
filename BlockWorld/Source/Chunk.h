@@ -6,6 +6,7 @@
 #include "ExtendLong.h"
 #include "BinaryChunk.h"
 #include "Blocks.h"
+#include "ThreadList.h"
 
 #include <ranges>
 #include <unordered_set>
@@ -18,15 +19,15 @@ namespace bwgame
 	public:
 		Chunk(ChunkCoords chunkCoords, const std::unordered_map<ChunkCoords, Chunk> const* chunkMap);
 		
+
 		Chunk(const Chunk&) = delete;
-		Chunk(Chunk&& other) noexcept : chunk_lock(), chunkMap(other.chunkMap),
-			chunkCoords(other.chunkCoords), isReadyToRender(other.isReadyToRender)
-		{
-			other.chunk_lock.lock();
+		Chunk(Chunk&& other) noexcept : flags(other.flags), chunkCoords(other.chunkCoords), chunkMap(other.chunkMap) {
+			chunkDataMutex.lock();
 			blockMap = std::move(other.blockMap);
-			flags = std::move(other.flags);
 			model = std::move(other.model);
-			other.chunk_lock.unlock();
+			async_chunk_operations = std::move(other.async_chunk_operations);
+
+			chunkDataMutex.unlock();
 		}
 
 		Chunk& operator=(const Chunk&) = delete;
@@ -43,21 +44,21 @@ namespace bwgame
 		{	return getBlock({ x,y,z });	}
 
 		inline void reserve(uint16_t amount) {
-
-			std::scoped_lock lock{chunk_lock};
-
 			if (blockMap.size() >= CHUNK_VOLUME)
 			{
 				BW_WARN("Reserve failed - Chunk is already at full capacity.");
 				return;
 			}
-			if (blockMap.size() + amount > CHUNK_VOLUME)
 			{
-				BW_WARN("Reserve attempted - Chunk has been set to maximum capacity.");
-				blockMap.reserve(CHUNK_VOLUME-blockMap.size());
-				return;
+				std::scoped_lock<std::mutex> transferModelDataLock(chunkDataMutex);
+				if (blockMap.size() + amount > CHUNK_VOLUME)
+				{
+					BW_WARN("Reserve attempted - Chunk has been set to maximum capacity.");
+					blockMap.reserve(CHUNK_VOLUME - blockMap.size());
+					return;
+				}
+				blockMap.reserve(amount);
 			}
-			blockMap.reserve(amount);
 
 		}
 
@@ -68,11 +69,9 @@ namespace bwgame
 
 		inline void deleteBlock(const BlockCoords& coords)
 		{
-			std::scoped_lock lock{ chunk_lock };
+			std::scoped_lock<std::mutex> transferModelDataLock(chunkDataMutex);
 			blockMap.erase(coords);
 		}
-
-		void setBlock_safe(const BlockCoords& coords, const Block& block);
 
 		void setBlock(const BlockCoords& coords, const Block& block);
 
@@ -85,12 +84,16 @@ namespace bwgame
 		// TODO make shared_ptr
 		const std::unordered_map<ChunkCoords, Chunk> const* chunkMap;
 
-		std::mutex chunk_lock;
-		bool isReadyToRender = false;
+		std::unique_ptr<utils::ThreadList> async_chunk_operations;
+		mutable std::mutex chunkDataMutex;
 
 	private:
 		inline void reloadModelData() const {
-			model->updateRenderData(packageRenderData());
+			auto data = packageRenderData();
+			{
+				std::scoped_lock<std::mutex> transferModelDataLock(chunkDataMutex);
+				model->updateRenderData(std::move(data));
+			}
 		}
 		std::vector<bwrenderer::BlockVertex> packageRenderData() const;
 		void bc_vertex_helper_ikj(uint8_t u, utils::data_IKJ& n_xzy, utils::data_IKJ& p_xzy, utils::data_IKJ& n_zxy, utils::data_IKJ& p_zxy,

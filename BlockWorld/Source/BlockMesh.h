@@ -25,12 +25,12 @@ namespace bwrenderer
 		inline const vertex_buffer& getVertexBuffer() const { return vbo; }
 		inline const vertex_array& getVertexArray() const { return vao; }
 
-		inline void setVertexBuffer(const std::vector<BlockVertex>& vertices) 
+		inline void setVertexBuffer(std::vector<BlockVertex>&& vertices) 
 		{ 
 			//GL_INFO("Vertex Buffer set for BlockMesh.");
 			vbo.bind();
 			vbo.attachBuffer(vertices[0].data, vertices.size() * sizeof(BlockVertex)); 
-			this->vertices = vertices;
+			this->vertices = std::move(vertices);
 		}
 	private:
 		std::vector<BlockVertex> vertices;

@@ -27,7 +27,7 @@ world(nullptr)
 
 	renderContext = std::make_shared<bwrenderer::RenderContext>
 		(bwrenderer::RenderContext{ .screen_width_px = screen_width, .screen_height_px = screen_height,
-			.ch_render_load_distance = 6, .ch_render_unload_distance = 6, .ch_shadow_window_distance = 6});
+			.ch_render_load_distance = 16, .ch_shadow_window_distance = 16});
 
 	camera.attachContext(renderContext);
 	world = std::make_unique<bwgame::World>(blocks, renderContext, ups, 10.0, 1);

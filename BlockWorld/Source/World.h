@@ -7,6 +7,7 @@
 #include "WorldGenerator.h"
 #include "WorldRenderer.h"
 #include "DayCycle.h"
+#include "ThreadList.h"
 
 #include <unordered_map>
 #include <future>
@@ -50,15 +51,15 @@ namespace bwgame {
 
 		chunk_coord_t playerLastChunkPosX = 0, playerLastChunkPosZ = 0;
 
+		utils::ThreadList async_world_operations; // number of threads may be subject to change based on CPU
+		std::mutex worldDataLock;
+
 	private:
 		void mt_loadChunks();
-		void build_func(ChunkCoords coords, Chunk* chunk);
 		void loadChunk(ChunkCoords coords);
 		
 		
 		void unloadChunk(const ChunkCoords& coords);
-
-		const std::unordered_map<ChunkCoords, Chunk>::iterator unloadChunk(const std::unordered_map<ChunkCoords, Chunk>::iterator& it);
 
 		void unloadAllChunks();
 	};

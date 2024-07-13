@@ -26,7 +26,7 @@ namespace bwgame {
 
 		inline uint64_t getSeed() const { return seed; }
 
-		void buildChunk(const ChunkCoords& coords, Chunk& chunk) const;
+		Chunk buildChunk(ChunkCoords coords, const std::unordered_map<ChunkCoords, Chunk> const* chunkMap) const;
 
 	private:
 		uint64_t seed;

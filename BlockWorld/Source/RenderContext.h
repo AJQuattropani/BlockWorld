@@ -14,7 +14,6 @@ namespace bwrenderer
 		glm::mat4 projectionMatrix = glm::mat4(1.0f);
         bwrenderer::TextureCache texture_cache;
         uint32_t ch_render_load_distance;
-        uint32_t ch_render_unload_distance;
 
 		uint32_t ch_shadow_window_distance;
 

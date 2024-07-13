@@ -72,7 +72,7 @@ void bwrenderer::Camera::zoom(float yoffset)
 void bwrenderer::Camera::updateContext()
 {
     if (updateFlags & UPDATE_PROJECTION_FLAG) outputContext->projectionMatrix =
-        glm::perspective(glm::radians(fov), static_cast<float>(outputContext->screen_width_px) / outputContext->screen_height_px, 0.1f, (outputContext->ch_render_unload_distance + 3.0f) * 15.0f);
+        glm::perspective(glm::radians(fov), static_cast<float>(outputContext->screen_width_px) / outputContext->screen_height_px, 0.1f, (outputContext->ch_render_load_distance + 3.0f) * 15.0f);
     if (updateFlags & UPDATE_VIEW_FLAG) outputContext->viewMatrix = glm::lookAt(position, position + front, up);
 
     outputContext->player_position_x = position.x;
