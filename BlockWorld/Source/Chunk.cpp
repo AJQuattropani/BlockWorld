@@ -12,6 +12,16 @@ namespace bwgame {
 		BW_INFO("Chunk generated.");
 	}
 
+	Chunk::Chunk(Chunk&& other) noexcept : flags(other.flags), chunk_coords(other.chunk_coords), chunk_map(other.chunk_map) 
+	{
+		chunk_data_mutex.lock();
+		block_map = std::move(other.block_map);
+		model = std::move(other.model);
+		async_chunk_operations = std::move(other.async_chunk_operations);
+
+		chunk_data_mutex.unlock();
+	}
+
 	Chunk::~Chunk()
 	{
 		BW_INFO("Chunk deleted.");
@@ -19,7 +29,12 @@ namespace bwgame {
 
 	void Chunk::update()
 	{
-		if (flags.test(CHUNK_FLAGS::MODEL_UPDATE_FLAG))
+		if (flags.test(CHUNK_FLAGS::MODEL_UPDATE_FLAG)
+			&& chunk_map->find({ chunk_coords.x + 1, chunk_coords.z }) != chunk_map->end()
+			&& chunk_map->find({ chunk_coords.x - 1, chunk_coords.z }) != chunk_map->end()
+			&& chunk_map->find({ chunk_coords.x, chunk_coords.z + 1}) != chunk_map->end()
+			&& chunk_map->find({ chunk_coords.x, chunk_coords.z - 1 }) != chunk_map->end()
+			)
 		{
 			if (model.get() == nullptr)
 			{

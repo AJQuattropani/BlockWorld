@@ -22,14 +22,7 @@ namespace bwgame
 		
 
 		Chunk(const Chunk&) = delete;
-		Chunk(Chunk&& other) noexcept : flags(other.flags), chunk_coords(other.chunk_coords), chunk_map(other.chunk_map) {
-			chunk_data_mutex.lock();
-			block_map = std::move(other.block_map);
-			model = std::move(other.model);
-			async_chunk_operations = std::move(other.async_chunk_operations);
-
-			chunk_data_mutex.unlock();
-		}
+		Chunk(Chunk&& other) noexcept;
 
 		Chunk& operator=(const Chunk&) = delete;
 		Chunk& operator=(Chunk&&) = delete;
