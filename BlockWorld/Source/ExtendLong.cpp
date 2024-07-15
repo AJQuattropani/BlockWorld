@@ -1,4 +1,4 @@
-#include "ExtendLong.h"
+#include "ExtendLong.hpp"
 
 void _print_extlonghex(const vec_type256* data)
 {

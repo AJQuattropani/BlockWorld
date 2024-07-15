@@ -1,4 +1,4 @@
-#include "Input.h"
+#include "Input.hpp"
 
 void mouse_cursor_input_callback(GLFWwindow* window, double xpos, double ypos)
 {
@@ -22,7 +22,7 @@ void mouse_button_input_callback(GLFWwindow* window, int button, int action, int
 void key_input_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
 	static InputContext* const context = static_cast<InputContext*>(glfwGetWindowUserPointer(window));
-	auto& keys = context->key_handler.keyCache;
+	auto& keys = context->key_handler.key_cache;
 	if (action == GLFW_PRESS)
 	{
 		keys[key] = true;
@@ -53,7 +53,7 @@ void cursor_enter_callback(GLFWwindow* window, int entered)
 
 	if (entered)
 	{
-		context->mouse_handler.resetFlag = true;
+		context->mouse_handler.reset_flag = true;
 	}
 	else
 	{

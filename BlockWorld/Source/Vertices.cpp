@@ -1,10 +1,10 @@
-#include "Vertices.h"
+#include "Vertices.hpp"
 
 using namespace bwrenderer;
 
 void vertex_layout::push(GLenum type, GLuint count, bool normalized)
 {
-	attributeList.emplace_back(type, count, normalized);
+	attribute_list.emplace_back(type, count, normalized);
 	stride += count * vertex_attribute::getSizeOfType(type);
 }
 

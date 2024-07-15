@@ -1,16 +1,16 @@
-#include "WorldGenerator.h"
+#include "WorldGenerator.hpp"
 
 namespace bwgame {
 
 
 
-	Chunk WorldGenerator::buildChunk(ChunkCoords coords, const std::unordered_map<ChunkCoords, Chunk> const* chunkMap) const
+	Chunk WorldGenerator::buildChunk(ChunkCoords coords, std::unordered_map<ChunkCoords, Chunk> const* chunkMap) const
 	{
 		Chunk chunk(coords, chunkMap);
 
-		srand(coords.seed);
+		srand(static_cast<unsigned int>(coords.seed));
 		
-		chunk.reserve(120 * CHUNK_WIDTH_BLOCKS * CHUNK_WIDTH_BLOCKS);
+		chunk.reserve(60 * CHUNK_WIDTH_BLOCKS * CHUNK_WIDTH_BLOCKS);
 
 		BlockCoords blockIdx{0,0,0};
 		while (1)
@@ -21,7 +21,7 @@ namespace bwgame {
 				{
 					int64_t w_x = coords.x * 15 + blockIdx.x;
 					int64_t w_z = coords.z * 15 + blockIdx.z;
-					int64_t threshold = 120.0 + ((rand() % 10 == 0) ? 1 : 0);  //1.0 * cos(w_x / 16.0) + 2.0 * sin(w_z/40.0) + 6.0 * sin(w_z/8.0-sin(w_x));
+					int64_t threshold = 60;  //1.0 * cos(w_x / 16.0) + 2.0 * sin(w_z/40.0) + 6.0 * sin(w_z/8.0-sin(w_x));
 					if (blockIdx.y < threshold)
 						chunk.setBlock(blockIdx, getBlockLayered(threshold - blockIdx.y, blockIdx.y));
 				}

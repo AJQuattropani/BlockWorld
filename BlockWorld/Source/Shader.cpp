@@ -1,27 +1,27 @@
-#include "Shader.h"
+#include "Shader.hpp"
 
 #include <fstream>
 #include <filesystem>
 #include <sstream>
 
 bwrenderer::Shader::Shader(const std::string& type, const std::string& file) 
-	: filePath(SHADER_PATH + type + "/" + file), type(type), shaderID(init(SHADER_PATH + type + "/" + file))
+	: file_path(SHADER_PATH + type + "/" + file), type(type), shaderID(init(SHADER_PATH + type + "/" + file))
 {
 	GL_INFO("SHADER [%x] has been created.", shaderID);
-	controlHead = new unsigned int(1);
+	control_head = new unsigned int(1);
 }
 
-GLuint bwrenderer::Shader::init(const std::string& filePath)
+GLuint bwrenderer::Shader::init(const std::string& file_path)
 {
-	std::unordered_map<Shader_Type, std::string> shaders = ParseShaders(filePath);
+	std::unordered_map<Shader_Type, std::string> shaders = ParseShaders(file_path);
 	GLuint new_program = CreateShaders(shaders);
 	return new_program;
 }
 
 bwrenderer::Shader::~Shader() {
-	if (controlHead) {
-		GL_INFO("1 instance of SHADER [%x] is destroyed of [%d] shared ptrs.", shaderID, *controlHead);
-		if (--(*controlHead))
+	if (control_head) {
+		GL_INFO("1 instance of SHADER [%x] is destroyed of [%d] shared ptrs.", shaderID, *control_head);
+		if (--(*control_head))
 		{
 			GL_INFO("SHADER [%x] is deleted.", shaderID);
 			glDeleteProgram(shaderID);
@@ -30,18 +30,18 @@ bwrenderer::Shader::~Shader() {
 }
 
 bwrenderer::Shader::Shader(const Shader& other)
-	: shaderID(other.shaderID), filePath(other.filePath), uniformLocationCache(other.uniformLocationCache)
+	: shaderID(other.shaderID), file_path(other.file_path), uniform_location_cache(other.uniform_location_cache)
 {
-	controlHead = other.controlHead;
-	(*controlHead)++;
-	GL_INFO("New copy of SHADER [%x] totals [%d] shared ptrs.", shaderID, *controlHead);
+	control_head = other.control_head;
+	(*control_head)++;
+	GL_INFO("New copy of SHADER [%x] totals [%d] shared ptrs.", shaderID, *control_head);
 }
 
 bwrenderer::Shader::Shader(Shader&& other) noexcept : shaderID(other.shaderID),
-	filePath(other.filePath), uniformLocationCache(std::move(other.uniformLocationCache)), controlHead(other.controlHead)
+file_path(other.file_path), uniform_location_cache(std::move(other.uniform_location_cache)), control_head(other.control_head)
 { 
-	other.controlHead = nullptr;
-	GL_INFO("SHADER [%x] instance moved. [%d] total shared ptrs.", shaderID, *controlHead);
+	other.control_head = nullptr;
+	GL_INFO("SHADER [%x] instance moved. [%d] total shared ptrs.", shaderID, *control_head);
 }
 
 bwrenderer::Shader& bwrenderer::Shader::operator=(const Shader& other)
@@ -58,21 +58,21 @@ bwrenderer::Shader& bwrenderer::Shader::operator=(Shader&& other) noexcept
 	return *this;
 }
 
-std::unordered_map<bwrenderer::Shader_Type, std::string> bwrenderer::Shader::ParseShaders(const std::string& filePath) {
+std::unordered_map<bwrenderer::Shader_Type, std::string> bwrenderer::Shader::ParseShaders(const std::string& file_path) {
 	std::unordered_map<Shader_Type, std::string> shaders;
 	for (const auto& shader : SHADERS) {
-		std::ifstream stream(filePath + shader.second.ext);
+		std::ifstream stream(file_path + shader.second.ext);
 		if (stream.fail()) {
 			switch (shader.first)
 			{
 			case Shader_Type::FRAGMENT_SHADER:
 			case Shader_Type::VERTEX_SHADER:
 				GL_ERROR("File not found: \"%s/%s%s\"",
-					std::filesystem::current_path().string().data(), filePath.data(), shader.second.ext.data());
+					std::filesystem::current_path().string().data(), file_path.data(), shader.second.ext.data());
 				break;
 			default:
 				GL_INFO("File not found: \"%s/%s%s\"", 
-					std::filesystem::current_path().string().data(), filePath.data(), shader.second.ext.data());
+					std::filesystem::current_path().string().data(), file_path.data(), shader.second.ext.data());
 				break;
 			} 
 			continue;

@@ -1,9 +1,7 @@
 #pragma once
 
-#include "Debug.h"
-
-
-#include "BlockUtils.h"
+#include "Debug.hpp"
+#include "BlockUtils.hpp"
 
 namespace bwgame
 {
@@ -19,7 +17,7 @@ namespace bwgame
 
 	class Block {
 	public:
-		Block(BlockType type, std::shared_ptr<CubeTexData>&& textureData);
+		Block(BlockType type, std::shared_ptr<CubeTexData>&& texture_data);
 		Block();
 		
 		Block(const Block& other) = default;
@@ -33,7 +31,7 @@ namespace bwgame
 		glm::vec2 getTexture(BlockDirection dir) const;
 	private:
 		BlockType type;
-		std::shared_ptr<CubeTexData const> textureData;
+		std::shared_ptr<CubeTexData const> texture_data;
 	};
 
 	struct BlockRegister {

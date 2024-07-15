@@ -1,4 +1,4 @@
-#include "Texture.h"
+#include "Texture.hpp"
 
 namespace bwrenderer {
 
@@ -9,15 +9,15 @@ namespace bwrenderer {
 		return TEXTURE_PATH + type + "/" + file;
 	}
 
-	GLuint bwrenderer::createTexture(TextureBuffer* buffer, const std::string& type, const std::string& filePath)
+	GLuint bwrenderer::createTexture(TextureBuffer* buffer, const std::string& type, const std::string& file_path)
 	{
 		buffer->type = type;
-		buffer->filePath = filePath;
+		buffer->file_path = file_path;
 		return initializeTexture(buffer);
 	}
 	void bwrenderer::deleteTexture(TextureBuffer* buffer)
 	{
-		GL_INFO("Texture deleted: %s | Type: %s | ID: %x", buffer->filePath.c_str(), buffer->type.c_str(), buffer->textureID);
+		GL_INFO("Texture deleted: %s | Type: %s | ID: %x", buffer->file_path.c_str(), buffer->type.c_str(), buffer->textureID);
 		glDeleteTextures(1, &buffer->textureID);
 	}
 
@@ -28,10 +28,10 @@ namespace bwrenderer {
 
 		//// STB IMAGE
 		stbi_set_flip_vertically_on_load(false);
-		unsigned char* data = stbi_load(buffer->filePath.c_str(), &buffer->width, &buffer->height, &buffer->nrChannels, 0);
+		unsigned char* data = stbi_load(buffer->file_path.c_str(), &buffer->width, &buffer->height, &buffer->nrChannels, 0);
 		buffer->format = updateFormat(buffer->nrChannels);
 
-		GL_ASSERT(data, "Failed to load image at %s", buffer->filePath.c_str());
+		GL_ASSERT(data, "Failed to load image at %s", buffer->file_path.c_str());
 
 		glBindTexture(GL_TEXTURE_2D, texture);
 
@@ -39,7 +39,7 @@ namespace bwrenderer {
 		//glGenerateMipmap(GL_TEXTURE_2D);
 
 		GL_DEBUG("Texture successfully generated as: %s | Type: %s | ID: %x | %d x %d : %d",
-			buffer->filePath.c_str(), buffer->type.c_str(), buffer->textureID, buffer->width, buffer->height, buffer->nrChannels);
+			buffer->file_path.c_str(), buffer->type.c_str(), buffer->textureID, buffer->width, buffer->height, buffer->nrChannels);
 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	// set texture wrapping to GL_REPEAT (default wrapping method)
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -83,19 +83,25 @@ namespace bwrenderer {
 
 	}
 
+	TextureBuffer& TextureCache::find(const std::string& type)
+	{
+		if (const auto& texBuff = loaded_textures.find(type); texBuff != loaded_textures.end()) return texBuff->second;
+		GL_ASSERT(false, "'%s': Texture not found.", type);
+	}
+
 	TextureBuffer& TextureCache::findOrLoad(const std::string& type, const std::string& name)
 	{
 		return findOrLoad_impl(type, makePath(type, name));
 	}
 
-	TextureBuffer& TextureCache::findOrLoad_impl(const std::string& type, const std::string& filePath)
+	TextureBuffer& TextureCache::findOrLoad_impl(const std::string& type, const std::string& file_path)
 	{
-		if (const auto& texBuff = loaded_textures.find(filePath); texBuff != loaded_textures.end()) return texBuff->second;
+		if (const auto& texBuff = loaded_textures.find(file_path); texBuff != loaded_textures.end()) return texBuff->second;
 
 		TextureBuffer loadedBuffer;
-		createTexture(&loadedBuffer, type, filePath);
+		createTexture(&loadedBuffer, type, file_path);
 
-		return (loaded_textures[filePath] = std::move(loadedBuffer));
+		return (loaded_textures[file_path] = std::move(loadedBuffer));
 	}
 
 	TextureBuffer& TextureCache::push(const std::string& name, TextureBuffer&& textureBuffer)

@@ -159,7 +159,6 @@
     <ClCompile Include="Source\Input.cpp" />
     <ClCompile Include="Source\Log.cpp" />
     <ClCompile Include="Source\Main.cpp" />
-    <ClCompile Include="Source\RenderContext.cpp" />
     <ClCompile Include="Source\Shader.cpp" />
     <ClCompile Include="Source\Skybox.cpp" />
     <ClCompile Include="Source\Texture.cpp" />
@@ -170,32 +169,32 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h" />
-    <ClInclude Include="Source\Application.h" />
-    <ClInclude Include="Source\BinaryChunk.h" />
-    <ClInclude Include="Source\BlockMesh.h" />
-    <ClInclude Include="Source\Blocks.h" />
-    <ClInclude Include="Source\BlockUtils.h" />
-    <ClInclude Include="Source\Buffers.h" />
-    <ClInclude Include="Source\Camera.h" />
-    <ClInclude Include="Source\Chunk.h" />
-    <ClInclude Include="Source\ChunkData.h" />
-    <ClInclude Include="Source\ChunkModel.h" />
-    <ClInclude Include="Source\DayCycle.h" />
-    <ClInclude Include="Source\Debug.h" />
-    <ClInclude Include="Source\ExtendLong.h" />
-    <ClInclude Include="Source\Input.h" />
-    <ClInclude Include="Source\Log.h" />
-    <ClInclude Include="Source\RenderContext.h" />
-    <ClInclude Include="Source\Shader.h" />
-    <ClInclude Include="Source\Skybox.h" />
-    <ClInclude Include="Source\Texture.h" />
-    <ClInclude Include="Source\ThreadList.h" />
-    <ClInclude Include="Source\Timer.h" />
+    <ClInclude Include="Source\Application.hpp" />
+    <ClInclude Include="Source\BinaryChunk.hpp" />
+    <ClInclude Include="Source\BlockMesh.hpp" />
+    <ClInclude Include="Source\Blocks.hpp" />
+    <ClInclude Include="Source\BlockUtils.hpp" />
+    <ClInclude Include="Source\Buffers.hpp" />
+    <ClInclude Include="Source\Camera.hpp" />
+    <ClInclude Include="Source\Chunk.hpp" />
+    <ClInclude Include="Source\ChunkData.hpp" />
+    <ClInclude Include="Source\ChunkModel.hpp" />
+    <ClInclude Include="Source\DayCycle.hpp" />
+    <ClInclude Include="Source\Debug.hpp" />
+    <ClInclude Include="Source\ExtendLong.hpp" />
+    <ClInclude Include="Source\Input.hpp" />
+    <ClInclude Include="Source\Log.hpp" />
+    <ClInclude Include="Source\Context.hpp" />
+    <ClInclude Include="Source\Shader.hpp" />
+    <ClInclude Include="Source\Skybox.hpp" />
+    <ClInclude Include="Source\Texture.hpp" />
+    <ClInclude Include="Source\ThreadList.hpp" />
+    <ClInclude Include="Source\Timer.hpp" />
     <ClInclude Include="Source\Vendor\stb_image.h" />
-    <ClInclude Include="Source\Vertices.h" />
-    <ClInclude Include="Source\World.h" />
-    <ClInclude Include="Source\WorldGenerator.h" />
-    <ClInclude Include="Source\WorldRenderer.h" />
+    <ClInclude Include="Source\Vertices.hpp" />
+    <ClInclude Include="Source\World.hpp" />
+    <ClInclude Include="Source\WorldGenerator.hpp" />
+    <ClInclude Include="Source\WorldRenderer.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\Textures\Blocks\blockmap.jpeg" />

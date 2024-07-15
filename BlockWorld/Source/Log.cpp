@@ -1,4 +1,4 @@
-#include "Log.h"
+#include "Log.hpp"
 
 #ifndef DIST
 std::shared_ptr<Log> Log::AppLog = std::make_shared<Log>(BW_DEFAULT_LOG_LEVEL, "Application");;

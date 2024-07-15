@@ -117,9 +117,6 @@
     <ClCompile Include="Source\Camera.cpp">
       <Filter>Source Files\Render\Utils</Filter>
     </ClCompile>
-    <ClCompile Include="Source\RenderContext.cpp">
-      <Filter>Source Files\Render\Utils</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Shader.cpp">
       <Filter>Source Files\Render\Utils</Filter>
     </ClCompile>
@@ -164,83 +161,83 @@
     <ClInclude Include="Source\Vendor\stb_image.h">
       <Filter>Header Files\Vendor</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Application.h">
+    <ClInclude Include="Source\Application.hpp">
       <Filter>Header Files\Application</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Input.h">
+    <ClInclude Include="Source\Input.hpp">
       <Filter>Header Files\Application\Input</Filter>
     </ClInclude>
-    <ClInclude Include="Source\BlockMesh.h">
+    <ClInclude Include="Source\BlockMesh.hpp">
       <Filter>Header Files\Render\Block</Filter>
     </ClInclude>
-    <ClInclude Include="Source\ChunkModel.h">
+    <ClInclude Include="Source\ChunkModel.hpp">
       <Filter>Header Files\Render\Block</Filter>
     </ClInclude>
     <ClInclude Include="resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Debug.h">
+    <ClInclude Include="Source\Debug.hpp">
       <Filter>Header Files\Application\Info</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Log.h">
+    <ClInclude Include="Source\Log.hpp">
       <Filter>Header Files\Application\Info</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Buffers.h">
+    <ClInclude Include="Source\Buffers.hpp">
       <Filter>Header Files\Render\Utils</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Camera.h">
+    <ClInclude Include="Source\Camera.hpp">
       <Filter>Header Files\Render\Utils</Filter>
     </ClInclude>
-    <ClInclude Include="Source\RenderContext.h">
+    <ClInclude Include="Source\Shader.hpp">
       <Filter>Header Files\Render\Utils</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Shader.h">
+    <ClInclude Include="Source\Texture.hpp">
       <Filter>Header Files\Render\Utils</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Texture.h">
+    <ClInclude Include="Source\Vertices.hpp">
       <Filter>Header Files\Render\Utils</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Vertices.h">
-      <Filter>Header Files\Render\Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Chunk.h">
+    <ClInclude Include="Source\Chunk.hpp">
       <Filter>Header Files\Game</Filter>
     </ClInclude>
-    <ClInclude Include="Source\ChunkData.h">
+    <ClInclude Include="Source\ChunkData.hpp">
       <Filter>Header Files\Game\Utils</Filter>
     </ClInclude>
-    <ClInclude Include="Source\ExtendLong.h">
+    <ClInclude Include="Source\ExtendLong.hpp">
       <Filter>Header Files\Game\Utils</Filter>
     </ClInclude>
-    <ClInclude Include="Source\BinaryChunk.h">
+    <ClInclude Include="Source\BinaryChunk.hpp">
       <Filter>Header Files\Game\Utils</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Blocks.h">
+    <ClInclude Include="Source\Blocks.hpp">
       <Filter>Header Files\Game</Filter>
     </ClInclude>
-    <ClInclude Include="Source\BlockUtils.h">
+    <ClInclude Include="Source\BlockUtils.hpp">
       <Filter>Header Files\Game\Utils</Filter>
     </ClInclude>
-    <ClInclude Include="Source\World.h">
+    <ClInclude Include="Source\World.hpp">
       <Filter>Header Files\Game</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Timer.h">
+    <ClInclude Include="Source\Timer.hpp">
       <Filter>Header Files\Application\Info</Filter>
     </ClInclude>
-    <ClInclude Include="Source\WorldGenerator.h">
+    <ClInclude Include="Source\WorldGenerator.hpp">
       <Filter>Header Files\Game\Utils</Filter>
     </ClInclude>
-    <ClInclude Include="Source\DayCycle.h">
+    <ClInclude Include="Source\DayCycle.hpp">
       <Filter>Header Files\Game</Filter>
     </ClInclude>
-    <ClInclude Include="Source\WorldRenderer.h">
+    <ClInclude Include="Source\WorldRenderer.hpp">
       <Filter>Header Files\Render\Block</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Skybox.h">
+    <ClInclude Include="Source\Skybox.hpp">
       <Filter>Header Files\Render\Utils</Filter>
     </ClInclude>
-    <ClInclude Include="Source\ThreadList.h">
+    <ClInclude Include="Source\ThreadList.hpp">
       <Filter>Header Files\Game\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Context.hpp">
+      <Filter>Header Files\Application</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

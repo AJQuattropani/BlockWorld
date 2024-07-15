@@ -1,4 +1,4 @@
-#include "Application.h"
+#include "Application.hpp"
 
 #ifndef DIST
 int main(int argc, char* argv[]) {

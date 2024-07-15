@@ -1,4 +1,4 @@
-#include "Debug.h"
+#include "Debug.hpp"
 
 #ifdef BW_DEBUGGING
 

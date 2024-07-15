@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Debug.h"
+#include "Debug.hpp"
 
 #include "GLFW/glfw3.h"
 
@@ -20,13 +20,13 @@ struct InputContext
 	} scroll_handler;
 	
 	struct {
-		std::map<unsigned int, bool> keyCache;
+		std::map<unsigned int, bool> key_cache;
 	} key_handler;
 
 	struct {
 		double last_x, last_y;
 		double cached_x_offset, cached_y_offset;
-		bool resetFlag;
+		bool reset_flag;
 	} mouse_handler;
 };
 

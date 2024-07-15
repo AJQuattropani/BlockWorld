@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Buffers.h"
-#include "Vertices.h"
-#include "RenderContext.h"
-#include "BlockUtils.h"
+#include "Buffers.hpp"
+#include "Vertices.hpp"
+#include "Context.hpp"
+#include "BlockUtils.hpp"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -29,7 +29,7 @@ namespace bwrenderer
 		{ 
 			//GL_INFO("Vertex Buffer set for BlockMesh.");
 			vbo.bind();
-			vbo.attachBuffer(vertices[0].data, vertices.size() * sizeof(BlockVertex)); 
+			vbo.attachBuffer(vertices[0].data, static_cast<GLuint>(vertices.size() * sizeof(BlockVertex))); 
 			this->vertices = std::move(vertices);
 		}
 	private:

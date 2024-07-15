@@ -1,4 +1,4 @@
-#include "BlockMesh.h"
+#include "BlockMesh.hpp"
 
 using namespace bwrenderer;
 
@@ -16,7 +16,7 @@ bwrenderer::BlockMesh::BlockMesh(const vertex_vector& vertices)
 void BlockMesh::draw() const
 {
 	vao.bind();
-	glDrawArrays(GL_POINTS, 0, vertices.size());
+	glDrawArrays(GL_POINTS, 0, (GLsizei)vertices.size());
 	vao.unbind();
 }
 

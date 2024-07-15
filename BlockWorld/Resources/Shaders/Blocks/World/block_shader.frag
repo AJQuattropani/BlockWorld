@@ -5,7 +5,6 @@ in GS_OUT {
 	vec3 f_normal;
 	vec4 f_pos_vs;
 	vec4 f_pos_ls;
-	vec3 rel_fragPos_ws;
 } fs_in;
 
 out vec4 o_Color;
@@ -55,7 +54,7 @@ void main()
 	vec3 norm = normalize(fs_in.f_normal);
 	vec3 fragPos = fs_in.f_pos_vs.xyz;
 	vec3 viewDir = normalize(-fragPos);
-	float fragDistance = max(abs(fs_in.rel_fragPos_ws.x), abs(fs_in.rel_fragPos_ws.z));
+	float fragDistance = length(fragPos);
 	
 	vec3 fragColor = vec3(0.0);
 

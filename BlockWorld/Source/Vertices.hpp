@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Debug.h"
-#include "Buffers.h"
+#include "Debug.hpp"
+#include "Buffers.hpp"
 
 #include <vector>
 
@@ -17,12 +17,12 @@ namespace bwrenderer
 
     class vertex_layout {
     private:
-        std::vector<vertex_attribute> attributeList;
+        std::vector<vertex_attribute> attribute_list;
         GLuint stride = 0;
     public:
         vertex_layout() = default;
         void push(GLenum type, GLuint count, bool normalized = false);
-        inline const std::vector<vertex_attribute>& elements() const { return attributeList; }
+        inline const std::vector<vertex_attribute>& elements() const { return attribute_list; }
         inline GLuint getStride() const { return stride; }
     };
 

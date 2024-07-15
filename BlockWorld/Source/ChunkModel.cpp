@@ -1,4 +1,4 @@
-#include "ChunkModel.h"
+#include "ChunkModel.hpp"
 
 void bwrenderer::ChunkModel::render(Shader& shader) const
 {

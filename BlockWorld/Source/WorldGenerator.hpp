@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Chunk.h"
-#include "Blocks.h"
+#include "Chunk.hpp"
+#include "Blocks.hpp"
 
 namespace bwgame {
 
@@ -26,7 +26,7 @@ namespace bwgame {
 
 		inline uint64_t getSeed() const { return seed; }
 
-		Chunk buildChunk(ChunkCoords coords, const std::unordered_map<ChunkCoords, Chunk> const* chunkMap) const;
+		Chunk buildChunk(ChunkCoords coords, std::unordered_map<ChunkCoords, Chunk> const* chunkMap) const;
 
 	private:
 		uint64_t seed;

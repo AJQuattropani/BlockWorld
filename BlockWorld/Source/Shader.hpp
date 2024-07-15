@@ -1,7 +1,7 @@
 #pragma once
 #include <GL/glew.h>
 #include <glm/glm.hpp>
-#include "Debug.h"
+#include "Debug.hpp"
 
 #include <string>
 #include <unordered_map>
@@ -92,19 +92,19 @@ namespace bwrenderer
 		{Shader_Type::TESS_EVALUATION_SHADER, Shader_Info{"TESE", ".tese"} }
 		};
 	private:
-		const std::string filePath;
+		const std::string file_path;
 		const std::string type;
 		const GLuint shaderID;
-		mutable std::unordered_map<std::string, GLint> uniformLocationCache;
+		mutable std::unordered_map<std::string, GLint> uniform_location_cache;
 
-		unsigned int* controlHead;
+		unsigned int* control_head;
 	private:
 		GLuint getUniformLocation(const std::string& name)
 		{
-			if (const auto& f = uniformLocationCache.find(name); f != uniformLocationCache.end()) return f->second;
+			if (const auto& f = uniform_location_cache.find(name); f != uniform_location_cache.end()) return f->second;
 			GLint location = glGetUniformLocation(shaderID, name.c_str());
 			if (location == -1) GL_WARN(" Uniform '%s' not found.", name.c_str());
-			uniformLocationCache[name] = location;
+			uniform_location_cache[name] = location;
 			return location;
 		}
 	private:

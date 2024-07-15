@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Debug.h"
+#include "Debug.hpp"
 
 #include "GL/glew.h"
 #include <string>
@@ -15,7 +15,7 @@ namespace bwrenderer
 	struct TextureBuffer
 	{
 		std::string type = "";
-		std::string filePath = "";
+		std::string file_path = "";
 		GLuint textureID = 0;
 
 		int width = 0, height = 0;
@@ -33,6 +33,8 @@ namespace bwrenderer
 		TextureCache();
 
 		~TextureCache();
+
+		TextureBuffer& find(const std::string& type);
 
 		TextureBuffer& findOrLoad(const std::string& type, const std::string& name);
 

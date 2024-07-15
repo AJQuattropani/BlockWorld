@@ -1,7 +1,7 @@
 #pragma once
 
-#include "BlockMesh.h"
-#include "ChunkData.h"
+#include "BlockMesh.hpp"
+#include "ChunkData.hpp"
 
 namespace bwrenderer {
 

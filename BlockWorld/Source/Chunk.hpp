@@ -1,12 +1,13 @@
 #pragma once
 
-#include "Debug.h"
-#include "ChunkData.h"
-#include "ChunkModel.h"
-#include "ExtendLong.h"
-#include "BinaryChunk.h"
-#include "Blocks.h"
-#include "ThreadList.h"
+#include "Debug.hpp"
+#include "ChunkData.hpp"
+#include "ChunkModel.hpp"
+#include "ExtendLong.hpp"
+#include "BinaryChunk.hpp"
+#include "Blocks.hpp"
+#include "ThreadList.hpp"
+#include "Timer.hpp"
 
 #include <ranges>
 #include <unordered_set>
@@ -17,17 +18,17 @@ namespace bwgame
 	class Chunk
 	{
 	public:
-		Chunk(ChunkCoords chunkCoords, const std::unordered_map<ChunkCoords, Chunk> const* chunkMap);
+		Chunk(ChunkCoords chunk_coords, std::unordered_map<ChunkCoords, Chunk> const* chunk_map);
 		
 
 		Chunk(const Chunk&) = delete;
-		Chunk(Chunk&& other) noexcept : flags(other.flags), chunkCoords(other.chunkCoords), chunkMap(other.chunkMap) {
-			chunkDataMutex.lock();
-			blockMap = std::move(other.blockMap);
+		Chunk(Chunk&& other) noexcept : flags(other.flags), chunk_coords(other.chunk_coords), chunk_map(other.chunk_map) {
+			chunk_data_mutex.lock();
+			block_map = std::move(other.block_map);
 			model = std::move(other.model);
 			async_chunk_operations = std::move(other.async_chunk_operations);
 
-			chunkDataMutex.unlock();
+			chunk_data_mutex.unlock();
 		}
 
 		Chunk& operator=(const Chunk&) = delete;
@@ -39,59 +40,59 @@ namespace bwgame
 
 		void render(bwrenderer::Shader& shader) const;
 
-		inline ChunkCoords getChunkCoords() const { return chunkCoords; }
+		inline const ChunkCoords& getChunkCoords() const { return chunk_coords; }
 		inline const Block& getBlock(block_coord_t x, block_coord_t y, block_coord_t z) const 
 		{	return getBlock({ x,y,z });	}
 
 		inline void reserve(uint16_t amount) {
-			if (blockMap.size() >= CHUNK_VOLUME)
+			if (block_map.size() >= CHUNK_VOLUME)
 			{
 				BW_WARN("Reserve failed - Chunk is already at full capacity.");
 				return;
 			}
 			{
-				std::scoped_lock<std::mutex> transferModelDataLock(chunkDataMutex);
-				if (blockMap.size() + amount > CHUNK_VOLUME)
+				std::scoped_lock<std::mutex> transferModelDataLock(chunk_data_mutex);
+				if (block_map.size() + amount > CHUNK_VOLUME)
 				{
 					BW_WARN("Reserve attempted - Chunk has been set to maximum capacity.");
-					blockMap.reserve(CHUNK_VOLUME - blockMap.size());
+					block_map.reserve(CHUNK_VOLUME - block_map.size());
 					return;
 				}
-				blockMap.reserve(amount);
+				block_map.reserve(amount);
 			}
 
 		}
 
 		inline const Block& getBlock(const BlockCoords& coords) const
 		{
-			if (const auto& block = blockMap.find(coords); block != blockMap.end()) return block->second;
+			if (const auto& block = block_map.find(coords); block != block_map.end()) return block->second;
 		}
 
 		inline void deleteBlock(const BlockCoords& coords)
 		{
-			std::scoped_lock<std::mutex> transferModelDataLock(chunkDataMutex);
-			blockMap.erase(coords);
+			std::scoped_lock<std::mutex> transferModelDataLock(chunk_data_mutex);
+			block_map.erase(coords);
 		}
 
 		void setBlock(const BlockCoords& coords, const Block& block);
 
 	private:
-		const ChunkCoords chunkCoords;
+		const ChunkCoords chunk_coords;
 		ChunkFlags flags;
 		// TODO find better data structure for holding onto blocks and chunks
-		std::unordered_map<BlockCoords, Block> blockMap;
+		std::unordered_map<BlockCoords, Block> block_map;
 		std::unique_ptr<bwrenderer::ChunkModel> model;
 		// TODO make shared_ptr
-		const std::unordered_map<ChunkCoords, Chunk> const* chunkMap;
+		std::unordered_map<ChunkCoords, Chunk> const* chunk_map;
 
 		std::unique_ptr<utils::ThreadList> async_chunk_operations;
-		mutable std::mutex chunkDataMutex;
+		mutable std::mutex chunk_data_mutex;
 
 	private:
 		inline void reloadModelData() const {
 			auto data = packageRenderData();
 			{
-				std::scoped_lock<std::mutex> transferModelDataLock(chunkDataMutex);
+				std::scoped_lock<std::mutex> transferModelDataLock(chunk_data_mutex);
 				model->updateRenderData(std::move(data));
 			}
 		}

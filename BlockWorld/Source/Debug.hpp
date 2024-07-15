@@ -5,7 +5,7 @@
 
 #include <map>
 
-#include "Log.h"
+#include "Log.hpp"
 
 #ifdef BW_DEBUGGING
 

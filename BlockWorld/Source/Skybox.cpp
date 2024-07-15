@@ -1,4 +1,4 @@
-#include "Skybox.h"
+#include "Skybox.hpp"
 
 namespace bwrenderer {
 
@@ -13,19 +13,19 @@ namespace bwrenderer {
 	{
 	}
 
-	void SkyBox::render(RenderContext& context, DayLightCycle& dayLightCycle)
+	void SkyBox::render(RenderContext& context, const DayLightCycle& day_light_cycle)
 	{
-		glm::vec4 sky_color = glm::mix(glm::vec4(0.05, 0.05, 0.15f, 1.0f), glm::vec4(0.0, 0.55, 1.0f, 1.0f), glm::clamp(4.0 * glm::sin(dayLightCycle.sun_Angle), 0.0, 1.0));
+		glm::vec4 sky_color = glm::mix(glm::vec4(0.05, 0.05, 0.15f, 1.0f), glm::vec4(0.0, 0.55, 1.0f, 1.0f), glm::clamp(4.0 * glm::sin(day_light_cycle.sun_angle), 0.0, 1.0));
 
 		glClearColor(sky_color.r, sky_color.g, sky_color.b, sky_color.a);
 		
 		glDepthFunc(GL_LEQUAL);
 
 		shader.bind();
-		shader.setUniformMat4f("projection", context.projectionMatrix);
-		shader.setUniformMat4f("view", context.viewMatrix);
+		shader.setUniformMat4f("projection", context.projection_matrix);
+		shader.setUniformMat4f("view", context.view_matrix);
 
-		setSunShaderInfo(shader, dayLightCycle);
+		shader.setUniformMat4f("rotation", glm::rotate(glm::mat4(1.0), day_light_cycle.sun_angle, glm::vec3(0.0, 0.0, 1.0)));
 
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, context.texture_cache.findOrLoad("World", "sky_textures.jpeg").textureID);

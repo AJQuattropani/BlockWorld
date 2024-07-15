@@ -3,13 +3,14 @@
 #define GLEW_STATIC
 #include <GL/glew.h>
 
-#include "Debug.h"
-#include "Input.h"
-#include "Shader.h"
-#include "RenderContext.h"
-#include "Camera.h"
-#include "Chunk.h"
-#include "World.h"
+#include "Debug.hpp"
+#include "Input.hpp"
+#include "Shader.hpp"
+#include "Context.hpp"
+#include "Camera.hpp"
+#include "Chunk.hpp"
+#include "World.hpp"
+#include "WorldRenderer.hpp"
 
 #include <memory>
 #include <string>
@@ -22,16 +23,15 @@ public:
 	~Application();
 private:
 	GLFWwindow* window;
-	InputContext inputContext;
-	std::shared_ptr<bwrenderer::RenderContext> renderContext;
-	bwrenderer::Camera camera;
-	double frameRateSeconds, gameUpdateRateSeconds;
-	struct {
-		double lastTimeSeconds = 0.0, deltaTimeSeconds = 0.0;
-		double lastFrameTimeSeconds = 0.0, lastUpdateTimeSeconds = 0.0;
-	} timer;
+	// REMOVE
+	InputContext input_context;
+	std::shared_ptr<bwrenderer::RenderContext> render_context;
+	std::unique_ptr<bwrenderer::WorldRenderer> world_renderer;
+	std::unique_ptr<bwrenderer::Camera> camera;
+
+	std::shared_ptr<bwgame::UserContext> user_context;
 	std::shared_ptr<bwgame::BlockRegister> blocks;
-	std::unique_ptr<bwgame::World> world;
+	std::shared_ptr<bwgame::World> world;
 
 private:
 	GLFWwindow* glfwWindowInit(const std::string& name);
@@ -42,7 +42,7 @@ private:
 
 	void handleInput();
 
-	void handleRenderContext();
+	void handleContext();
 private:
 	static void loadCallbacks(GLFWwindow* window);
 	static void updateTime(double& lastTimeSeconds, double& deltaTimeSeconds);

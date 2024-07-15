@@ -1,14 +1,14 @@
-#include "Blocks.h"
+#include "Blocks.hpp"
 
 namespace bwgame {
 	
-	Block::Block(BlockType type, std::shared_ptr<CubeTexData>&& textureData)
-		: type(type), textureData(std::move(textureData))
+	Block::Block(BlockType type, std::shared_ptr<CubeTexData>&& texture_data)
+		: type(type), texture_data(std::move(texture_data))
 	{
 		BW_INFO("Block initialized.");
 	}
 
-	Block::Block() : type(BlockType::AIR), textureData(nullptr)
+	Block::Block() : type(BlockType::AIR), texture_data(nullptr)
 	{
 		BW_INFO("Block initialized.");
 	}
@@ -44,17 +44,17 @@ namespace bwgame {
 		switch (dir)
 		{
 		case BlockDirection::UP:
-			return glm::vec2(textureData->up.x, textureData->up.y);
+			return glm::vec2(texture_data->up.x, texture_data->up.y);
 		case BlockDirection::DOWN:
-			return glm::vec2(textureData->down.x, textureData->down.y);
+			return glm::vec2(texture_data->down.x, texture_data->down.y);
 		case BlockDirection::FORWARD:
-			return glm::vec2(textureData->front.x, textureData->front.y);
+			return glm::vec2(texture_data->front.x, texture_data->front.y);
 		case BlockDirection::BACKWARD:
-			return glm::vec2(textureData->back.x, textureData->back.y);
+			return glm::vec2(texture_data->back.x, texture_data->back.y);
 		case BlockDirection::RIGHT:
-			return glm::vec2(textureData->right.x, textureData->right.y);
+			return glm::vec2(texture_data->right.x, texture_data->right.y);
 		case BlockDirection::LEFT:
-			return glm::vec2(textureData->left.x, textureData->left.y);
+			return glm::vec2(texture_data->left.x, texture_data->left.y);
 		}
 		BW_ASSERT(false, "Block Direction Enum unrecognized.");
 		return { 0,0 };

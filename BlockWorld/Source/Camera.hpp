@@ -4,54 +4,42 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-#include "RenderContext.h"
-
-
+#include "Context.hpp"
 #include <memory>
 
 namespace bwrenderer
 {
-	enum class Camera_Controls
-	{
-		FORWARD, BACKWARD, RIGHT, LEFT, UP, DOWN
-	};
 
 	class Camera
 	{
 	public:
-		Camera(const std::shared_ptr<bwrenderer::RenderContext>& context, const glm::vec3 position = glm::vec3(0.0f, 60.0f, 0.0f),
+		Camera(const std::shared_ptr<bwgame::UserContext>& input_context, 
+			const std::shared_ptr<bwrenderer::RenderContext>& output_context, const glm::vec3 position = glm::vec3(0.0f, 60.0f, 0.0f),
 			const glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), float yaw = YAW, float pitch = PITCH);
-
-		Camera();
-
-		void attachContext(const std::shared_ptr<bwrenderer::RenderContext>& context)
-		{
-			outputContext = context;
-		}
 
 		inline float getFov() const { return fov; }
 
 		// TODO move this to a player class
-		void move(Camera_Controls direction, float magnitude);
 		void turn(float xoffset, float yoffset, bool constrainPitch = true);
 		void zoom(float yoffset);
 
 		void updateContext();
 
-
+		void move(bwgame::Controls direction, float magnitude);
 	private:
 
 		glm::vec3 position; // replace back after new data structure created.
-
-		std::shared_ptr<bwrenderer::RenderContext> outputContext;
+		
+		std::shared_ptr<bwgame::UserContext> user_context;
+		std::shared_ptr<bwrenderer::RenderContext> output_context;
 
 		glm::vec3 front;
 		glm::vec3 up;
 		glm::vec3 right;
 
 		float yaw, pitch;
-		float movementSpeed, mouseSensitivity, fov;
-		uint_fast8_t updateFlags;
+		float mouse_sensitivity, fov, movement_speed;
+		uint_fast8_t update_flags;
 	private:
 		void updateCameraVectors();
 	private:
