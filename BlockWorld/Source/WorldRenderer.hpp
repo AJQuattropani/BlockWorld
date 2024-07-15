@@ -27,7 +27,7 @@ namespace bwrenderer {
 		{
 			TIME_FUNC("World Render");
 
-			float radialTime = glm::mod<float>(world_ref->day_light_cycle.time_game_days, 1.0f) * glm::radians(360.0);
+			float radialTime = glm::mod<float>(world_ref->day_light_cycle.time_game_days, 1.0f) * glm::radians(360.0f);
 
 			glm::vec3 lightPosition = 15.0f * user_context->ch_render_load_distance * glm::vec3(
 				glm::cos(glm::mod(radialTime, glm::radians(180.0f))),
@@ -126,7 +126,7 @@ namespace bwrenderer {
 
 			block_shader.setUniform3f("dir_light.position", lightPosition.x, lightPosition.y, lightPosition.z);
 			block_shader.setUniform1f("dir_light.day_time", world_ref->day_light_cycle.time_game_days);
-			block_shader.setUniform1f("dir_light.radial_time", world_ref->day_light_cycle.time_game_days * glm::radians(360.0));
+			block_shader.setUniform1f("dir_light.radial_time", world_ref->day_light_cycle.time_game_days * glm::radians(360.0f));
 			block_shader.setUniform1f("dir_light.environmental_brightness",
 				glm::sqrt(glm::abs(glm::sin(radialTime)))
 				* (1.0f - glm::sign(radialTime - glm::radians(180.0f)) / 2.0f) / 1.5f);

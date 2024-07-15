@@ -11,7 +11,6 @@ struct DayLightCycle {
 	DayLightCycle(float minutes_per_game_day, float ticks_per_second)
 		: game_days_per_tick(gameHoursPerTickFunc(minutes_per_game_day, ticks_per_second)) {
 		update();
-		BW_DEBUG("Time rate: %f", game_days_per_tick);
 	}
 
 	inline static constexpr float gameHoursPerTickFunc(float minutes_per_game_day, float ticks_per_second)

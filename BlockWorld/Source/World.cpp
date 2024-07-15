@@ -24,7 +24,6 @@ namespace bwgame {
 			{
 				//todo move to own function
 				async_world_operations.pushTask(std::bind(&World::loadChunk, this, ChunkCoords{x,z}));
-				BW_DEBUG("Chunk {%d, %d} loaded.", x, z);
 			}
 		}
 
@@ -43,9 +42,13 @@ namespace bwgame {
 
 		day_light_cycle.update();
 
-		std::scoped_lock<std::mutex> updateIteratorLock(world_data_lock);
-		for (auto& [coords, chunk] : chunk_map) chunk.update();
-		
+		{
+			std::scoped_lock<std::mutex> updateIteratorLock(world_data_lock);
+			for (auto& [coords, chunk] : chunk_map) 
+			{
+				chunk.update();
+			}
+		}
 
 		BW_DEBUG("Total chunks: %d", chunk_map.size());
 
@@ -60,31 +63,6 @@ namespace bwgame {
 	{
 		TIME_FUNC("MT World Update and Load");
 
-		//ChunkCoords coords{};
-		//std::vector<std::jthread> async_chunk_loads;
-
-		//uint8_t load_count = 0;
-
-		//for (coords.x = context->player_position_x/15 - context->ch_render_load_distance / 2;
-		//	coords.x <= context->player_position_x/15 + context->ch_render_load_distance / 2;
-		//	coords.x++)
-		//{
-		//	for (coords.z = context->player_position_z/15 - context->ch_render_load_distance / 2;
-		//		coords.z <= context->player_position_z/15 + context->ch_render_load_distance / 2;
-		//		coords.z++)
-		//	{
-
-		//		const auto& [Iterator, success] = chunk_map.try_emplace(coords, Chunk(coords, chunk_map));
-
-		//		if (!success) continue;
-		//		auto& chunk = Iterator->second;
-		//		//todo move to own function
-		//		async_chunk_loads.push_back(std::jthread(&World::build_func, this, coords, &chunk));
-		//		load_count++;
-		//	}
-		//}
-		//GL_DEBUG("%i chunks loaded.", load_count);
-
 		chunk_coord_t ch_player_position_x = (chunk_coord_t)user_context->player_position_x / 15;
 		chunk_coord_t ch_player_position_z = (chunk_coord_t)user_context->player_position_z / 15;
 		chunk_coord_t differenceX = ch_player_position_x - player_last_chunk_pos_x;
@@ -97,15 +75,25 @@ namespace bwgame {
 		size_t unload_chunks = 0;
 		auto unload_filter = [ch_player_position_x,
 			ch_player_position_z, render_load_distance](const auto& chunkIt) -> bool {
-			return abs(chunkIt.first.x - ch_player_position_x) > render_load_distance
-				|| abs(chunkIt.first.z - ch_player_position_z) > render_load_distance;
+			return ;
 			};
-		for (auto& coords : chunk_map | std::views::filter(unload_filter) | std::views::keys) 
+
 		{
-			unloadChunk(coords);
-			unload_chunks++;
+			// todo replace with multithreaded unloading
+			std::scoped_lock<std::mutex> unloadChunkLock(world_data_lock);
+			for (auto it = chunk_map.begin(); it != chunk_map.end(); )
+			{
+				unload_chunks++;
+				if (abs(it->first.x - ch_player_position_x) > render_load_distance
+					|| abs(it->first.z - ch_player_position_z) > render_load_distance)
+				//todo add memory loadoff
+				{
+					it = chunk_map.erase(it);
+					continue;
+				}
+				it++;
+			}
 		}
-		BW_DEBUG("%d chunks removed.", unload_chunks);
 
 
 		// start with square range in x and z of set of all values inclusive
@@ -116,7 +104,6 @@ namespace bwgame {
 			xmod1 = ch_player_position_x - render_load_distance,
 			xmod2 = ch_player_position_x + render_load_distance;
 
-		BW_DEBUG("Last chunk: {%d, %d} into: {%d, %d}", player_last_chunk_pos_x, player_last_chunk_pos_z, ch_player_position_x, ch_player_position_z);
 
 		// if the change in x was positive, we need to prune the lower value
 		if (differenceX > 0)
@@ -141,9 +128,7 @@ namespace bwgame {
 		}
 
 		BW_ASSERT(x1 <= x2 + 1, "malformed bounds: x1 = %d, x2 = %d", x1, x2);
-		BW_DEBUG("X: {%d, %d}", x1, x2);
 		BW_ASSERT(z1 <= z2 + 1, "malformed bounds: z1 = %d, z2 = %d", z1, z2);
-		BW_DEBUG("Z: {%d, %d}", z1, z2);
 		BW_ASSERT(xmod1 <= xmod2 + 1, "malformed bounds: xmod1 = %d, xmod2 = %d", xmod1, xmod2);
 
 		size_t chunk_loads = 0;
@@ -154,7 +139,6 @@ namespace bwgame {
 			// make rectangle strip WITH corner
 			for (chunk_coord_t z = ch_player_position_z - render_load_distance; z < ch_player_position_z + render_load_distance + 1; z++)
 			{
-				BW_ASSERT(chunk_map.find({ x,z }) == chunk_map.end(), "Repeat chunk building at {%d,%d}.", x, z);
 				async_world_operations.pushTask(std::bind(&World::loadChunk, this, ChunkCoords{x,z}));
 				chunk_loads++;
 			}
@@ -174,31 +158,37 @@ namespace bwgame {
 		size_t expected_chunk_loads = (abs(differenceX) + abs(differenceZ)) * (render_load_distance * 2 + 1) - abs(differenceX * differenceZ);
 		BW_ASSERT(chunk_loads == expected_chunk_loads, "Chunk render error: Expected: %d, Got: %d", expected_chunk_loads, chunk_loads);
 
-		BW_DEBUG("%d chunks loaded.", chunk_loads);
-
 		player_last_chunk_pos_x = ch_player_position_x;
 		player_last_chunk_pos_z = ch_player_position_z;
 
 	}
 
 	void World::loadChunk(ChunkCoords coords) {
-		//todo add
-		Chunk chunk = world_gen->buildChunk(coords, &chunk_map);
+		//todo add loading from memory
+		
+		// queue up task to prevent re-running the same task
 		{
-			std::scoped_lock<std::mutex> addChunkToMapLock(world_data_lock);
+			std::scoped_lock<std::mutex> pushToLoadChunksLock(loading_chunks_lock);
+			if (!loading_chunks.emplace(coords).second) return;
+		}
+
+		// do MT work
+		Chunk chunk = world_gen->buildChunk(coords, &chunk_map);
+
+		// do concurrent work
+		{
+			std::scoped_lock<std::mutex, std::mutex> addChunkToMapLock(world_data_lock, loading_chunks_lock);
 			chunk_map.try_emplace(coords, std::move(chunk));
+
+			// remove task so it may be ran again
+			loading_chunks.erase(coords);
 		}
 	}
 
-	void bwgame::World::unloadChunk(const ChunkCoords& coords)
+	/*void bwgame::World::unloadChunk(const ChunkCoords& coords)
 	{
-		{
-			std::scoped_lock<std::mutex> removeChunkFromMapLock(world_data_lock);
-			//storeChunk();
-			chunk_map.erase(coords);
-		}
-		BW_INFO("Chunk { %i, %i } unloaded.", coords.x, coords.z);
-	}
+		chunk_map.erase(coords);
+	}*/
 
 	void World::unloadAllChunks()
 	{

@@ -11,6 +11,7 @@
 #include <unordered_map>
 #include <future>
 #include <thread>
+#include <unordered_set>
 
 namespace bwrenderer {
 
@@ -46,13 +47,15 @@ namespace bwgame {
 
 		utils::ThreadList async_world_operations; // number of threads may be subject to change based on CPU
 		std::mutex world_data_lock;
+		std::unordered_set<ChunkCoords> loading_chunks;
+		std::mutex loading_chunks_lock;
 
 	private:
 		void mt_loadChunks();
 		void loadChunk(ChunkCoords coords);
 		
 		
-		void unloadChunk(const ChunkCoords& coords);
+		//void unloadChunk(const ChunkCoords& coords);
 
 		void unloadAllChunks();
 

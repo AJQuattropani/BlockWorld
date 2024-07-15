@@ -35,8 +35,8 @@ namespace bwgame
 
 		inline const ChunkCoords& getChunkCoords() const { return chunk_coords; }
 
-		inline const Block& getBlock(block_coord_t x, block_coord_t y, block_coord_t z) 
-		{	return getBlock({ x,y,z });	}
+		inline const Block& getBlockConst(block_coord_t x, block_coord_t y, block_coord_t z) const 
+		{	return getBlockConst({ x,y,z });	}
 
 		inline void reserve(uint16_t amount) {
 			if (block_map.size() >= CHUNK_VOLUME)
@@ -55,12 +55,6 @@ namespace bwgame
 				block_map.reserve(amount);
 			}
 
-		}
-
-		inline const Block& getBlock(const BlockCoords& coords)
-		{
-			//if (const auto& block = block_map.find(coords); block != block_map.end()) return block->second;
-			return block_map[coords];
 		}
 
 		inline void deleteBlock(const BlockCoords& coords)
@@ -86,8 +80,9 @@ namespace bwgame
 	private:
 		inline const Block& getBlockConst(const BlockCoords& coords) const
 		{
-			if (const auto& block = block_map.find(coords); block != block_map.end()) return block->second;
-			BW_ASSERT("Block not found");
+			const auto& block_pair = block_map.find(coords);
+			BW_ASSERT(block_pair != block_map.end(), "Block not found");
+			return block_pair->second;
 		}
 
 		inline void reloadModelData() const {
