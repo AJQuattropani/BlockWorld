@@ -35,7 +35,8 @@ Currently a work-in-progress.
 8. Shadows.
 9. Cross-platform implementation on Apple and Linux.
 10. Music/sounds
-11. Non-AVX2-friendliness.
+11. Functionality for non-AVX2 machines.
+12. Cross-platform build compatibility.
 
 # How to Install and Run
 1. Ensure processor has at least AVX2 x64 capabilities and computer is running Windows, and have a directory for glew, glfw, and glm libraries installed.
