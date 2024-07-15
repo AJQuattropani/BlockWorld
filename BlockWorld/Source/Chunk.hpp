@@ -41,7 +41,8 @@ namespace bwgame
 		void render(bwrenderer::Shader& shader) const;
 
 		inline const ChunkCoords& getChunkCoords() const { return chunk_coords; }
-		inline const Block& getBlock(block_coord_t x, block_coord_t y, block_coord_t z) const 
+
+		inline const Block& getBlock(block_coord_t x, block_coord_t y, block_coord_t z) 
 		{	return getBlock({ x,y,z });	}
 
 		inline void reserve(uint16_t amount) {
@@ -63,9 +64,10 @@ namespace bwgame
 
 		}
 
-		inline const Block& getBlock(const BlockCoords& coords) const
+		inline const Block& getBlock(const BlockCoords& coords)
 		{
-			if (const auto& block = block_map.find(coords); block != block_map.end()) return block->second;
+			//if (const auto& block = block_map.find(coords); block != block_map.end()) return block->second;
+			return block_map[coords];
 		}
 
 		inline void deleteBlock(const BlockCoords& coords)
@@ -89,6 +91,12 @@ namespace bwgame
 		mutable std::mutex chunk_data_mutex;
 
 	private:
+		inline const Block& getBlockConst(const BlockCoords& coords) const
+		{
+			if (const auto& block = block_map.find(coords); block != block_map.end()) return block->second;
+			BW_ASSERT("Block not found");
+		}
+
 		inline void reloadModelData() const {
 			auto data = packageRenderData();
 			{
@@ -103,7 +111,7 @@ namespace bwgame
 			std::vector<bwrenderer::BlockVertex>& vertices) const;
 		inline bwrenderer::BlockVertex packageBlockRenderData(bwgame::BlockCoords pos, BlockDirection dir) const
 		{
-			return { glm::vec3(pos.x, pos.y, pos.z), utils::blockDirectionToNormal(dir), getBlock(pos).getTexture(dir) };
+			return { glm::vec3(pos.x, pos.y, pos.z), utils::blockDirectionToNormal(dir), getBlockConst(pos).getTexture(dir) };
 		}
 
 
