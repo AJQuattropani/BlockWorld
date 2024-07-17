@@ -55,16 +55,16 @@ int Application::run() {
 
 		if (Timer.last_time_seconds - Timer.last_update_time_seconds >= Timer.game_update_rate_seconds)
 		{
+			Timer.last_update_time_seconds = Timer.last_time_seconds;
 			handleInput();
 			update();
-			Timer.last_update_time_seconds = Timer.last_time_seconds;
 		}
 
 		if (Timer.last_time_seconds - Timer.last_frame_time_seconds >= Timer.frame_rate_seconds)
 		{
+			Timer.last_frame_time_seconds = Timer.last_time_seconds;
 			handleContext();
 			render();
-			Timer.last_frame_time_seconds = Timer.last_time_seconds;
 			glfwSwapBuffers(window);
 
 		}
