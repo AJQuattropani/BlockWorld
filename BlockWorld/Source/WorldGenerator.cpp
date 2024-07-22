@@ -4,7 +4,7 @@ namespace bwgame {
 
 
 
-	Chunk WorldGenerator::buildChunk(ChunkCoords coords, std::unordered_map<ChunkCoords, Chunk> const* chunkMap) const
+	[[nodiscard]] Chunk WorldGenerator::buildChunk(ChunkCoords coords, std::unordered_map<ChunkCoords, Chunk> const* chunkMap) const
 	{
 		Chunk chunk(coords, chunkMap);
 
@@ -19,9 +19,15 @@ namespace bwgame {
 			{
 				for (blockIdx.x = 0; blockIdx.x < CHUNK_WIDTH_BLOCKS; blockIdx.x++)
 				{
-					int64_t w_x = coords.x * 15 + blockIdx.x;
-					int64_t w_z = coords.z * 15 + blockIdx.z;
-					int64_t threshold = 60;  //1.0 * cos(w_x / 16.0) + 2.0 * sin(w_z/40.0) + 6.0 * sin(w_z/8.0-sin(w_x));
+					int64_t w_x = static_cast<int64_t>(coords.x) * 15 + blockIdx.x;
+					int64_t w_z = static_cast<int64_t>(coords.z) * 15 + blockIdx.z;
+					//int64_t threshold = 60;  //1.0 * cos(w_x / 16.0) + 2.0 * sin(w_z/40.0) + 6.0 * sin(w_z/8.0-sin(w_x));
+					int64_t threshold = 80;
+
+					threshold += 20.0f * world_noise_gen.sample2D(static_cast<float>(w_x) / 60.0f, static_cast<float>(w_z) / 60.0f);
+					threshold += 50.0f * world_noise_gen.sample2D(static_cast<float>(w_x) / 120.0f, static_cast<float>(w_z) / 120.0f);
+					threshold += 100.0f * world_noise_gen.sample2D(static_cast<float>(w_x) / 700.0f, static_cast<float>(w_z) / 700.0f);
+					
 					if (blockIdx.y < threshold)
 						chunk.setBlock(blockIdx, getBlockLayered(threshold - blockIdx.y, blockIdx.y));
 				}
@@ -34,7 +40,7 @@ namespace bwgame {
 		return chunk;
 	}
 
-	inline const Block& WorldGenerator::getBlockLayered(int64_t depth, uint8_t height) const
+	[[nodiscard]] inline const Block& WorldGenerator::getBlockLayered(int64_t depth, uint8_t height) const
 	{
 		if (height < 70) {
 			if (depth < 5) return rand() % 2 ? blocks->sand : blocks->gravel;

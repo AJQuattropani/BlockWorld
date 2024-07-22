@@ -2,24 +2,14 @@
 
 #include "Chunk.hpp"
 #include "Blocks.hpp"
+#include "PerlinNoise.hpp"
 
 namespace bwgame {
 
 
-	class PerlinNoise {
-	public:
-		PerlinNoise(uint64_t seed) : seed(seed)
-		{
-
-		}
-
-	private:
-		uint64_t seed;
-	};
-
 	class WorldGenerator {
 	public:
-		WorldGenerator(uint64_t seed, const std::shared_ptr<BlockRegister>& blocks) : seed(seed), blocks(blocks)
+		WorldGenerator(uint64_t seed, const std::shared_ptr<BlockRegister>& blocks) : seed(seed), blocks(blocks), world_noise_gen(seed)
 		{
 			BW_INFO("World Seed: %Ld", seed);
 		}
@@ -31,6 +21,7 @@ namespace bwgame {
 	private:
 		uint64_t seed;
 		std::shared_ptr<const BlockRegister> blocks;
+		const utils::PerlinNoiseGenerator world_noise_gen;
 
 		inline const Block& getBlockLayered(int64_t depth, uint8_t height) const;
 	};

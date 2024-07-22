@@ -12,6 +12,7 @@
 #include <ranges>
 #include <unordered_set>
 #include <future>
+#include <execution>
 
 namespace bwgame
 {

@@ -4,6 +4,7 @@
 
 #include <forward_list>
 #include <future>
+#include <algorithm>
 #include <queue>
 #include <functional>
 #include <mutex>
@@ -77,8 +78,5 @@ namespace utils
 		}
 
 	};
-
-
-
 
 }

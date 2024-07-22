@@ -55,7 +55,7 @@ namespace bwgame {
 		void loadChunk(ChunkCoords coords);
 		
 		
-		//void unloadChunk(const ChunkCoords& coords);
+		// void unloadChunk(const ChunkCoords& coords);
 
 		void unloadAllChunks();
 

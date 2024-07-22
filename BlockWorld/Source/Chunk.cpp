@@ -91,38 +91,38 @@ namespace bwgame {
 			utils::set(binary_chunk->n_zxy, coords.z, coords.y, coords.x);
 			utils::set(binary_chunk->p_zxy, coords.z + 1, coords.y, coords.x);
 		}
-#define OPTIMIZATION 2
+#define OPTIMIZATION 1
 #if OPTIMIZATION == 1
 		{
 			//TIME_FUNC("Optimization 1");
-			if (const auto& n_x_Chunk = chunkMap.find(ChunkCoords{ chunkCoords.x + 1, chunkCoords.z }); n_x_Chunk != chunkMap.end())
+			if (const auto& n_x_Chunk = chunk_map->find(ChunkCoords{ chunk_coords.x + 1, chunk_coords.z }); n_x_Chunk != chunk_map->end())
 			{
 				auto n_x_It_func = [](const BlockCoords& coords) -> bool { return coords.x == 0; };
-				for (const auto coords : std::views::keys(n_x_Chunk->second.blockMap) | std::views::filter(n_x_It_func))
+				for (const auto coords : std::views::keys(n_x_Chunk->second.block_map) | std::views::filter(n_x_It_func))
 				{
 					utils::set(binary_chunk->n_xzy, CHUNK_WIDTH_BLOCKS, coords.y, coords.z);
 				}
 			}
-			if (const auto& n_z_Chunk = chunkMap.find(ChunkCoords{ chunkCoords.x, chunkCoords.z + 1 }); n_z_Chunk != chunkMap.end())
+			if (const auto& n_z_Chunk = chunk_map->find(ChunkCoords{ chunk_coords.x, chunk_coords.z + 1 }); n_z_Chunk != chunk_map->end())
 			{
 				auto n_z_It_func = [](const BlockCoords& coords) -> bool { return coords.z == 0; };
-				for (const auto coords : std::views::keys(n_z_Chunk->second.blockMap) | std::views::filter(n_z_It_func))
+				for (const auto coords : std::views::keys(n_z_Chunk->second.block_map) | std::views::filter(n_z_It_func))
 				{
 					utils::set(binary_chunk->n_zxy, CHUNK_WIDTH_BLOCKS, coords.y, coords.x);
 				}
 			}
-			if (const auto& p_x_Chunk = chunkMap.find(ChunkCoords{ chunkCoords.x - 1, chunkCoords.z }); p_x_Chunk != chunkMap.end())
+			if (const auto& p_x_Chunk = chunk_map->find(ChunkCoords{ chunk_coords.x - 1, chunk_coords.z }); p_x_Chunk != chunk_map->end())
 			{
 				auto p_x_It_func = [](const BlockCoords& coords) -> bool { return coords.x == 14; };
-				for (const auto coords : std::views::keys(p_x_Chunk->second.blockMap) | std::views::filter(p_x_It_func))
+				for (const auto coords : std::views::keys(p_x_Chunk->second.block_map) | std::views::filter(p_x_It_func))
 				{
 					utils::set(binary_chunk->p_xzy, 0, coords.y, coords.z);
 				}
 			}
-			if (const auto& p_z_Chunk = chunkMap.find(ChunkCoords{ chunkCoords.x, chunkCoords.z - 1 }); p_z_Chunk != chunkMap.end())
+			if (const auto& p_z_Chunk = chunk_map->find(ChunkCoords{ chunk_coords.x, chunk_coords.z - 1 }); p_z_Chunk != chunk_map->end())
 			{
 				auto p_z_It_func = [](const BlockCoords& coords) -> bool { return coords.z == 14; };
-				for (const auto coords : std::views::keys(p_z_Chunk->second.blockMap) | std::views::filter(p_z_It_func))
+				for (const auto coords : std::views::keys(p_z_Chunk->second.block_map) | std::views::filter(p_z_It_func))
 				{
 					utils::set(binary_chunk->p_zxy, 0, coords.y, coords.x);
 				}

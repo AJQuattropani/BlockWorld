@@ -185,6 +185,7 @@
     <ClInclude Include="Source\Input.hpp" />
     <ClInclude Include="Source\Log.hpp" />
     <ClInclude Include="Source\Context.hpp" />
+    <ClInclude Include="Source\PerlinNoise.hpp" />
     <ClInclude Include="Source\Shader.hpp" />
     <ClInclude Include="Source\Skybox.hpp" />
     <ClInclude Include="Source\Texture.hpp" />

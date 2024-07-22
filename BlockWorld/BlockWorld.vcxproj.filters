@@ -239,6 +239,9 @@
     <ClInclude Include="Source\Context.hpp">
       <Filter>Header Files\Application</Filter>
     </ClInclude>
+    <ClInclude Include="Source\PerlinNoise.hpp">
+      <Filter>Header Files\Game\Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\Textures\Blocks\blockmap.jpeg">
