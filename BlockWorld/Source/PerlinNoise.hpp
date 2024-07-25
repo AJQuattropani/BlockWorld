@@ -15,50 +15,50 @@
 
 namespace utils {
 
-	class Lehmer64Generator
-	{
-	private:
-		uint64_t lehmer_state;
-	public:
-		Lehmer64Generator(uint64_t seed = 0) : lehmer_state(seed)
-		{	}
+	//class Lehmer64Generator
+	//{
+	//private:
+	//	uint64_t lehmer_state;
+	//public:
+	//	Lehmer64Generator(uint64_t seed = 0) : lehmer_state(seed)
+	//	{	}
 
-		inline void setSeed(uint64_t new_seed) { lehmer_state = new_seed; }
+	//	inline void setSeed(uint64_t new_seed) { lehmer_state = new_seed; }
 
-		inline uint64_t operator() ()
-		{
-			return next();
-		}
+	//	inline uint64_t operator() ()
+	//	{
+	//		return next();
+	//	}
 
-		float nextFloat(float min, float max)
-		{
-			float result = ((float)next() / (float)(std::numeric_limits<uint64_t>::max()) * (max - min)) + min;
-			return result;
-		}
+	//	float nextFloat(float min, float max)
+	//	{
+	//		float result = ((float)next() / (float)(std::numeric_limits<uint64_t>::max()) * (max - min)) + min;
+	//		return result;
+	//	}
 
-		int64_t nextInt(int64_t min = std::numeric_limits<int64_t>::min(), int64_t max = std::numeric_limits<int64_t>::max())
-		{
-			return next() % (max - min) + min;
-		}
+	//	int64_t nextInt(int64_t min = std::numeric_limits<int64_t>::min(), int64_t max = std::numeric_limits<int64_t>::max())
+	//	{
+	//		return next() % (max - min) + min;
+	//	}
 
-	private:
-		uint64_t next()
-		{
-			lehmer_state += 0xe120fc15;
-			uint64_t temporary = lehmer_state * 0x4a39b70d;
-			uint64_t shift1 = (temporary >> 32) ^ temporary;
-			temporary = shift1 * 0x12fad5c9;
-			uint64_t shift2 = (temporary >> 32) ^ temporary;
+	//private:
+	//	uint64_t next()
+	//	{
+	//		lehmer_state += 0xe120fc15;
+	//		uint64_t temporary = lehmer_state * 0x4a39b70d;
+	//		uint64_t shift1 = (temporary >> 32) ^ temporary;
+	//		temporary = shift1 * 0x12fad5c9;
+	//		uint64_t shift2 = (temporary >> 32) ^ temporary;
 
-			return shift2;
-		}
+	//		return shift2;
+	//	}
 
-	};
+	//};
 
 	class PerlinNoiseGenerator
 	{
 	private: 
-		mutable Lehmer64Generator generator;
+		//mutable Lehmer64Generator generator;
 		uint64_t world_seed = 0;
 	public:
 		PerlinNoiseGenerator(uint64_t world_seed) : world_seed(world_seed) {}
@@ -127,32 +127,32 @@ namespace utils {
 
 		inline std::pair<float, float> randomGradient(int32_t cx, int32_t cz) const
 		{
-		//{
-		//	union seedConvert{
-		//		struct {
-		//			int32_t x;
-		//			int32_t z;
-		//		};
-		//		uint64_t seed;
-		//	} seedCon = {cx, cz};
+			//union seedConvert{
+			//	struct {
+			//		int32_t x;
+			//		int32_t z;
+			//	};
+			//	uint64_t seed;
+			//} seedCon = {cx, cz};
 
-		//	generator.setSeed(seedCon.seed ^ world_seed);
-		//	float angle = generator.nextFloat(0.0f, 1.0f);
+			//generator.setSeed(seedCon.seed | world_seed);
+			//float angle = generator.nextFloat(0.0f, 1.0f);
 
-		//	float supplmentary_angle = angle + 0.25f;
-		//	if (supplmentary_angle > 1.0f) supplmentary_angle -= 1.0f;
-		//	return {fast_sin(supplmentary_angle), fast_sin(angle)};
-		//	//return { glm::cos(angle), glm::sin(angle)};
+			//float supplmentary_angle = angle + 0.25f;
+			//if (supplmentary_angle > 1.0f) supplmentary_angle -= 1.0f;
+			////return {fast_sin(supplmentary_angle), fast_sin(angle)};
+			//return { glm::cos(angle), glm::sin(angle)};
 
 			// FROM ZIPPED
 
 			// No precomputed gradients mean this works for any number of grid coordinates
-			const unsigned w = 8 * sizeof(unsigned);
-			constexpr unsigned s = w / 2;
-			unsigned a = cx, b = cz;
+			const unsigned w = 8 * sizeof(unsigned long long);
+			constexpr unsigned long long s = w / 2;
+			unsigned long long a = cx, b = cz;
 			a *= 3284157443;
 
 			b ^= a << s | a >> w - s;
+			b ^= world_seed;
 			b *= 1911520717;
 			
 			a ^= b << s | b >> w - s;
