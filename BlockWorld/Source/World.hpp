@@ -29,7 +29,7 @@ namespace bwgame {
 	public:
 		World(const std::shared_ptr<BlockRegister>& block_register, const std::shared_ptr<UserContext>& user_context,
 			float ticks_per_second,
-			float minutes_per_day = 1.0, uint64_t seed = 0);
+			float minutes_per_day = 1.0, uint64_t seed = 38513759);
 
 		~World();
 

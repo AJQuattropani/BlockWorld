@@ -34,17 +34,17 @@ namespace bwrenderer {
 				glm::sin(glm::mod(radialTime, glm::radians(180.0f))),
 				0.0);
 
-			const float near_plane = 1.0f, far_plane = 256.0f * 2.0f;
+			const float near_plane = 1.0f, far_plane = 15.0f * 2.0f * user_context->ch_render_load_distance;
 			glm::mat4 lightProjection = glm::ortho(
-				-15.0f * render_context->ch_shadow_window_distance / 2,
-				15.0f * render_context->ch_shadow_window_distance / 2,
-				-15.0f * render_context->ch_shadow_window_distance / 2,
-				15.0f * render_context->ch_shadow_window_distance / 2, near_plane, far_plane);
+				-15.0f * render_context->ch_shadow_window_distance,
+				15.0f * render_context->ch_shadow_window_distance,
+				-15.0f * render_context->ch_shadow_window_distance,
+				15.0f * render_context->ch_shadow_window_distance, near_plane, far_plane);
 			glm::mat4 lightView = glm::lookAt(
 				lightPosition
 				+ glm::vec3(user_context->player_position_x, user_context->player_position_y, user_context->player_position_z),
-				glm::vec3(0.0f)
-				+ glm::vec3(user_context->player_position_x, user_context->player_position_y, user_context->player_position_z),
+				//glm::vec3(0.0f)
+				glm::vec3(user_context->player_position_x, user_context->player_position_y, user_context->player_position_z),
 				glm::vec3(0.0f, 1.0f, 0.0f));
 			glm::mat4 lightSpaceMatrix = lightProjection * lightView;
 

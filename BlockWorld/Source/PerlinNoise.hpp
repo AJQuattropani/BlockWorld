@@ -152,12 +152,15 @@ namespace utils {
 			a *= 3284157443;
 
 			b ^= a << s | a >> w - s;
-			b ^= world_seed;
 			b *= 1911520717;
+			b ^= world_seed;
 			
 			a ^= b << s | b >> w - s;
 			a *= 2048419325;
 			float random = a * (3.14159265 / ~(~0u >> 1)); // in [0, 2*Pi]
+
+			//float random_supp = random - 3.14159265f / 2.0f;
+			//if (random_supp < 0.0f) random_supp += 3.14159265f * 2.0f;
 
 			// Create the vector from the angle
 			return {glm::cos(random), glm::sin(random)};
@@ -166,8 +169,11 @@ namespace utils {
 
 		inline static float fast_sin(float angle_revs)
 		{
-			if (angle_revs > 0.5f) return 16.0f * angle_revs * angle_revs - 16.0f * angle_revs - 8.0f * angle_revs + 8.0f;
-			return -16.0f * angle_revs * angle_revs + 8.0f * angle_revs;
+			/*if (angle_revs > 0.5f) return 16.0f * angle_revs * angle_revs - 16.0f * angle_revs - 8.0f * angle_revs + 8.0f;
+			return -16.0f * angle_revs * angle_revs + 8.0f * angle_revs;*/
+			constexpr float PI = 3.14159265;
+			constexpr float PI4 = PI * PI * PI * PI;
+			return 8.0f / (PI4) * angle_revs * (PI - angle_revs) * (2.0f * PI - angle_revs);
 		}
 
 		inline static float interpolate(float a0, float a1, float weight)
