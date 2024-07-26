@@ -23,7 +23,7 @@ namespace bwgame {
 		std::shared_ptr<const BlockRegister> blocks;
 		const utils::PerlinNoiseGenerator world_noise_gen;
 
-		inline const Block& getBlockLayered(int64_t depth, uint8_t height) const;
+		inline const Block& getBlockLayered(int64_t depth, uint8_t height, float biome) const;
 	};
 
 

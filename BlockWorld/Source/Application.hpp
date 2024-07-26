@@ -18,7 +18,7 @@
 class Application
 {
 public:
-	Application(unsigned int screen_width = 1080, unsigned int screen_height = 720, float fps = 60.0f, float ups = 60.0f);
+	Application(unsigned int screen_width = 1080, unsigned int screen_height = 720, float fps = 60.0f / 2.0f, float ups = 60.0f / 2.0f);
 	int run();
 	~Application();
 private:
