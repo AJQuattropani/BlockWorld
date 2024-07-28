@@ -248,7 +248,7 @@
       <Filter>Resource Files\Textures\Blocks</Filter>
     </Image>
     <Image Include="Resources\Textures\World\sky_textures.jpeg">
-      <Filter>Resource Files</Filter>
+      <Filter>Resource Files\Textures\Skybox</Filter>
     </Image>
   </ItemGroup>
   <ItemGroup>

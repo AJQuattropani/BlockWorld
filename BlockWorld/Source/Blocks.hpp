@@ -12,7 +12,10 @@ namespace bwgame
 		STONE,
 		COBBLESTONE,
 		SAND,
-		GRAVEL
+		GRAVEL,
+		WOOD,
+		WATER,
+		LEAVES
 	};
 
 	class Block {
@@ -43,6 +46,9 @@ namespace bwgame
 		const Block cobblestone;
 		const Block sand;
 		const Block gravel;
+		const Block logs;
+		const Block water;
+		const Block leaves;
 
 		BlockRegister();
 	};

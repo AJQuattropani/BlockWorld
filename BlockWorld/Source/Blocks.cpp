@@ -68,7 +68,10 @@ namespace bwgame {
 		stone(BlockType::STONE, utils::makeCubeTexData({ 3,0 })),
 		cobblestone(BlockType::COBBLESTONE, utils::makeCubeTexData({ 4,0 })),
 		sand(BlockType::SAND, utils::makeCubeTexData({ 5,0 })),
-		gravel(BlockType::GRAVEL, utils::makeCubeTexData({ 6,0 }))
+		gravel(BlockType::GRAVEL, utils::makeCubeTexData({ 6,0 })),
+		logs(BlockType::WOOD, utils::makePillarTexData({ 7, 0 }, { 9,0 }, { 9,0 })),
+		water(BlockType::WATER, utils::makeCubeTexData({ 10, 0})),
+		leaves(BlockType::LEAVES, utils::makeCubeTexData({ 11, 0 }))
 	{
 		BW_INFO("Blocks initialized.");
 	}

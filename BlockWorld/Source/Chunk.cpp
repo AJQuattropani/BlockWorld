@@ -91,7 +91,7 @@ namespace bwgame {
 			utils::set(binary_chunk->n_zxy, coords.z, coords.y, coords.x);
 			utils::set(binary_chunk->p_zxy, coords.z + 1, coords.y, coords.x);
 		}
-#define OPTIMIZATION 1
+#define OPTIMIZATION 2
 #if OPTIMIZATION == 1
 		{
 			//TIME_FUNC("Optimization 1");
@@ -131,6 +131,7 @@ namespace bwgame {
 #endif
 #if OPTIMIZATION == 2
 		{
+
 			//TIME_FUNC("Optimization 2");
 			if (const auto& n_x_Chunk = chunk_map->find(ChunkCoords{ chunk_coords.x + 1, chunk_coords.z }); n_x_Chunk != chunk_map->end())
 			{

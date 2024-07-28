@@ -26,7 +26,7 @@ Application::Application(unsigned int screen_width, unsigned int screen_height, 
 			.ch_shadow_window_distance = 8});
 
 	user_context = std::make_shared<bwgame::UserContext>
-		(bwgame::UserContext{ .player_position_x = 0.0, .player_position_y = 0.0, .player_position_z = 0.0, .ch_render_load_distance = 16,
+		(bwgame::UserContext{ .player_position_x = 0.0, .player_position_y = 0.0, .player_position_z = 0.0, .ch_render_load_distance = 12,
 			.Timer{.frame_rate_seconds = 1.0/fps, .game_update_rate_seconds = 1.0/ups} });
 
 	camera = std::make_unique<bwrenderer::Camera>(user_context, render_context);
