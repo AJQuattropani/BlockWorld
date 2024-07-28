@@ -5,9 +5,9 @@ This is my first from-scratch programming project in C++, and I am using it to f
 
 Currently a work-in-progress.
 
-<img src="Photos/6.30.2024.png" alt="Daylight, 6/30/2024" style="width=200">
-<img src="Photos/6.30.2024 (2).png" alt="Moonlight, 6/30/2024" style = "width=200">
-<img src="Photos/6.28.2024.png" alt="Moonlight, 6/30/2024" style = "width=200">
+<img src="Photos/7.27.2024 (2).png" alt="Daylight, 6/30/2024" style="width=200">
+<img src="Photos/7.27.2024.png" alt="Moonlight, 6/30/2024" style = "width=200">
+<img src="Photos/7.25.2024.png" alt="Moonlight, 6/30/2024" style = "width=200">
 <img src="Photos/7.7.2024 (2).png" alt="Shadows, 7/30/2024" style = "width=200">
 <img src="Photos/7.7.2024 (3).png" alt="Shadows, 7/30/2024" style = "width=200">
 <img src="Photos/7.7.2024.png" alt="Shadows, 7/30/2024" style = "width=200">
