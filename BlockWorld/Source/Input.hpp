@@ -16,7 +16,7 @@ struct InputContext
 	} screen_handler;
 
 	struct {
-		double cache_amount;
+		double cache_amount = 0.0;
 	} scroll_handler;
 	
 	struct {
@@ -28,6 +28,13 @@ struct InputContext
 		double cached_x_offset, cached_y_offset;
 		bool reset_flag;
 	} mouse_handler;
+
+	struct {
+		bool right_click = false;
+		bool left_click = false;
+		bool middle_click = false;
+	} click_handler;
+
 };
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);

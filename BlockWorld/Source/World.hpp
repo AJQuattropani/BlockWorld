@@ -35,6 +35,36 @@ namespace bwgame {
 
 		void update();
 
+		void setBlock(const Block& block, WorldBlockCoords coords)
+		{
+			chunk_coord_t c_x = coords.x / CHUNK_WIDTH_BLOCKS;
+			const block_coord_t x = ((coords.x % CHUNK_WIDTH_BLOCKS) + CHUNK_WIDTH_BLOCKS) % CHUNK_WIDTH_BLOCKS;
+			chunk_coord_t c_z = coords.z / CHUNK_WIDTH_BLOCKS;
+			const block_coord_t z = ((coords.z % CHUNK_WIDTH_BLOCKS) + CHUNK_WIDTH_BLOCKS) % CHUNK_WIDTH_BLOCKS;
+			if (coords.x < 0) c_x--;
+			if (coords.z < 0) c_z--;
+			if (const auto& chunk_it = chunk_map.find(ChunkCoords{ c_x, c_z }); chunk_it != chunk_map.end())
+			{
+				chunk_it->second.setBlock(BlockCoords{
+					x, coords.y, z }, block);
+			}
+		}
+
+		void destroyBlock(WorldBlockCoords coords)
+		{
+			chunk_coord_t c_x = coords.x / CHUNK_WIDTH_BLOCKS;
+			const block_coord_t x = ((coords.x % CHUNK_WIDTH_BLOCKS) + CHUNK_WIDTH_BLOCKS) % CHUNK_WIDTH_BLOCKS;
+			chunk_coord_t c_z = coords.z / CHUNK_WIDTH_BLOCKS;
+			const block_coord_t z = ((coords.z % CHUNK_WIDTH_BLOCKS) + CHUNK_WIDTH_BLOCKS) % CHUNK_WIDTH_BLOCKS;
+			if (coords.x < 0) c_x--;
+			if (coords.z < 0) c_z--;
+			if (const auto& chunk_it = chunk_map.find(ChunkCoords{ c_x, c_z }); chunk_it != chunk_map.end())
+			{
+				chunk_it->second.deleteBlock(BlockCoords{
+					x, coords.y, z });
+			}
+		}
+
 		void storeChunk();
 
 	private:
@@ -58,9 +88,7 @@ namespace bwgame {
 		// void unloadChunk(const ChunkCoords& coords);
 
 		void unloadAllChunks();
-
-
-
+		
 		friend bwrenderer::WorldRenderer;
 	};
 

@@ -18,9 +18,7 @@ namespace bwgame
 	union BlockCoords
 	{
 		struct {
-			block_coord_t x;
-			block_coord_t y;
-			block_coord_t z;
+			block_coord_t x, y, z;
 		};
 		uint32_t index;
 		block_coord_t data[3];
@@ -28,6 +26,13 @@ namespace bwgame
 	};
 	
 	using w_block_coord_t = int64_t;
+	struct WorldBlockCoords
+	{
+		w_block_coord_t x, z;
+
+		block_coord_t y;
+
+	};
 
 	struct TexData
 	{

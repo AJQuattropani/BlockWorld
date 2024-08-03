@@ -55,8 +55,8 @@ namespace bwgame {
 
 	void Chunk::setBlock(const BlockCoords& coords, const Block& block)
 	{
-		BW_ASSERT(coords.x <= CHUNK_WIDTH_BLOCKS
-			&& coords.z <= CHUNK_WIDTH_BLOCKS, // Note: block_coord_t already puts cap on y coord range
+		BW_ASSERT(coords.x < CHUNK_WIDTH_BLOCKS
+			&& coords.z < CHUNK_WIDTH_BLOCKS, // Note: block_coord_t already puts cap on y coord range
 			"Block outside chunk range.");
 		if (block.isAir())
 		{
@@ -65,7 +65,20 @@ namespace bwgame {
 		}
 		{
 			std::scoped_lock<std::mutex> transferModelDataLock(chunk_data_mutex);
-			block_map.try_emplace(coords, block);
+			block_map[coords] = block;
+			flags.set(CHUNK_FLAGS::MODEL_UPDATE_FLAG);
+		}
+	}
+
+	void Chunk::deleteBlock(const BlockCoords& coords)
+	{
+		BW_ASSERT(coords.x < CHUNK_WIDTH_BLOCKS
+			&& coords.z < CHUNK_WIDTH_BLOCKS, // Note: block_coord_t already puts cap on y coord range
+			"Block outside chunk range.");
+		{
+			std::scoped_lock<std::mutex> transferModelDataLock(chunk_data_mutex);
+			block_map.erase(coords);
+			flags.set(CHUNK_FLAGS::MODEL_UPDATE_FLAG);
 		}
 	}
 

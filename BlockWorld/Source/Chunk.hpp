@@ -58,11 +58,7 @@ namespace bwgame
 
 		}
 
-		inline void deleteBlock(const BlockCoords& coords)
-		{
-			std::scoped_lock<std::mutex> transferModelDataLock(chunk_data_mutex);
-			block_map.erase(coords);
-		}
+		void deleteBlock(const BlockCoords& coords);
 
 		void setBlock(const BlockCoords& coords, const Block& block);
 

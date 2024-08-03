@@ -4,7 +4,6 @@
 Application::Application(unsigned int screen_width, unsigned int screen_height, float fps, float ups) :
 	input_context{
 		.screen_handler{screen_width, screen_height},
-		.scroll_handler = {0},
 		.key_handler{.key_cache = std::map<unsigned int, bool>()},
 		.mouse_handler{screen_width / 2.0, screen_height / 2.0,0,0}
 	},
@@ -116,6 +115,7 @@ void Application::render() {
 }
 
 void Application::handleInput() {
+
 	// Framebuffer Input
 	render_context->screen_width_px = input_context.screen_handler.screen_width_px;
 	render_context->screen_height_px = input_context.screen_handler.screen_height_px;
@@ -165,8 +165,23 @@ void Application::handleInput() {
 		input_context.mouse_handler.reset_flag = false;
 	}
 
-	// Mouse Button Input
-
+	if (user_context->player_position_y > 0.0f && user_context->player_position_y < 256.0f)
+	{	// Mouse Button Input
+		if (input_context.click_handler.right_click)
+		{
+			world->setBlock(blocks->logs, bwgame::WorldBlockCoords{
+				.x = static_cast<int64_t>(floor(user_context->player_position_x + 0.5f)),
+				.z = static_cast<int64_t>(floor(user_context->player_position_z + 0.5f)),
+				.y = static_cast<uint8_t>(floor(user_context->player_position_y + 0.5f)) });
+		}
+		if (input_context.click_handler.left_click)
+		{
+			world->destroyBlock(bwgame::WorldBlockCoords{
+				.x = static_cast<int64_t>(floor(user_context->player_position_x + 0.5f)),
+				.z = static_cast<int64_t>(floor(user_context->player_position_z + 0.5f)),
+				.y = static_cast<uint8_t>(floor(user_context->player_position_y + 0.5f)) });
+		}
+	}
 
 
 	// Scroll Input

@@ -69,7 +69,7 @@ namespace bwgame {
 		cobblestone(BlockType::COBBLESTONE, utils::makeCubeTexData({ 4,0 })),
 		sand(BlockType::SAND, utils::makeCubeTexData({ 5,0 })),
 		gravel(BlockType::GRAVEL, utils::makeCubeTexData({ 6,0 })),
-		logs(BlockType::WOOD, utils::makePillarTexData({ 7, 0 }, { 9,0 }, { 9,0 })),
+		logs(BlockType::WOOD, utils::makePillarTexData({ 9, 0 }, { 7,0 }, { 9,0 })),
 		water(BlockType::WATER, utils::makeCubeTexData({ 10, 0})),
 		leaves(BlockType::LEAVES, utils::makeCubeTexData({ 11, 0 }))
 	{

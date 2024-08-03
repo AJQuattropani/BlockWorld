@@ -7,9 +7,6 @@ namespace bwgame {
 	[[nodiscard]] Chunk WorldGenerator::buildChunk(ChunkCoords coords, std::unordered_map<ChunkCoords, Chunk> const* chunkMap) const
 	{
 		Chunk chunk(coords, chunkMap);
-
-		srand(static_cast<unsigned int>(coords.seed));
-		
 		chunk.reserve(100 * CHUNK_WIDTH_BLOCKS * CHUNK_WIDTH_BLOCKS);
 
 		BlockCoords blockIdx{0,0,0};
@@ -20,10 +17,10 @@ namespace bwgame {
 					int64_t w_x = static_cast<int64_t>(coords.x) * 15 + blockIdx.x;
 					int64_t w_z = static_cast<int64_t>(coords.z) * 15 + blockIdx.z;
 					//int64_t threshold = 60;  //1.0 * cos(w_x / 16.0) + 2.0 * sin(w_z/40.0) + 6.0 * sin(w_z/8.0-sin(w_x));
-					float macro_elevation = world_noise_gen.sample2D(static_cast<float>(w_x) / 250.0f, static_cast<float>(w_z) / 250.0f);
-					macro_elevation += world_noise_gen.sample2D(static_cast<float>(w_x) / 120.0f, static_cast<float>(w_z) / 120.0f);
-					macro_elevation += world_noise_gen.sample2D(static_cast<float>(w_z) / 320.0f, static_cast<float>(w_x) / 320.0f) / 2.0;
-					macro_elevation += world_noise_gen.sample2D(static_cast<float>(w_z) / 400.0f, static_cast<float>(w_x) / 400.0f) / 2.0;
+					float macro_elevation = world_noise_gen.sample2D(static_cast<float>(w_x) / 250.0f, static_cast<float>(w_z) / 250.0f) / 4.0 + 0.5;
+					macro_elevation += world_noise_gen.sample2D(static_cast<float>(w_x) / 120.0f, static_cast<float>(w_z) / 120.0f) / 4.0;
+					macro_elevation += world_noise_gen.sample2D(static_cast<float>(w_z) / 320.0f, static_cast<float>(w_x) / 320.0f) / 4.0;
+					macro_elevation += world_noise_gen.sample2D(static_cast<float>(w_z) / 400.0f, static_cast<float>(w_x) / 400.0f) / 4.0;
 
 
 					int64_t threshold;
