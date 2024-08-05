@@ -15,45 +15,10 @@
 
 namespace utils {
 
-	//class Lehmer64Generator
-	//{
-	//private:
-	//	uint64_t lehmer_state;
-	//public:
-	//	Lehmer64Generator(uint64_t seed = 0) : lehmer_state(seed)
-	//	{	}
-
-	//	inline void setSeed(uint64_t new_seed) { lehmer_state = new_seed; }
-
-	//	inline uint64_t operator() ()
-	//	{
-	//		return next();
-	//	}
-
-	//	float nextFloat(float min, float max)
-	//	{
-	//		float result = ((float)next() / (float)(std::numeric_limits<uint64_t>::max()) * (max - min)) + min;
-	//		return result;
-	//	}
-
-	//	int64_t nextInt(int64_t min = std::numeric_limits<int64_t>::min(), int64_t max = std::numeric_limits<int64_t>::max())
-	//	{
-	//		return next() % (max - min) + min;
-	//	}
-
-	//private:
-	//	uint64_t next()
-	//	{
-	//		lehmer_state += 0xe120fc15;
-	//		uint64_t temporary = lehmer_state * 0x4a39b70d;
-	//		uint64_t shift1 = (temporary >> 32) ^ temporary;
-	//		temporary = shift1 * 0x12fad5c9;
-	//		uint64_t shift2 = (temporary >> 32) ^ temporary;
-
-	//		return shift2;
-	//	}
-
-	//};
+	constexpr double PI = 3.14159265;
+	constexpr double PI2 = PI * PI;
+	constexpr double HALF_PI = PI / 2;
+	constexpr double TAU = 2 * PI;
 
 	class PerlinNoiseGenerator
 	{
@@ -127,22 +92,6 @@ namespace utils {
 
 		inline std::pair<float, float> randomGradient(int32_t cx, int32_t cz) const
 		{
-			//union seedConvert{
-			//	struct {
-			//		int32_t x;
-			//		int32_t z;
-			//	};
-			//	uint64_t seed;
-			//} seedCon = {cx, cz};
-
-			//generator.setSeed(seedCon.seed | world_seed);
-			//float angle = generator.nextFloat(0.0f, 1.0f);
-
-			//float supplmentary_angle = angle + 0.25f;
-			//if (supplmentary_angle > 1.0f) supplmentary_angle -= 1.0f;
-			////return {fast_sin(supplmentary_angle), fast_sin(angle)};
-			//return { glm::cos(angle), glm::sin(angle)};
-
 			// FROM ZIPPED
 
 			// No precomputed gradients mean this works for any number of grid coordinates
@@ -157,24 +106,11 @@ namespace utils {
 			
 			a ^= b << s | b >> w - s;
 			a *= 2048419325;
-			float random = a * (3.14159265 / ~(~0u >> 1)); // in [0, 2*Pi]
+			float random = a * (PI / ~(~0u >> 1)); // in [0, 2*Pi]
 
-			//float random_supp = random - 3.14159265f / 2.0f;
-			//if (random_supp < 0.0f) random_supp += 3.14159265f * 2.0f;
-
-			// Create the vector from the angle
-			return {glm::cos(random), glm::sin(random)};
-
+			return {cos(random), sin(random)};
 		}
 
-		inline static float fast_sin(float angle_revs)
-		{
-			/*if (angle_revs > 0.5f) return 16.0f * angle_revs * angle_revs - 16.0f * angle_revs - 8.0f * angle_revs + 8.0f;
-			return -16.0f * angle_revs * angle_revs + 8.0f * angle_revs;*/
-			constexpr float PI = 3.14159265;
-			constexpr float PI4 = PI * PI * PI * PI;
-			return 8.0f / (PI4) * angle_revs * (PI - angle_revs) * (2.0f * PI - angle_revs);
-		}
 
 		inline static float interpolate(float a0, float a1, float weight)
 		{
