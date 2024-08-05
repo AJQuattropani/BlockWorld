@@ -167,14 +167,14 @@ void Application::handleInput() {
 
 	if (user_context->player_position_y > 0.0f && user_context->player_position_y < 256.0f)
 	{	// Mouse Button Input
-		if (input_context.click_handler.right_click)
+		if (input_context.click_handler.right_click_press)
 		{
 			world->setBlock(blocks->logs, bwgame::WorldBlockCoords{
 				.x = static_cast<int64_t>(floor(user_context->player_position_x + 0.5f)),
 				.z = static_cast<int64_t>(floor(user_context->player_position_z + 0.5f)),
 				.y = static_cast<uint8_t>(floor(user_context->player_position_y + 0.5f)) });
 		}
-		if (input_context.click_handler.left_click)
+		if (input_context.click_handler.left_click_press)
 		{
 			world->destroyBlock(bwgame::WorldBlockCoords{
 				.x = static_cast<int64_t>(floor(user_context->player_position_x + 0.5f)),
@@ -183,6 +183,23 @@ void Application::handleInput() {
 		}
 	}
 
+	if (input_context.click_handler.left_click_release)
+	{
+		input_context.click_handler.left_click_press = false;
+		input_context.click_handler.left_click_release = false;
+	}
+
+	if (input_context.click_handler.right_click_release)
+	{
+		input_context.click_handler.right_click_press = false;
+		input_context.click_handler.right_click_release = false;
+	}
+
+	if (input_context.click_handler.middle_click_release)
+	{
+		input_context.click_handler.middle_click_press = false;
+		input_context.click_handler.middle_click_release = false;
+	}
 
 	// Scroll Input
 	camera->zoom(static_cast<float>(input_context.scroll_handler.cache_amount));

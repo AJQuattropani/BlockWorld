@@ -29,17 +29,18 @@ namespace bwrenderer {
 
 			float radialTime = glm::mod<float>(world_ref->day_light_cycle.time_game_days, 1.0f) * glm::radians(360.0f);
 
-			glm::vec3 lightPosition = 15.0f * user_context->ch_render_load_distance * glm::vec3(
+			glm::vec3 lightPosition = bwgame::CHUNK_WIDTH_BLOCKS_FLOAT * user_context->ch_render_load_distance * glm::vec3(
 				glm::cos(glm::mod(radialTime, glm::radians(180.0f))),
 				glm::sin(glm::mod(radialTime, glm::radians(180.0f))),
 				0.0);
 
-			const float near_plane = 1.0f, far_plane = 15.0f * 2.0f * user_context->ch_render_load_distance;
+
+			const float near_plane = 1.0f, far_plane = bwgame::CHUNK_WIDTH_BLOCKS * 2.0f * user_context->ch_render_load_distance;
 			glm::mat4 lightProjection = glm::ortho(
-				-15.0f * render_context->ch_shadow_window_distance,
-				15.0f * render_context->ch_shadow_window_distance,
-				-15.0f * render_context->ch_shadow_window_distance,
-				15.0f * render_context->ch_shadow_window_distance, near_plane, far_plane);
+				-bwgame::CHUNK_WIDTH_BLOCKS_FLOAT * render_context->ch_shadow_window_distance,
+				bwgame::CHUNK_WIDTH_BLOCKS_FLOAT * render_context->ch_shadow_window_distance,
+				-bwgame::CHUNK_WIDTH_BLOCKS_FLOAT * render_context->ch_shadow_window_distance,
+				bwgame::CHUNK_WIDTH_BLOCKS_FLOAT * render_context->ch_shadow_window_distance, near_plane, far_plane);
 			glm::mat4 lightView = glm::lookAt(
 				lightPosition
 				+ glm::vec3(user_context->player_position_x, user_context->player_position_y, user_context->player_position_z),
@@ -206,7 +207,7 @@ namespace bwrenderer {
 			block_shader.setUniform1f("fog.gradient", GRADIENT);
 			
 			static const float GRAD_COEFF = glm::pow(1 - INV_GRADIENT, INV_GRADIENT);
-			block_shader.setUniform1f("fog.density", GRAD_COEFF / (user_context->ch_render_load_distance * 15.0f));
+			block_shader.setUniform1f("fog.density", GRAD_COEFF / (user_context->ch_render_load_distance * bwgame::CHUNK_WIDTH_BLOCKS_FLOAT));
 			block_shader.unbind();
 		}
 

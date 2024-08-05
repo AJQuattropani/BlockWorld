@@ -9,6 +9,7 @@ namespace bwgame {
 	using chunk_diff_t = int32_t;
 
 	static constexpr uint16_t CHUNK_WIDTH_BLOCKS = 15;
+	static constexpr float CHUNK_WIDTH_BLOCKS_FLOAT = CHUNK_WIDTH_BLOCKS;
 	static constexpr uint16_t CHUNK_HEIGHT_BLOCKS = 256;
 	static constexpr uint32_t CHUNK_VOLUME = CHUNK_WIDTH_BLOCKS * CHUNK_WIDTH_BLOCKS * CHUNK_HEIGHT_BLOCKS;
 

@@ -18,22 +18,22 @@ void mouse_button_input_callback(GLFWwindow* window, int button, int action, int
 {
 	static InputContext* const context = static_cast<InputContext*>(glfwGetWindowUserPointer(window));
 
-	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
-		context->click_handler.left_click = true;
-	else {
-		context->click_handler.left_click = false;
+	if (button == GLFW_MOUSE_BUTTON_LEFT)
+	{
+		if (action == GLFW_PRESS)   context->click_handler.left_click_press = true;
+		if (action == GLFW_RELEASE) context->click_handler.left_click_release = true;
 	}
 
-	if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS)
-		context->click_handler.right_click = true;
-	else {
-		context->click_handler.right_click = false;
+	if (button == GLFW_MOUSE_BUTTON_RIGHT)
+	{
+		if (action == GLFW_PRESS)   context->click_handler.right_click_press = true;
+		if (action == GLFW_RELEASE) context->click_handler.right_click_release = true;
 	}
 
-	if (button == GLFW_MOUSE_BUTTON_MIDDLE && action == GLFW_PRESS)
-		context->click_handler.middle_click = true;
-	else {
-		context->click_handler.middle_click = false;
+	if (button == GLFW_MOUSE_BUTTON_MIDDLE)
+	{
+		if (action == GLFW_PRESS)   context->click_handler.middle_click_press = true;
+		if (action == GLFW_RELEASE) context->click_handler.middle_click_release = true;
 	}
 }
 

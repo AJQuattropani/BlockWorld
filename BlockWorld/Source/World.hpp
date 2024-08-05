@@ -37,12 +37,12 @@ namespace bwgame {
 
 		void setBlock(const Block& block, WorldBlockCoords coords)
 		{
-			chunk_coord_t c_x = coords.x / CHUNK_WIDTH_BLOCKS;
+			chunk_coord_t c_x = floor((float)(coords.x) / CHUNK_WIDTH_BLOCKS);
 			const block_coord_t x = ((coords.x % CHUNK_WIDTH_BLOCKS) + CHUNK_WIDTH_BLOCKS) % CHUNK_WIDTH_BLOCKS;
-			chunk_coord_t c_z = coords.z / CHUNK_WIDTH_BLOCKS;
+			chunk_coord_t c_z = floor((float)(coords.z) / CHUNK_WIDTH_BLOCKS);
 			const block_coord_t z = ((coords.z % CHUNK_WIDTH_BLOCKS) + CHUNK_WIDTH_BLOCKS) % CHUNK_WIDTH_BLOCKS;
-			if (coords.x < 0) c_x--;
-			if (coords.z < 0) c_z--;
+			//if (coords.x < 0) c_x--;
+			//if (coords.z < 0) c_z--;
 			if (const auto& chunk_it = chunk_map.find(ChunkCoords{ c_x, c_z }); chunk_it != chunk_map.end())
 			{
 				chunk_it->second.setBlock(BlockCoords{
@@ -52,12 +52,12 @@ namespace bwgame {
 
 		void destroyBlock(WorldBlockCoords coords)
 		{
-			chunk_coord_t c_x = coords.x / CHUNK_WIDTH_BLOCKS;
+			chunk_coord_t c_x = floor((float)(coords.x) / CHUNK_WIDTH_BLOCKS);
 			const block_coord_t x = ((coords.x % CHUNK_WIDTH_BLOCKS) + CHUNK_WIDTH_BLOCKS) % CHUNK_WIDTH_BLOCKS;
-			chunk_coord_t c_z = coords.z / CHUNK_WIDTH_BLOCKS;
+			chunk_coord_t c_z = floor((float)(coords.z) / CHUNK_WIDTH_BLOCKS);
 			const block_coord_t z = ((coords.z % CHUNK_WIDTH_BLOCKS) + CHUNK_WIDTH_BLOCKS) % CHUNK_WIDTH_BLOCKS;
-			if (coords.x < 0) c_x--;
-			if (coords.z < 0) c_z--;
+			//if (coords.x < 0); c_x--;
+			//if (coords.z < 0); c_z--;
 			if (const auto& chunk_it = chunk_map.find(ChunkCoords{ c_x, c_z }); chunk_it != chunk_map.end())
 			{
 				chunk_it->second.deleteBlock(BlockCoords{

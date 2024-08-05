@@ -30,9 +30,13 @@ struct InputContext
 	} mouse_handler;
 
 	struct {
-		bool right_click = false;
-		bool left_click = false;
-		bool middle_click = false;
+		bool right_click_press = false;
+		bool left_click_press = false;
+		bool middle_click_press = false;
+
+		bool right_click_release = false;
+		bool left_click_release = false;
+		bool middle_click_release = false;
 	} click_handler;
 
 };

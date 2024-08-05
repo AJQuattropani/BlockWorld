@@ -14,8 +14,8 @@ namespace bwgame {
 			{
 				for (blockIdx.x = 0; blockIdx.x < CHUNK_WIDTH_BLOCKS; blockIdx.x++)
 				{
-					int64_t w_x = static_cast<int64_t>(coords.x) * 15 + blockIdx.x;
-					int64_t w_z = static_cast<int64_t>(coords.z) * 15 + blockIdx.z;
+					int64_t w_x = static_cast<int64_t>(coords.x) * CHUNK_WIDTH_BLOCKS + blockIdx.x;
+					int64_t w_z = static_cast<int64_t>(coords.z) * CHUNK_WIDTH_BLOCKS + blockIdx.z;
 					//int64_t threshold = 60;  //1.0 * cos(w_x / 16.0) + 2.0 * sin(w_z/40.0) + 6.0 * sin(w_z/8.0-sin(w_x));
 					float macro_elevation = world_noise_gen.sample2D(static_cast<float>(w_x) / 250.0f, static_cast<float>(w_z) / 250.0f) / 4.0 + 0.5;
 					macro_elevation += world_noise_gen.sample2D(static_cast<float>(w_x) / 120.0f, static_cast<float>(w_z) / 120.0f) / 4.0;

@@ -37,7 +37,7 @@ namespace bwrenderer {
 
 		inline void setModelMatrix(glm::vec3 position)
 		{
-			model = modelMatrixInit(glm::translate(glm::mat4(1.0), position * 15.0f));
+			model = modelMatrixInit(glm::translate(glm::mat4(1.0), position * (float)bwgame::CHUNK_WIDTH_BLOCKS));
 		}
 
 		inline const glm::mat4& getModelMatrix()

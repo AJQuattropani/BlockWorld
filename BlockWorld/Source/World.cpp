@@ -14,12 +14,12 @@ namespace bwgame {
 
 		BW_INFO("World created.");
 
-		for (chunk_coord_t x = (chunk_coord_t)user_context->player_position_x/15 - (chunk_coord_t)user_context->ch_render_load_distance;
-			x <= (chunk_coord_t)user_context->player_position_x/15 + (chunk_coord_t)user_context->ch_render_load_distance;
+		for (chunk_coord_t x = (chunk_coord_t)user_context->player_position_x/CHUNK_WIDTH_BLOCKS - (chunk_coord_t)user_context->ch_render_load_distance;
+			x <= (chunk_coord_t)user_context->player_position_x/CHUNK_WIDTH_BLOCKS + (chunk_coord_t)user_context->ch_render_load_distance;
 			x++)
 		{
-			for (chunk_coord_t z = (chunk_coord_t)user_context->player_position_z/15 - (chunk_coord_t)user_context->ch_render_load_distance;
-				z <= (chunk_coord_t)user_context->player_position_z/15 + (chunk_coord_t)user_context->ch_render_load_distance;
+			for (chunk_coord_t z = (chunk_coord_t)user_context->player_position_z/CHUNK_WIDTH_BLOCKS - (chunk_coord_t)user_context->ch_render_load_distance;
+				z <= (chunk_coord_t)user_context->player_position_z/CHUNK_WIDTH_BLOCKS + (chunk_coord_t)user_context->ch_render_load_distance;
 				z++)
 			{
 				//todo move to own function
@@ -63,8 +63,8 @@ namespace bwgame {
 	{
 		TIME_FUNC("MT World Update and Load");
 
-		chunk_coord_t ch_player_position_x = (chunk_coord_t)user_context->player_position_x / 15;
-		chunk_coord_t ch_player_position_z = (chunk_coord_t)user_context->player_position_z / 15;
+		chunk_coord_t ch_player_position_x = (chunk_coord_t)user_context->player_position_x / CHUNK_WIDTH_BLOCKS;
+		chunk_coord_t ch_player_position_z = (chunk_coord_t)user_context->player_position_z / CHUNK_WIDTH_BLOCKS;
 		chunk_coord_t differenceX = ch_player_position_x - player_last_chunk_pos_x;
 		chunk_coord_t differenceZ = ch_player_position_z - player_last_chunk_pos_z;
 
