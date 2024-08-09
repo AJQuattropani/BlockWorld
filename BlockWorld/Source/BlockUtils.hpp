@@ -32,6 +32,11 @@ namespace bwgame
 
 		block_coord_t y;
 
+		bool equals(const WorldBlockCoords& A)
+		{
+			return x == A.x && y == A.y && z == A.z;
+		}
+
 	};
 
 	struct TexData

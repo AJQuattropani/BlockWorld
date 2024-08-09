@@ -15,10 +15,10 @@
 
 namespace utils {
 
-	constexpr double PI = 3.14159265;
-	constexpr double PI2 = PI * PI;
-	constexpr double HALF_PI = PI / 2;
-	constexpr double TAU = 2 * PI;
+	constexpr float PI = 3.14159265f;
+	constexpr float PI2 = PI * PI;
+	constexpr float HALF_PI = PI / 2;
+	constexpr float TAU = 2 * PI;
 
 	class PerlinNoiseGenerator
 	{
@@ -100,11 +100,11 @@ namespace utils {
 			unsigned long long a = cx, b = cz;
 			a *= 3284157443;
 
-			b ^= a << s | a >> w - s;
+			b ^= (a << s) | (a >> (w - s));
 			b *= 1911520717;
 			b ^= world_seed;
 			
-			a ^= b << s | b >> w - s;
+			a ^= (b << s) | (b >> (w - s));
 			a *= 2048419325;
 			float random = a * (PI / ~(~0u >> 1)); // in [0, 2*Pi]
 

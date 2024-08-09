@@ -7,10 +7,10 @@
 #include "Input.hpp"
 #include "Shader.hpp"
 #include "Context.hpp"
-#include "Camera.hpp"
 #include "Chunk.hpp"
 #include "World.hpp"
 #include "WorldRenderer.hpp"
+#include "Player.hpp"
 
 #include <memory>
 #include <string>
@@ -25,14 +25,13 @@ private:
 	GLFWwindow* window;
 	// REMOVE
 	InputContext input_context;
-	std::shared_ptr<bwrenderer::RenderContext> render_context;
-	std::unique_ptr<bwrenderer::WorldRenderer> world_renderer;
-	std::unique_ptr<bwrenderer::Camera> camera;
+	std::shared_ptr<bwgame::Context> context;
 
-	std::shared_ptr<bwgame::UserContext> user_context;
 	std::shared_ptr<bwgame::BlockRegister> blocks;
 	std::shared_ptr<bwgame::World> world;
+	std::shared_ptr<bwgame::Player> player;
 
+	std::unique_ptr<bwrenderer::WorldRenderer> world_renderer;
 private:
 	GLFWwindow* glfwWindowInit(const std::string& name);
 private:

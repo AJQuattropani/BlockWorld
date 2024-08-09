@@ -58,6 +58,12 @@ namespace bwgame
 
 		}
 
+		inline bool checkBlock(const BlockCoords& coords) const
+		{
+			const auto& block_it = block_map.find(coords);
+			return block_it != block_map.end();
+		}
+
 		void deleteBlock(const BlockCoords& coords);
 
 		void setBlock(const BlockCoords& coords, const Block& block);
@@ -81,6 +87,7 @@ namespace bwgame
 			BW_ASSERT(block_pair != block_map.end(), "Block not found");
 			return block_pair->second;
 		}
+
 
 		inline void reloadModelData() const {
 			auto data = packageRenderData();

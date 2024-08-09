@@ -14,7 +14,7 @@ namespace bwrenderer {
 
 		~SkyBox();
 
-		void render(RenderContext& context, const DayLightCycle& day_light_cycle);
+		void render(bwgame::Context& context, const DayLightCycle& day_light_cycle);
 	private:
 		vertex_buffer vbo;
 		vertex_array vao;

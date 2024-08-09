@@ -151,7 +151,6 @@
     <ClCompile Include="Source\BlockMesh.cpp" />
     <ClCompile Include="Source\Blocks.cpp" />
     <ClCompile Include="Source\Buffers.cpp" />
-    <ClCompile Include="Source\Camera.cpp" />
     <ClCompile Include="Source\Chunk.cpp" />
     <ClCompile Include="Source\ChunkModel.cpp" />
     <ClCompile Include="Source\Debug.cpp" />
@@ -159,6 +158,7 @@
     <ClCompile Include="Source\Input.cpp" />
     <ClCompile Include="Source\Log.cpp" />
     <ClCompile Include="Source\Main.cpp" />
+    <ClCompile Include="Source\Player.cpp" />
     <ClCompile Include="Source\Shader.cpp" />
     <ClCompile Include="Source\Skybox.cpp" />
     <ClCompile Include="Source\Texture.cpp" />
@@ -175,7 +175,6 @@
     <ClInclude Include="Source\Blocks.hpp" />
     <ClInclude Include="Source\BlockUtils.hpp" />
     <ClInclude Include="Source\Buffers.hpp" />
-    <ClInclude Include="Source\Camera.hpp" />
     <ClInclude Include="Source\Chunk.hpp" />
     <ClInclude Include="Source\ChunkData.hpp" />
     <ClInclude Include="Source\ChunkModel.hpp" />
@@ -186,6 +185,7 @@
     <ClInclude Include="Source\Log.hpp" />
     <ClInclude Include="Source\Context.hpp" />
     <ClInclude Include="Source\PerlinNoise.hpp" />
+    <ClInclude Include="Source\Player.hpp" />
     <ClInclude Include="Source\Shader.hpp" />
     <ClInclude Include="Source\Skybox.hpp" />
     <ClInclude Include="Source\Texture.hpp" />

@@ -5,21 +5,23 @@ namespace bwgame {
 
 
 	World::World(const std::shared_ptr<BlockRegister>& block_register, 
-		const std::shared_ptr<UserContext>& user_context, float ticks_per_second, float minutes_per_day, uint64_t seed)
+		const std::shared_ptr<Context>& user_context, float ticks_per_second, float minutes_per_day, uint64_t seed)
 		: world_gen(std::make_unique<WorldGenerator>(seed, block_register)),
-		user_context(user_context), day_light_cycle(minutes_per_day, ticks_per_second),
+		user_context(user_context), day_light_cycle(minutes_per_day, ticks_per_second), block_register(block_register),
 		async_world_operations(32)
 	{
 		chunk_map.reserve((2 * user_context->ch_render_load_distance + 1) * (2 * user_context->ch_render_load_distance + 1));
 
 		BW_INFO("World created.");
 
-		for (chunk_coord_t x = (chunk_coord_t)user_context->player_position_x/CHUNK_WIDTH_BLOCKS - (chunk_coord_t)user_context->ch_render_load_distance;
-			x <= (chunk_coord_t)user_context->player_position_x/CHUNK_WIDTH_BLOCKS + (chunk_coord_t)user_context->ch_render_load_distance;
+		for (chunk_coord_t x = (chunk_coord_t)user_context->player_position.x/CHUNK_WIDTH_BLOCKS 
+			- (chunk_coord_t)user_context->ch_render_load_distance;
+			x <= (chunk_coord_t)user_context->player_position.x/CHUNK_WIDTH_BLOCKS +
+			(chunk_coord_t)user_context->ch_render_load_distance;
 			x++)
 		{
-			for (chunk_coord_t z = (chunk_coord_t)user_context->player_position_z/CHUNK_WIDTH_BLOCKS - (chunk_coord_t)user_context->ch_render_load_distance;
-				z <= (chunk_coord_t)user_context->player_position_z/CHUNK_WIDTH_BLOCKS + (chunk_coord_t)user_context->ch_render_load_distance;
+			for (chunk_coord_t z = (chunk_coord_t)user_context->player_position.z/CHUNK_WIDTH_BLOCKS - (chunk_coord_t)user_context->ch_render_load_distance;
+				z <= (chunk_coord_t)user_context->player_position.z/CHUNK_WIDTH_BLOCKS + (chunk_coord_t)user_context->ch_render_load_distance;
 				z++)
 			{
 				//todo move to own function
@@ -63,8 +65,8 @@ namespace bwgame {
 	{
 		TIME_FUNC("MT World Update and Load");
 
-		chunk_coord_t ch_player_position_x = (chunk_coord_t)user_context->player_position_x / CHUNK_WIDTH_BLOCKS;
-		chunk_coord_t ch_player_position_z = (chunk_coord_t)user_context->player_position_z / CHUNK_WIDTH_BLOCKS;
+		chunk_coord_t ch_player_position_x = (chunk_coord_t)(user_context->player_position.x / CHUNK_WIDTH_BLOCKS_FLOAT);
+		chunk_coord_t ch_player_position_z = (chunk_coord_t)(user_context->player_position.z / CHUNK_WIDTH_BLOCKS_FLOAT);
 		chunk_coord_t differenceX = ch_player_position_x - player_last_chunk_pos_x;
 		chunk_coord_t differenceZ = ch_player_position_z - player_last_chunk_pos_z;
 

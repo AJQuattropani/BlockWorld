@@ -3,15 +3,13 @@
 #include "Debug.hpp"
 #include "Timer.hpp"
 #include "Chunk.hpp"
-#include "Camera.hpp"
 #include "WorldGenerator.hpp"
 #include "DayCycle.hpp"
 #include "ThreadList.hpp"
+#include "Context.hpp"
 
 #include <unordered_map>
-#include <future>
 #include <thread>
-#include <unordered_set>
 
 namespace bwrenderer {
 
@@ -20,14 +18,13 @@ namespace bwrenderer {
 
 namespace bwgame {
 
-
 	/*
 	* The goal is to eventually have file writing/reading.
 	*/
 	class World
 	{
 	public:
-		World(const std::shared_ptr<BlockRegister>& block_register, const std::shared_ptr<UserContext>& user_context,
+		World(const std::shared_ptr<BlockRegister>& block_register, const std::shared_ptr<Context>& user_context,
 			float ticks_per_second,
 			float minutes_per_day = 1.0, uint64_t seed = 38513759);
 
@@ -37,41 +34,63 @@ namespace bwgame {
 
 		void setBlock(const Block& block, WorldBlockCoords coords)
 		{
-			chunk_coord_t c_x = floor((float)(coords.x) / CHUNK_WIDTH_BLOCKS);
-			const block_coord_t x = ((coords.x % CHUNK_WIDTH_BLOCKS) + CHUNK_WIDTH_BLOCKS) % CHUNK_WIDTH_BLOCKS;
-			chunk_coord_t c_z = floor((float)(coords.z) / CHUNK_WIDTH_BLOCKS);
-			const block_coord_t z = ((coords.z % CHUNK_WIDTH_BLOCKS) + CHUNK_WIDTH_BLOCKS) % CHUNK_WIDTH_BLOCKS;
-			//if (coords.x < 0) c_x--;
-			//if (coords.z < 0) c_z--;
-			if (const auto& chunk_it = chunk_map.find(ChunkCoords{ c_x, c_z }); chunk_it != chunk_map.end())
+			auto [chunk_coords, block_coords] = decomposeCoordinates(coords);
+			if (const auto& chunk_it = chunk_map.find(chunk_coords); chunk_it != chunk_map.end())
 			{
-				chunk_it->second.setBlock(BlockCoords{
-					x, coords.y, z }, block);
+				chunk_it->second.setBlock(block_coords, block);
 			}
 		}
 
+		inline bool checkBlock(const WorldBlockCoords& coords) const
+		{
+			auto [chunk_coords, block_coords] = decomposeCoordinates(coords);
+			if (const auto& chunk_it = chunk_map.find(chunk_coords); chunk_it != chunk_map.end())
+				return chunk_it->second.checkBlock(block_coords);
+			return false;
+		}
+
+		const Block& getBlock(WorldBlockCoords coords) const
+		{
+			auto [chunk_coords, block_coords] = decomposeCoordinates(coords);
+			if (const auto& chunk_it = chunk_map.find(chunk_coords); chunk_it != chunk_map.end()) 
+				return chunk_it->second.getBlockConst(block_coords.x, block_coords.y, block_coords.z);
+			return block_register->air;
+		}
+
+
 		void destroyBlock(WorldBlockCoords coords)
 		{
-			chunk_coord_t c_x = floor((float)(coords.x) / CHUNK_WIDTH_BLOCKS);
-			const block_coord_t x = ((coords.x % CHUNK_WIDTH_BLOCKS) + CHUNK_WIDTH_BLOCKS) % CHUNK_WIDTH_BLOCKS;
-			chunk_coord_t c_z = floor((float)(coords.z) / CHUNK_WIDTH_BLOCKS);
-			const block_coord_t z = ((coords.z % CHUNK_WIDTH_BLOCKS) + CHUNK_WIDTH_BLOCKS) % CHUNK_WIDTH_BLOCKS;
-			//if (coords.x < 0); c_x--;
-			//if (coords.z < 0); c_z--;
-			if (const auto& chunk_it = chunk_map.find(ChunkCoords{ c_x, c_z }); chunk_it != chunk_map.end())
+			auto [chunk_coords, block_coords] = decomposeCoordinates(coords);
+			if (const auto& chunk_it = chunk_map.find(chunk_coords); chunk_it != chunk_map.end())
 			{
-				chunk_it->second.deleteBlock(BlockCoords{
-					x, coords.y, z });
+				chunk_it->second.deleteBlock(block_coords);
 			}
+		}
+
+		inline const std::shared_ptr<BlockRegister>& getBlockRegister() const
+		{
+			return block_register;
 		}
 
 		void storeChunk();
 
+	public:
+		static inline std::pair<ChunkCoords, BlockCoords> decomposeCoordinates(const WorldBlockCoords& coords)
+		{
+			ChunkCoords chunk_coords{ (chunk_coord_t)floor((coords.x) / CHUNK_WIDTH_BLOCKS_FLOAT), (chunk_coord_t)floor((coords.z) / CHUNK_WIDTH_BLOCKS_FLOAT) };
+			BlockCoords block_coords{
+				(block_coord_t)(((coords.x % CHUNK_WIDTH_BLOCKS) + CHUNK_WIDTH_BLOCKS) % CHUNK_WIDTH_BLOCKS),
+				(block_coord_t)coords.y,
+				(block_coord_t)(((coords.z % CHUNK_WIDTH_BLOCKS) + CHUNK_WIDTH_BLOCKS) % CHUNK_WIDTH_BLOCKS)
+			};
+			return { chunk_coords, block_coords };
+		}
 	private:
 		std::unordered_map<ChunkCoords, Chunk> chunk_map;
 		std::unique_ptr<WorldGenerator> world_gen;
 		DayLightCycle day_light_cycle;
-		const std::shared_ptr<UserContext> user_context;
+		const std::shared_ptr<const Context> user_context;
+		const std::shared_ptr<BlockRegister> block_register;
 
 		chunk_coord_t player_last_chunk_pos_x = 0, player_last_chunk_pos_z = 0;
 

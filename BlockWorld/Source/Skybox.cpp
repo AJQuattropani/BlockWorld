@@ -13,7 +13,7 @@ namespace bwrenderer {
 	{
 	}
 
-	void SkyBox::render(RenderContext& context, const DayLightCycle& day_light_cycle)
+	void SkyBox::render(bwgame::Context& context, const DayLightCycle& day_light_cycle)
 	{
 		glm::vec4 sky_color = glm::mix(glm::vec4(0.05, 0.05, 0.15f, 1.0f), glm::vec4(0.0, 0.55, 1.0f, 1.0f), glm::clamp(4.0 * glm::sin(day_light_cycle.sun_angle), 0.0, 1.0));
 

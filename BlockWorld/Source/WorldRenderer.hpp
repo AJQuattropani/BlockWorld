@@ -8,14 +8,14 @@
 #include "Skybox.hpp"
 #include "ThreadList.hpp"
 #include "World.hpp"
+#include "Player.hpp"
 
 namespace bwrenderer {
 
 	class WorldRenderer {
 	public:
-		WorldRenderer(const std::shared_ptr<const bwgame::World> world_ref, const std::shared_ptr<bwgame::UserContext>& user_context,
-			const std::shared_ptr<bwrenderer::RenderContext> render_context) 
-			: world_ref(world_ref), thread_list(), render_context(render_context), user_context(user_context),
+		WorldRenderer(const std::shared_ptr<const bwgame::World> world_ref, const std::shared_ptr<bwgame::Context> render_context) 
+			: world_ref(world_ref), thread_list(), render_context(render_context),
 			block_shader("Blocks/World", "block_shader"), shadow_shader("Blocks/World", "shadows")
 		{
 		initializeDepthBuffer();
@@ -29,13 +29,13 @@ namespace bwrenderer {
 
 			float radialTime = glm::mod<float>(world_ref->day_light_cycle.time_game_days, 1.0f) * glm::radians(360.0f);
 
-			glm::vec3 lightPosition = bwgame::CHUNK_WIDTH_BLOCKS_FLOAT * user_context->ch_render_load_distance * glm::vec3(
+			glm::vec3 lightPosition = bwgame::CHUNK_WIDTH_BLOCKS_FLOAT * render_context->ch_render_load_distance * glm::vec3(
 				glm::cos(glm::mod(radialTime, glm::radians(180.0f))),
 				glm::sin(glm::mod(radialTime, glm::radians(180.0f))),
 				0.0);
 
 
-			const float near_plane = 1.0f, far_plane = bwgame::CHUNK_WIDTH_BLOCKS * 2.0f * user_context->ch_render_load_distance;
+			const float near_plane = 1.0f, far_plane = bwgame::CHUNK_WIDTH_BLOCKS * 2.0f * render_context->ch_render_load_distance;
 			glm::mat4 lightProjection = glm::ortho(
 				-bwgame::CHUNK_WIDTH_BLOCKS_FLOAT * render_context->ch_shadow_window_distance,
 				bwgame::CHUNK_WIDTH_BLOCKS_FLOAT * render_context->ch_shadow_window_distance,
@@ -43,10 +43,9 @@ namespace bwrenderer {
 				bwgame::CHUNK_WIDTH_BLOCKS_FLOAT * render_context->ch_shadow_window_distance, near_plane, far_plane);
 			glm::mat4 lightView = glm::lookAt(
 				lightPosition
-				+ glm::vec3(user_context->player_position_x, user_context->player_position_y, user_context->player_position_z),
-				//glm::vec3(0.0f)
-				glm::vec3(user_context->player_position_x, user_context->player_position_y, user_context->player_position_z),
-				glm::vec3(0.0f, 1.0f, 0.0f));
+				+ render_context->player_position,
+				render_context->player_position,
+				bwgame::Player::WORLD_UP);
 			glm::mat4 lightSpaceMatrix = lightProjection * lightView;
 
 			bwrenderer::TextureBuffer& texture = render_context->texture_cache.findOrLoad("Blocks", "blockmap.jpeg");
@@ -153,8 +152,7 @@ namespace bwrenderer {
 	private:
 		const std::shared_ptr<const bwgame::World> world_ref;
 		std::unique_ptr<utils::ThreadList> thread_list;
-		const std::shared_ptr<const bwgame::UserContext> user_context;
-		const std::shared_ptr<bwrenderer::RenderContext> render_context;
+		const std::shared_ptr<bwgame::Context> render_context;
 
 		bwrenderer::Shader block_shader, shadow_shader;
 		bwrenderer::frame_buffer depth_buffer;
@@ -207,7 +205,7 @@ namespace bwrenderer {
 			block_shader.setUniform1f("fog.gradient", GRADIENT);
 			
 			static const float GRAD_COEFF = glm::pow(1 - INV_GRADIENT, INV_GRADIENT);
-			block_shader.setUniform1f("fog.density", GRAD_COEFF / (user_context->ch_render_load_distance * bwgame::CHUNK_WIDTH_BLOCKS_FLOAT));
+			block_shader.setUniform1f("fog.density", GRAD_COEFF / (render_context->ch_render_load_distance * bwgame::CHUNK_WIDTH_BLOCKS_FLOAT));
 			block_shader.unbind();
 		}
 
