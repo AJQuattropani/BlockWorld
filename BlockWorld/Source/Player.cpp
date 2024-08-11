@@ -96,129 +96,77 @@ namespace bwgame
 
         if (position.y <= 0.f || position.y >= 256.f) return;
 
-        glm::vec3 temp = position + front * reach;
+        glm::vec3 start_pos = position + glm::vec3(0.0f, 0.5f, 0.0f) + 1.77f * front + 0.5f * up; //* right + 0.5f * WORLD_UP;
+        glm::vec3 step_unit_size(glm::length(front/front.x), glm::length(front / front.y), glm::length(front / front.z));
 
-        glm::vec3 initial;
-        glm::vec3 last;
-        if (temp.x > position.x)
+        WorldBlockCoords block_pos{ (w_block_coord_t)start_pos.x, (w_block_coord_t)start_pos.z, (block_coord_t)start_pos.y };
+        WorldBlockCoords last_block_pos{ block_pos };
+        glm::vec3 ray_length_1D(0.0f);
+
+        glm::i64vec3 step;
+
+        if (front.x < 0)
         {
-            last.x = glm::floor(temp.x);
-            initial.x = glm::floor(position.x);
+            step.x = -1;
+            ray_length_1D.x = (start_pos.x - float(block_pos.x)) * step_unit_size.x;
         }
         else
         {
-            last.x = glm::ceil(temp.x);
-            initial.x = glm::ceil(position.x);
+            step.x = 1;
+            ray_length_1D.x = (float(block_pos.x + 1) - start_pos.x) * step_unit_size.x;
         }
-
-        if (temp.y > position.y)
+        if (front.y < 0)
         {
-            last.y = glm::floor(temp.y);
-            initial.y = glm::floor(position.y);
+            step.y = -1;
+            ray_length_1D.y = (start_pos.y - float(block_pos.y)) * step_unit_size.y;
         }
         else
         {
-            last.y = glm::ceil(temp.y);
-            initial.y = glm::ceil(position.y);
+            step.y = 1;
+            ray_length_1D.y = (float(block_pos.y + 1) - start_pos.y) * step_unit_size.y;
         }
-
-        if (temp.z > position.z)
+        if (front.z < 0)
         {
-            last.z = glm::floor(temp.z);
-            initial.z = glm::floor(position.z);
+            step.z = -1;
+            ray_length_1D.z = (start_pos.z - float(block_pos.z)) * step_unit_size.z;
         }
         else
         {
-            last.z = glm::ceil(temp.z);
-            initial.z = glm::ceil(position.z);
+            step.z = 1;
+            ray_length_1D.x = (float(block_pos.z + 1) - start_pos.z) * step_unit_size.z;
         }
 
-        glm::vec3 abs_displacement = glm::abs(last - initial);
+        float distance = 0.0f;
+        while (distance < reach)
+        {
+            if (ray_length_1D.x == ray_length_1D.y || ray_length_1D.x == ray_length_1D.z || ray_length_1D.y == ray_length_1D.z) break;
 
-        int stepX = initial.x < last.x ? 1 : -1;
-        int stepY = initial.y < last.y ? 1 : -1;
-        int stepZ = initial.z < last.z ? 1 : -1;
-
-        float hypotenuse = glm::length(abs_displacement);
-
-        glm::vec3 tDelta = glm::vec3(1.0f / abs_displacement.x, 1.0f / abs_displacement.y, 1.0f / abs_displacement.z) * hypotenuse;
-        glm::vec3 tMax = 0.5f * tDelta;
-
-        WorldBlockCoords coords, prev;
-        coords.x = initial.x;
-        coords.y = initial.y;
-        coords.z = initial.z;
-        prev = coords;
-
-        while (initial.x != last.x || initial.y != last.y || initial.z != last.z) {
-            if (tMax.x < tMax.y) {
-                if (tMax.x < tMax.z) {
-                    initial.x += stepX;
-                    tMax.x += tDelta.x;
-                }
-                else if (tMax.x > tMax.z) {
-                    initial.z += stepZ;
-                    tMax.z += tDelta.z;
-                }
-                else {
-                    initial.x += stepX;
-                    tMax.x += tDelta.x;
-                    initial.z += stepZ;
-                    tMax.z += tDelta.z;
-                    continue;
-                }
-            }
-            else if (tMax.x > tMax.y) {
-                if (tMax.y < tMax.z) {
-                    initial.y += stepY;
-                    tMax.y += tDelta.y;
-                }
-                else if (tMax.y > tMax.z) {
-                    initial.z += stepZ;
-                    tMax.z += tDelta.z;
-                }
-                else {
-                    initial.y += stepY;
-                    tMax.y += tDelta.y;
-                    initial.z += stepZ;
-                    tMax.z += tDelta.z;
-                    continue;
-                }
-            }
-            else {
-                if (tMax.y < tMax.z) {
-                    initial.x += stepX;
-                    tMax.x += tDelta.x;
-                    initial.y += stepY;
-                    tMax.y += tDelta.y;
-                    continue;
-                }
-                else if (tMax.y > tMax.z) {
-                    initial.z += stepZ;
-                    tMax.z += tDelta.z;
-                }
-                else {
-                    initial.x += stepX;
-                    tMax.x += tDelta.x;
-                    initial.y += stepY;
-                    tMax.y += tDelta.y;
-                    initial.z += stepZ;
-                    tMax.z += tDelta.z;
-                    continue;
-                }
-            }
-
-            coords.x = initial.x;
-            coords.y = initial.y;
-            coords.z = initial.z;
-
-            if (world->checkBlock(coords))
+            if (ray_length_1D.x < ray_length_1D.y && ray_length_1D.x < ray_length_1D.z)
             {
-                world->setBlock(world->getBlockRegister()->cobblestone, prev);
-                return;
+                block_pos.x += step.x;
+                distance = ray_length_1D.x;
+                ray_length_1D.x += step_unit_size.x;
+            }
+            else if (ray_length_1D.y < ray_length_1D.z)
+            {
+                block_pos.y += step.y;
+                distance = ray_length_1D.y;
+                ray_length_1D.y += step_unit_size.y;
+            }
+            else
+            {
+                block_pos.z += step.z;
+                distance = ray_length_1D.z;
+                ray_length_1D.z += step_unit_size.z;
             }
 
-            prev = coords;
+            if (world->checkBlock(block_pos))
+            {
+                world->setBlock(world->getBlockRegister()->cobblestone, last_block_pos);
+                break;
+            }
+
+            last_block_pos = block_pos;
         }
 
     }
@@ -231,41 +179,120 @@ namespace bwgame
 
         if (position.y <= 0.f || position.y >= 256.f) return;
 
-        glm::vec3 r0 = position;
-        glm::vec3 r1 = position + front * reach;
+        glm::vec3 start_pos = position + glm::vec3(0.0f, 0.5f, 0.0f) + 1.77f * front; //* right + 0.5f * WORLD_UP;
+        glm::vec3 step_unit_size(glm::length(front / front.x), glm::length(front / front.y), glm::length(front / front.z));
 
-        // find the displacement vector
-        glm::vec3 displacement = r1 - r0;
-        BW_DEBUG("%f, %f, %f", displacement.x, displacement.y, displacement.z);
+        WorldBlockCoords block_pos{ (w_block_coord_t)start_pos.x, (w_block_coord_t)start_pos.z, (block_coord_t)start_pos.y };
+        glm::vec3 ray_length_1D(0.0f);
 
-        constexpr float precision_per_block = 3.0f;
-        uint32_t iterations = glm::length(displacement) * precision_per_block;
-        glm::vec3 increment = displacement / (float)iterations;
+        glm::i64vec3 step;
 
-        WorldBlockCoords current, last;
-        last.x = r0.x;
-        last.y = r0.y;
-        last.z = r0.z;
-
-        for (size_t i = 0; i < iterations; i++)
+        if (front.x < 0)
         {
-            current.x = r0.x;
-            current.y = r0.y;
-            current.z = r0.z;
-            r0 += increment;
+            step.x = -1;
+            ray_length_1D.x = (start_pos.x - float(block_pos.x)) * step_unit_size.x;
+        }
+        else
+        {
+            step.x = 1;
+            ray_length_1D.x = (float(block_pos.x + 1) - start_pos.x) * step_unit_size.x;
+        }
+        if (front.y < 0)
+        {
+            step.y = -1;
+            ray_length_1D.y = (start_pos.y - float(block_pos.y)) * step_unit_size.y;
+        }
+        else
+        {
+            step.y = 1;
+            ray_length_1D.y = (float(block_pos.y + 1) - start_pos.y) * step_unit_size.y;
+        }
+        if (front.z < 0)
+        {
+            step.z = -1;
+            ray_length_1D.z = (start_pos.z - float(block_pos.z)) * step_unit_size.z;
+        }
+        else
+        {
+            step.z = 1;
+            ray_length_1D.x = (float(block_pos.z + 1) - start_pos.z) * step_unit_size.z;
+        }
 
-            if (current.equals(last)) continue;
+        float distance = 0.0f;
+        while (distance < reach)
+        {
+            if (ray_length_1D.x == ray_length_1D.y || ray_length_1D.x == ray_length_1D.z || ray_length_1D.y == ray_length_1D.z) break;
 
-            if (world->checkBlock(current)) 
+            if (world->checkBlock(block_pos))
             {
-                world->setBlock(world->getBlockRegister()->cobblestone, last);
+                world->destroyBlock(block_pos);
                 break;
             }
 
-            // TODO add checker to ensure no overreach for iterations;
+            if (ray_length_1D.x < ray_length_1D.y && ray_length_1D.x < ray_length_1D.z)
+            {
+                block_pos.x += step.x;
+                distance = ray_length_1D.x;
+                ray_length_1D.x += step_unit_size.x;
+            }
+            else if (ray_length_1D.y < ray_length_1D.z)
+            {
+                block_pos.y += step.y;
+                distance = ray_length_1D.y;
+                ray_length_1D.y += step_unit_size.y;
+            }
+            else
+            {
+                block_pos.z += step.z;
+                distance = ray_length_1D.z;
+                ray_length_1D.z += step_unit_size.z;
+            }
 
-            last = current;
+           
         }
+
+        //if (clickCoolDown != 0) return;
+
+        //clickCoolDown = CLICK_COOLDOWN_SECONDS * 60;
+
+        //if (position.y <= 0.f || position.y >= 256.f) return;
+
+        //glm::vec3 r0 = position; //+ (right_screen + up) * 0.5f;
+
+        //// find the displacement vector
+        //glm::vec3 displacement = front * reach + up * 0.5f;
+        ////BW_DEBUG("%f, %f, %f", displacement.x, displacement.y, displacement.z);
+
+        //constexpr float precision_per_block = 100.0f;
+        //uint32_t iterations = glm::length(displacement) * precision_per_block;
+        //const glm::vec3 increment = displacement / (float)iterations;
+        //glm::vec3 accumulated(0.0f);
+
+        //WorldBlockCoords current, last;
+        //last.x = r0.x;
+        //last.y = r0.y;
+        //last.z = r0.z;
+
+        //for (size_t i = 0; i < iterations; i++)
+        //{
+        //    // ensure that the integer vector is added to the float displacement
+        //    current.x = float(r0.x) + (w_block_coord_t)accumulated.x;
+        //    current.y = float(r0.y) + (block_coord_t)accumulated.y;
+        //    current.z = float(r0.z) + (w_block_coord_t)accumulated.z;
+        //    accumulated += increment;
+
+        //    if (current.equals(last)) continue;
+
+        //    if (world->checkBlock(current)) 
+        //    {
+        //        world->destroyBlock(current);
+        //        break;
+        //    }
+
+        //    // TODO add checker to ensure no overreach for iterations;
+
+        //    last = current;
+        //}
 
 
     }
@@ -279,6 +306,8 @@ namespace bwgame
         front = glm::normalize(frnt);
         right = glm::normalize(glm::cross(front, WORLD_UP));
         up = glm::normalize(glm::cross(right, front));
+
+        right_screen = glm::normalize(glm::cross(up, front));
 
         update_view = true;
     }

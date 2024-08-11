@@ -44,6 +44,8 @@ namespace bwgame
         glm::vec3 right;
         glm::vec3 up;
 
+        glm::vec3 right_screen;
+
         float movement_speed = SPEED;
         float reach = REACH;
 
