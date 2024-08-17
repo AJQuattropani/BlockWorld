@@ -210,6 +210,8 @@
     <None Include="Resources\Shaders\Blocks\World\shadows.frag" />
     <None Include="Resources\Shaders\Blocks\World\shadows.geom" />
     <None Include="Resources\Shaders\Blocks\World\shadows.vert" />
+    <None Include="Resources\Shaders\GUI\vector.frag" />
+    <None Include="Resources\Shaders\GUI\vector.vert" />
     <None Include="Resources\Shaders\World\skybox.frag" />
     <None Include="Resources\Shaders\World\skybox.vert" />
   </ItemGroup>

@@ -40,7 +40,9 @@ namespace bwgame
         glm::vec3 position;
         glm::vec3 displacement = glm::vec3(0.0f);
 
+    public: // todo remove
         glm::vec3 front;
+    private:
         glm::vec3 right;
         glm::vec3 up;
 

@@ -80,10 +80,10 @@ namespace bwgame
 
         if (constrainPitch)
         {
-            if (pitch > 89.0f)
-                pitch = 89.0f;
-            if (pitch < -89.0f)
-                pitch = -89.0f;
+            if (pitch > 89.9f)
+                pitch = 89.9f;
+            if (pitch < -89.9f)
+                pitch = -89.9f;
         }
         updateVectors();
     }
@@ -91,15 +91,16 @@ namespace bwgame
     void Player::placeBlock()
     {
         if (clickCoolDown != 0) return;
-
+        if (position.y <= 0.f || position.y >= 256.f) return;
         clickCoolDown = CLICK_COOLDOWN_SECONDS * 60;
 
-        if (position.y <= 0.f || position.y >= 256.f) return;
-
-        glm::vec3 start_pos = position + glm::vec3(0.0f, 0.5f, 0.0f) + 1.77f * front + 0.5f * up; //* right + 0.5f * WORLD_UP;
+        glm::vec3 start_pos = position + glm::vec3(0.5f, 0.5f, 0.5f);
         glm::vec3 step_unit_size(glm::length(front/front.x), glm::length(front / front.y), glm::length(front / front.z));
 
-        WorldBlockCoords block_pos{ (w_block_coord_t)start_pos.x, (w_block_coord_t)start_pos.z, (block_coord_t)start_pos.y };
+        WorldBlockCoords block_pos{};
+        block_pos.x = start_pos.x;
+        block_pos.y = start_pos.y;
+        block_pos.z = start_pos.z;
         WorldBlockCoords last_block_pos{ block_pos };
         glm::vec3 ray_length_1D(0.0f);
 
@@ -133,7 +134,7 @@ namespace bwgame
         else
         {
             step.z = 1;
-            ray_length_1D.x = (float(block_pos.z + 1) - start_pos.z) * step_unit_size.z;
+            ray_length_1D.z = (float(block_pos.z + 1) - start_pos.z) * step_unit_size.z;
         }
 
         float distance = 0.0f;
@@ -174,15 +175,17 @@ namespace bwgame
     void Player::breakBlock()
     {
         if (clickCoolDown != 0) return;
-
+        if (position.y <= 0.f || position.y >= 256.f) return;
         clickCoolDown = CLICK_COOLDOWN_SECONDS * 60;
 
-        if (position.y <= 0.f || position.y >= 256.f) return;
-
-        glm::vec3 start_pos = position + glm::vec3(0.0f, 0.5f, 0.0f) + 1.77f * front; //* right + 0.5f * WORLD_UP;
+        glm::vec3 start_pos = position + glm::vec3(0.5f, 0.5f, 0.5f);
         glm::vec3 step_unit_size(glm::length(front / front.x), glm::length(front / front.y), glm::length(front / front.z));
 
-        WorldBlockCoords block_pos{ (w_block_coord_t)start_pos.x, (w_block_coord_t)start_pos.z, (block_coord_t)start_pos.y };
+        WorldBlockCoords block_pos{};
+        block_pos.x = start_pos.x;
+        block_pos.y = start_pos.y;
+        block_pos.z = start_pos.z;
+
         glm::vec3 ray_length_1D(0.0f);
 
         glm::i64vec3 step;
@@ -215,7 +218,7 @@ namespace bwgame
         else
         {
             step.z = 1;
-            ray_length_1D.x = (float(block_pos.z + 1) - start_pos.z) * step_unit_size.z;
+            ray_length_1D.z = (float(block_pos.z + 1) - start_pos.z) * step_unit_size.z;
         }
 
         float distance = 0.0f;
@@ -247,54 +250,7 @@ namespace bwgame
                 distance = ray_length_1D.z;
                 ray_length_1D.z += step_unit_size.z;
             }
-
-           
         }
-
-        //if (clickCoolDown != 0) return;
-
-        //clickCoolDown = CLICK_COOLDOWN_SECONDS * 60;
-
-        //if (position.y <= 0.f || position.y >= 256.f) return;
-
-        //glm::vec3 r0 = position; //+ (right_screen + up) * 0.5f;
-
-        //// find the displacement vector
-        //glm::vec3 displacement = front * reach + up * 0.5f;
-        ////BW_DEBUG("%f, %f, %f", displacement.x, displacement.y, displacement.z);
-
-        //constexpr float precision_per_block = 100.0f;
-        //uint32_t iterations = glm::length(displacement) * precision_per_block;
-        //const glm::vec3 increment = displacement / (float)iterations;
-        //glm::vec3 accumulated(0.0f);
-
-        //WorldBlockCoords current, last;
-        //last.x = r0.x;
-        //last.y = r0.y;
-        //last.z = r0.z;
-
-        //for (size_t i = 0; i < iterations; i++)
-        //{
-        //    // ensure that the integer vector is added to the float displacement
-        //    current.x = float(r0.x) + (w_block_coord_t)accumulated.x;
-        //    current.y = float(r0.y) + (block_coord_t)accumulated.y;
-        //    current.z = float(r0.z) + (w_block_coord_t)accumulated.z;
-        //    accumulated += increment;
-
-        //    if (current.equals(last)) continue;
-
-        //    if (world->checkBlock(current)) 
-        //    {
-        //        world->destroyBlock(current);
-        //        break;
-        //    }
-
-        //    // TODO add checker to ensure no overreach for iterations;
-
-        //    last = current;
-        //}
-
-
     }
 
     void Player::updateVectors()

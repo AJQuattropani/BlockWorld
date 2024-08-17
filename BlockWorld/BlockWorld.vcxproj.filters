@@ -94,6 +94,9 @@
     <Filter Include="Resource Files\Shaders\World\Debug">
       <UniqueIdentifier>{2007fbcb-0a70-4c7b-a143-72c5ff0d0eeb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\Shaders\World\GUI">
+      <UniqueIdentifier>{ad9f0a1a-212c-4f39-b751-2ee64141d987}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Application.cpp">
@@ -281,6 +284,12 @@
     </None>
     <None Include="Resources\Shaders\Blocks\World\debugshader.frag">
       <Filter>Resource Files\Shaders\World\Debug</Filter>
+    </None>
+    <None Include="Resources\Shaders\GUI\vector.vert">
+      <Filter>Resource Files\Shaders\World\GUI</Filter>
+    </None>
+    <None Include="Resources\Shaders\GUI\vector.frag">
+      <Filter>Resource Files\Shaders\World\GUI</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

@@ -107,7 +107,35 @@ void Application::render() {
 	glViewport(0, 0, context->screen_width_px, context->screen_height_px);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+
 	world_renderer->render();
+
+
+
+	static bwrenderer::Shader gui_shader("GUI", "vector");
+
+	float vertices[] = { 
+		context->player_position.x + 0.2 * player->front.x, context->player_position.y + 0.2 * player->front.y, context->player_position.z + 0.2 * player->front.z,
+		context->player_position.x + player->front.x, context->player_position.y + player->front.y, context->player_position.z + player->front.z};
+	static GLuint vbo, vao;
+	glGenBuffers(1, &vbo);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+	glGenVertexArrays(1, &vao);
+	glBindVertexArray(vao);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
+
+
+	gui_shader.bind();
+	//gui_shader.setUniformMat4f("model", glm::translate(glm::translate(glm::mat4(1.0f), player->getPosition()), glm::vec3(1.0, 0.0, 0.0)));
+	gui_shader.setUniformMat4f("model", glm::mat4(1.0f));
+	gui_shader.setUniformMat4f("view", context->view_matrix);
+	gui_shader.setUniformMat4f("projection", context->projection_matrix);
+	//gui_shader.setUniformMat4f("projection", glm::mat4(1.0f));
+
+	glDrawArrays(GL_POINTS, 0, 2);
 
 }
 
