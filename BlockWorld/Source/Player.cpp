@@ -97,12 +97,19 @@ namespace bwgame
         glm::vec3 start_pos = position + glm::vec3(0.5f, 0.5f, 0.5f);
         glm::vec3 step_unit_size(glm::length(front/front.x), glm::length(front / front.y), glm::length(front / front.z));
 
+
         WorldBlockCoords block_pos{};
-        block_pos.x = start_pos.x;
-        block_pos.y = start_pos.y;
-        block_pos.z = start_pos.z;
+        block_pos.x = floor(start_pos.x);
+        block_pos.y = floor(start_pos.y);
+        block_pos.z = floor(start_pos.z);
         WorldBlockCoords last_block_pos{ block_pos };
         glm::vec3 ray_length_1D(0.0f);
+        
+
+        //BW_DEBUG("\n Front: [ %f %f %f ]", front.x, front.y, front.z);
+        //BW_DEBUG(" Position: [ %f %f %f ]", position.x, position.y, position.z);
+        //BW_DEBUG(" Position: [ %f %f %f ]", start_pos.x, start_pos.y, start_pos.z);
+        //BW_DEBUG(" Pos: [ %d %d %d ]", block_pos.x, block_pos.y, block_pos.z);
 
         glm::i64vec3 step;
 
@@ -110,11 +117,15 @@ namespace bwgame
         {
             step.x = -1;
             ray_length_1D.x = (start_pos.x - float(block_pos.x)) * step_unit_size.x;
+            /*if (start_pos.x < 0) 
+                ray_length_1D.x = (float(block_pos.x + 1) - start_pos.x) * step_unit_size.x;*/
         }
         else
         {
             step.x = 1;
             ray_length_1D.x = (float(block_pos.x + 1) - start_pos.x) * step_unit_size.x;
+            /*if (start_pos.x > 0) 
+                ray_length_1D.x = (start_pos.x - float(block_pos.x)) * step_unit_size.x;*/
         }
         if (front.y < 0)
         {
@@ -130,11 +141,15 @@ namespace bwgame
         {
             step.z = -1;
             ray_length_1D.z = (start_pos.z - float(block_pos.z)) * step_unit_size.z;
+            /*if (start_pos.z < 0)
+                ray_length_1D.z = (float(block_pos.z + 1) - start_pos.z) * step_unit_size.z;*/
         }
         else
         {
             step.z = 1;
             ray_length_1D.z = (float(block_pos.z + 1) - start_pos.z) * step_unit_size.z;
+            /*if (start_pos.z > 0)
+                ray_length_1D.z = (start_pos.z - float(block_pos.z)) * step_unit_size.z;*/
         }
 
         float distance = 0.0f;
@@ -182,9 +197,9 @@ namespace bwgame
         glm::vec3 step_unit_size(glm::length(front / front.x), glm::length(front / front.y), glm::length(front / front.z));
 
         WorldBlockCoords block_pos{};
-        block_pos.x = start_pos.x;
-        block_pos.y = start_pos.y;
-        block_pos.z = start_pos.z;
+        block_pos.x = floor(start_pos.x);
+        block_pos.y = floor(start_pos.y);
+        block_pos.z = floor(start_pos.z);
 
         glm::vec3 ray_length_1D(0.0f);
 
