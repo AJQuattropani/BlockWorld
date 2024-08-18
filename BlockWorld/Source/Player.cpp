@@ -117,15 +117,11 @@ namespace bwgame
         {
             step.x = -1;
             ray_length_1D.x = (start_pos.x - float(block_pos.x)) * step_unit_size.x;
-            /*if (start_pos.x < 0) 
-                ray_length_1D.x = (float(block_pos.x + 1) - start_pos.x) * step_unit_size.x;*/
         }
         else
         {
             step.x = 1;
             ray_length_1D.x = (float(block_pos.x + 1) - start_pos.x) * step_unit_size.x;
-            /*if (start_pos.x > 0) 
-                ray_length_1D.x = (start_pos.x - float(block_pos.x)) * step_unit_size.x;*/
         }
         if (front.y < 0)
         {
@@ -141,15 +137,11 @@ namespace bwgame
         {
             step.z = -1;
             ray_length_1D.z = (start_pos.z - float(block_pos.z)) * step_unit_size.z;
-            /*if (start_pos.z < 0)
-                ray_length_1D.z = (float(block_pos.z + 1) - start_pos.z) * step_unit_size.z;*/
         }
         else
         {
             step.z = 1;
             ray_length_1D.z = (float(block_pos.z + 1) - start_pos.z) * step_unit_size.z;
-            /*if (start_pos.z > 0)
-                ray_length_1D.z = (start_pos.z - float(block_pos.z)) * step_unit_size.z;*/
         }
 
         float distance = 0.0f;
